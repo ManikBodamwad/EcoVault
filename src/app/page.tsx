@@ -366,7 +366,7 @@ export default function Home() {
       <SensoryImpactShowcase />
 
       {/* Advanced Light-Themed Verification Scanner */}
-      <section className="py-24 bg-white border-b border-slate-200/50 dotted-grid relative">
+      <section className="py-24 bg-white/40 backdrop-blur-md border-b border-slate-200/50 dotted-grid relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
             <span className="text-[9px] uppercase font-bold tracking-wider bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full border border-emerald-200/50">
@@ -386,7 +386,7 @@ export default function Home() {
             {/* Left Console Controller (5 cols) */}
             <div className="md:col-span-5 flex flex-col justify-between">
               <TiltCard 
-                className="bg-white border border-slate-200/80 p-6 shadow-md flex flex-col justify-between h-full space-y-6"
+                className="bg-white/90 backdrop-blur-md border border-slate-200/80 p-6 shadow-md flex flex-col justify-between h-full space-y-6"
                 shadowColor="rgba(16, 185, 129, 0.05)"
               >
                 <div className="space-y-4">
@@ -435,7 +435,7 @@ export default function Home() {
             </div>
 
             {/* Right Scanner Terminal (Frosted glass light layout) */}
-            <div className="md:col-span-7 bg-[#F8FAF9] rounded-3xl p-6 shadow-lg border border-slate-200/80 relative overflow-hidden flex flex-col justify-between min-h-[300px]">
+            <div className="md:col-span-7 bg-white/70 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-slate-200/80 relative overflow-hidden flex flex-col justify-between min-h-[300px]">
               
               {/* Laser Sweep Overlay Line */}
               {terminalStatus === "running" && <div className="laser-line" />}
@@ -489,7 +489,7 @@ export default function Home() {
       </section>
 
       {/* Buyer vs Seller dynamic panel showcase */}
-      <section className="py-24 bg-slate-50/50 border-b border-slate-200/50 relative">
+      <section className="py-24 bg-slate-50/40 backdrop-blur-md border-b border-slate-200/50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
             <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Adaptable Platform</span>
@@ -663,7 +663,7 @@ export default function Home() {
       </section>
 
       {/* Strategic Roadmap (Sleek timeline) */}
-      <section className="py-24 bg-white border-b border-slate-200/50">
+      <section className="py-24 bg-white/40 backdrop-blur-md border-b border-slate-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
             <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Platform Scaling</span>

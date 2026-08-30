@@ -21,15 +21,21 @@ export const metadata: Metadata = {
   }
 };
 
+import OrganicFlowBackground from "@/components/OrganicFlowBackground";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#F7FAF8] text-[#1E293B]">
+      <body className="min-h-full flex flex-col bg-[#F8FAF9] text-[#1E293B] relative">
         <AppProvider>
-          {children}
+          {/* Continuous Organic Flow Background Canvas (Of The Oak style Lidar contours & bio-luminescence) */}
+          <OrganicFlowBackground />
+          <div className="relative z-10 flex flex-col min-h-screen">
+            {children}
+          </div>
         </AppProvider>
       </body>
     </html>
