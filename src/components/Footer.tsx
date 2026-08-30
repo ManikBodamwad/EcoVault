@@ -80,7 +80,7 @@ export default function Footer() {
           <span>Built by <strong className="text-slate-200 font-bold">Manik Bodamwad</strong></span>
           <span>•</span>
           <a
-            href="https://github.com/ManikBodamwad/EcoVault"
+            href="https://github.com/ManikBodamwad?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
             className="text-emerald-400 hover:text-emerald-300 transition-colors underline underline-offset-2"
@@ -89,7 +89,7 @@ export default function Footer() {
           </a>
           <span>•</span>
           <a
-            href="https://www.linkedin.com/in/manikbodamwad/"
+            href="https://www.linkedin.com/in/manik-bodamwad-814b331a6/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-emerald-400 hover:text-emerald-300 transition-colors underline underline-offset-2"

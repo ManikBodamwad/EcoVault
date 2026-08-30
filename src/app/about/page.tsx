@@ -114,15 +114,15 @@ export default function AboutPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <a
-              href="https://github.com/ManikBodamwad/EcoVault"
+              href="https://github.com/ManikBodamwad?tab=repositories"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[10px] font-bold tracking-wide bg-emerald-900 hover:bg-emerald-800 border border-emerald-700 text-white px-4 py-2 rounded-xl transition-all shadow-sm"
             >
-              GitHub Repository ↗
+              GitHub Profile ↗
             </a>
             <a
-              href="https://www.linkedin.com/in/manikbodamwad/"
+              href="https://www.linkedin.com/in/manik-bodamwad-814b331a6/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[10px] font-bold tracking-wide bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl transition-all shadow-sm"
