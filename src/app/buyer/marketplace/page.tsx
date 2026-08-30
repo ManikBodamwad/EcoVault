@@ -66,7 +66,7 @@ export default function Marketplace() {
   }, [searchTerm, selectedType, maxPrice, acvaOnly, projects]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAF9] font-sans">
+    <div className="min-h-screen flex flex-col bg-transparent font-sans">
       <Navbar />
 
       {/* Main Container */}

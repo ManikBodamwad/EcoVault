@@ -87,7 +87,7 @@ export default function SellerOnboarding() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAF9] font-sans">
+    <div className="min-h-screen flex flex-col bg-transparent font-sans">
       <Navbar />
 
       <div className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">

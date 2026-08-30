@@ -46,7 +46,7 @@ export default function SellerDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAF9] font-sans">
+    <div className="min-h-screen flex flex-col bg-transparent font-sans">
       <Navbar />
 
       <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">

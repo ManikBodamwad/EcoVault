@@ -1,83 +1,86 @@
+"use client";
+
 import React from "react";
+import Image from "next/image";
 
 interface LogoProps {
   variant?: "full" | "horizontal" | "icon";
   className?: string;
   light?: boolean;
+  size?: "sm" | "md" | "lg";
 }
 
-export default function Logo({ variant = "horizontal", className = "", light = false }: LogoProps) {
-  const brandDark = "#0B3D2E";
-  const brandPrimary = "#16A34A";
-  const brandLight = "#4ADE80";
-  
-  const textMainColor = light ? "#F7FAF8" : "#0B3D2E";
-  const textSubColor = light ? "#A3E635" : "#16A34A";
+export default function Logo({
+  variant = "horizontal",
+  className = "",
+  light = false,
+  size = "md"
+}: LogoProps) {
+  // Dimension mappings
+  const dimensions = {
+    sm: { imgWidth: 32, imgHeight: 32, hClass: "h-8" },
+    md: { imgWidth: 44, imgHeight: 44, hClass: "h-11" },
+    lg: { imgWidth: 60, imgHeight: 60, hClass: "h-16" }
+  };
 
-  // SVG Logo Icon
-  const LogoIcon = () => (
-    <svg
-      viewBox="0 0 100 100"
-      className="w-10 h-10 select-none flex-shrink-0"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Circle Vault Frame */}
-      <circle cx="50" cy="50" r="46" stroke={light ? brandLight : brandPrimary} strokeWidth="3.5" strokeDasharray="3 2" />
-      <circle cx="50" cy="50" r="40" fill={brandDark} />
-      
-      {/* Stylized Leaf-E Icon with Keyhole */}
-      {/* E-Shape and Keyhole Backing */}
-      <path
-        d="M32 35 C32 30, 68 30, 68 35 M32 50 L62 50 M32 65 C32 70, 68 70, 68 65"
-        stroke={light ? "#ffffff" : brandLight}
-        strokeWidth="6"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* Vault Keyhole inside E */}
-      <circle cx="48" cy="50" r="6" fill="#FBBF24" />
-      <path d="M45 50 L51 50 L53 62 L43 62 Z" fill="#FBBF24" />
-      
-      {/* Overlaying Leaf Shape on the Right side */}
-      <path
-        d="M62 30 C72 40, 72 60, 62 70 C56 60, 56 40, 62 30 Z"
-        fill={brandPrimary}
-        opacity="0.85"
-      />
-      <path
-        d="M62 30 L62 70"
-        stroke="#ffffff"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        opacity="0.6"
-      />
-      
-      {/* Little green node */}
-      <circle cx="50" cy="22" r="3.5" fill={brandLight} />
-    </svg>
-  );
+  const { imgWidth, imgHeight, hClass } = dimensions[size] || dimensions.md;
 
   if (variant === "icon") {
-    return <LogoIcon />;
+    return (
+      <div className={`relative flex items-center justify-center group ${className}`}>
+        <div className="absolute inset-0 rounded-full bg-emerald-500/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        <div className="relative w-10 h-10 overflow-hidden rounded-full flex items-center justify-center">
+          <Image
+            src="/logo.png"
+            alt="EcoVault Logo"
+            width={44}
+            height={44}
+            className="object-cover object-center w-full h-full scale-[1.4]"
+            priority
+          />
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <LogoIcon />
+    <div className={`flex items-center gap-3 select-none group cursor-pointer ${className}`}>
+      {/* Emblem */}
+      <div className="relative flex items-center justify-center">
+        <div className="absolute -inset-1 rounded-full bg-emerald-500/25 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        <div className={`relative ${hClass} aspect-square overflow-hidden rounded-full flex items-center justify-center`}>
+          <Image
+            src="/logo.png"
+            alt="EcoVault Emblem"
+            width={imgWidth * 1.3}
+            height={imgHeight * 1.3}
+            className="object-cover object-top w-full h-full scale-[1.45] transition-transform duration-300 group-hover:scale-[1.55]"
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Brand Wordmark */}
       <div className="flex flex-col justify-center leading-none">
         <span 
-          className="text-xl font-bold tracking-tight" 
-          style={{ color: textMainColor, fontFamily: "var(--font-sans)" }}
+          className="text-xl sm:text-2xl font-black tracking-tight flex items-center transition-colors"
+          style={{ 
+            color: light ? "#FFFFFF" : "#064E3B",
+            fontFamily: "var(--font-sans)"
+          }}
         >
-          Eco<span style={{ color: textSubColor }}>Vault</span>
+          <span>Eco</span>
+          <span className="text-emerald-600 group-hover:text-emerald-500 transition-colors">Vault</span>
         </span>
+        
         {variant === "full" && (
           <span 
-            className="text-[9px] font-semibold tracking-widest uppercase mt-0.5" 
-            style={{ color: light ? "rgba(247, 250, 248, 0.7)" : "#64748B" }}
+            className="text-[8px] sm:text-[9px] font-black tracking-[0.2em] uppercase mt-0.5"
+            style={{ 
+              color: light ? "rgba(255, 255, 255, 0.7)" : "#10B981" 
+            }}
           >
-            Make Carbon Count
+            MAKE CARBON COUNT.
           </span>
         )}
       </div>

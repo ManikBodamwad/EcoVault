@@ -181,7 +181,7 @@ export default function Home() {
   ];
 
   return (
-    <div ref={targetRef} className="min-h-screen flex flex-col bg-white font-sans overflow-x-hidden">
+    <div ref={targetRef} className="min-h-screen flex flex-col bg-transparent font-sans overflow-x-hidden relative">
       
       {/* Light-Themed Transaction Marquee Ticker with smooth edge fades */}
       <div className="bg-slate-50 border-b border-slate-200/60 text-slate-600 py-3 overflow-hidden text-[9px] font-mono tracking-wider select-none relative z-50">
