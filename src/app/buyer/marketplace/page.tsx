@@ -9,6 +9,7 @@ import InteractiveGlobe from "@/components/InteractiveGlobe";
 import AIChatDrawer from "@/components/AIChatDrawer";
 import { Search, Filter, ShieldCheck, ChevronRight, SlidersHorizontal, Map, Landmark, Activity, Sparkles } from "lucide-react";
 import Link from "next/link";
+import TiltCard from "@/components/TiltCard";
 
 export default function Marketplace() {
   const { projects, activeProject, selectProject, chatMessages } = useApp();
@@ -176,88 +177,93 @@ export default function Marketplace() {
                 };
 
                 return (
-                  <div
+                  <TiltCard
                     key={p.id}
-                    onClick={() => selectProject(isActive ? null : p)}
-                    className={`bg-white rounded-2xl border p-5 cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden flex flex-col md:flex-row justify-between gap-4 group ${
-                      isActive 
-                        ? "border-emerald-500 ring-1 ring-emerald-500/20" 
-                        : "border-slate-200/80 hover:border-emerald-300"
-                    }`}
+                    className="w-full"
+                    shadowColor="rgba(16, 185, 129, 0.04)"
+                    maxTilt={4}
                   >
-                    {/* Left content block */}
-                    <div className="space-y-2 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
-                          p.type === "Forestry" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
-                          p.type === "Biogas" ? "bg-amber-50 text-amber-700 border border-amber-100" :
-                          p.type === "Solar" ? "bg-sky-50 text-sky-700 border border-sky-100" :
-                          p.type === "Wind" ? "bg-purple-50 text-purple-700 border border-purple-100" :
-                          "bg-rose-50 text-rose-700 border border-rose-100"
-                        }`}>
-                          {p.type}
-                        </span>
-                        <span className="text-[10px] text-slate-400 font-semibold">{p.location}, India</span>
-                        {p.acvaVerified && (
-                          <span className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[9px] font-bold rounded-md border border-emerald-900/50">
-                            <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                            ACVA Audit
+                    <div
+                      onClick={() => selectProject(isActive ? null : p)}
+                      className={`bg-white rounded-2xl border p-5 cursor-pointer flex flex-col md:flex-row justify-between gap-4 group w-full h-full ${
+                        isActive 
+                          ? "border-emerald-500 ring-1 ring-emerald-500/20" 
+                          : "border-slate-200/80 hover:border-emerald-300"
+                      }`}
+                    >
+                      {/* Left content block */}
+                      <div className="space-y-2 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
+                            p.type === "Forestry" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                            p.type === "Biogas" ? "bg-amber-50 text-amber-700 border border-amber-100" :
+                            p.type === "Solar" ? "bg-sky-50 text-sky-700 border border-sky-100" :
+                            p.type === "Wind" ? "bg-purple-50 text-purple-700 border border-purple-100" :
+                            "bg-rose-50 text-rose-700 border border-rose-100"
+                          }`}>
+                            {p.type}
                           </span>
-                        )}
+                          <span className="text-[10px] text-slate-400 font-semibold">{p.location}, India</span>
+                          {p.acvaVerified && (
+                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[9px] font-bold rounded-md border border-emerald-900/50">
+                              <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                              ACVA Audit
+                            </span>
+                          )}
+                        </div>
+
+                        <h3 className="text-base font-extrabold text-slate-800 tracking-tight group-hover:text-emerald-700 transition-colors">
+                          {p.name}
+                        </h3>
+                        <p className="text-xs text-slate-500 leading-relaxed max-w-xl line-clamp-2">
+                          {p.description}
+                        </p>
+                        
+                        <div className="flex items-center gap-4 text-[10px] text-slate-400 pt-2 font-semibold border-t border-slate-50">
+                          <span className="flex items-center gap-0.5">Trust Score: <strong className="text-emerald-600">{p.trustScore}%</strong></span>
+                          <span>Registry ID: <code className="font-mono">{p.certRegistry}</code></span>
+                          <span className="flex items-center gap-0.5">Risk: <strong className={p.riskScore === "Low" ? "text-emerald-600" : "text-amber-500"}>{p.riskScore}</strong></span>
+                        </div>
                       </div>
 
-                      <h3 className="text-base font-extrabold text-slate-800 tracking-tight group-hover:text-emerald-700 transition-colors">
-                        {p.name}
-                      </h3>
-                      <p className="text-xs text-slate-500 leading-relaxed max-w-xl line-clamp-2">
-                        {p.description}
-                      </p>
-                      
-                      <div className="flex items-center gap-4 text-[10px] text-slate-400 pt-2 font-semibold border-t border-slate-50">
-                        <span className="flex items-center gap-0.5">Trust Score: <strong className="text-emerald-600">{p.trustScore}%</strong></span>
-                        <span>Registry ID: <code className="font-mono">{p.certRegistry}</code></span>
-                        <span className="flex items-center gap-0.5">Risk: <strong className={p.riskScore === "Low" ? "text-emerald-600" : "text-amber-500"}>{p.riskScore}</strong></span>
+                      {/* Middle: Sparkline Mini Chart */}
+                      <div className="hidden md:flex flex-col justify-center items-center px-4 border-l border-r border-slate-50 min-w-[70px]">
+                        <span className="text-[8px] uppercase font-bold text-slate-400 block mb-1">12M Trend</span>
+                        <svg className={`w-14 h-6 ${
+                          p.type === "Forestry" ? "text-emerald-500" : 
+                          p.type === "Biogas" ? "text-amber-500" : "text-sky-500"
+                        }`} viewBox="0 0 50 20">
+                          <path
+                            d={getSparklineD()}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </div>
+
+                      {/* Right pricing block */}
+                      <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 border-t md:border-t-0 md:pl-5 min-w-[120px]">
+                        <div className="text-left md:text-right">
+                          <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Asking Price</span>
+                          <span className="text-xl font-black text-slate-800">₹{p.price}</span>
+                          <span className="text-[9px] text-slate-400 block font-semibold mt-0.5">per Ton CO₂e</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Volume</span>
+                          <span className="text-xs font-bold text-slate-700">{p.volume.toLocaleString()} tons</span>
+                        </div>
+                        <Link
+                          href={`/buyer/marketplace/${p.id}`}
+                          onClick={(e) => e.stopPropagation()} // Stop event bubbling
+                          className="p-1.5 bg-slate-50 hover:bg-emerald-600 text-slate-600 hover:text-white rounded-xl transition-all group-hover:translate-x-1 border border-slate-200/60"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </Link>
                       </div>
                     </div>
-
-                    {/* Middle: Sparkline Mini Chart */}
-                    <div className="hidden md:flex flex-col justify-center items-center px-4 border-l border-r border-slate-50 min-w-[70px]">
-                      <span className="text-[8px] uppercase font-bold text-slate-400 block mb-1">12M Trend</span>
-                      <svg className={`w-14 h-6 ${
-                        p.type === "Forestry" ? "text-emerald-500" : 
-                        p.type === "Biogas" ? "text-amber-500" : "text-sky-500"
-                      }`} viewBox="0 0 50 20">
-                        <path
-                          d={getSparklineD()}
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </div>
-
-                    {/* Right pricing block */}
-                    <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 border-t md:border-t-0 md:pl-5 min-w-[120px]">
-                      <div className="text-left md:text-right">
-                        <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Asking Price</span>
-                        <span className="text-xl font-black text-slate-800">₹{p.price}</span>
-                        <span className="text-[9px] text-slate-400 block font-semibold mt-0.5">per Ton CO₂e</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Volume</span>
-                        <span className="text-xs font-bold text-slate-700">{p.volume.toLocaleString()} tons</span>
-                      </div>
-                      <Link
-                        href={`/buyer/marketplace/${p.id}`}
-                        onClick={(e) => e.stopPropagation()} // Stop event bubbling
-                        className="p-1.5 bg-slate-50 hover:bg-emerald-600 text-slate-600 hover:text-white rounded-xl transition-all group-hover:translate-x-1 border border-slate-200/60"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </Link>
-                    </div>
-
-                  </div>
+                  </TiltCard>
                 );
               })
             ) : (

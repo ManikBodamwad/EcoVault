@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import Logo from "@/components/Logo";
 import InteractiveGlobe from "@/components/InteractiveGlobe";
 import AIChatDrawer from "@/components/AIChatDrawer";
+import TiltCard from "@/components/TiltCard";
 import { 
   ShieldCheck, 
   ArrowRight, 
@@ -22,7 +23,7 @@ import {
   Layers,
   MapPin
 } from "lucide-react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue } from "framer-motion";
 
 export default function Home() {
   const { switchPersona, selectProject } = useApp();
@@ -30,13 +31,38 @@ export default function Home() {
   
   // Parallax scroll controllers using framer-motion hooks
   const targetRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   
-  // Float different layers at different speeds (Figma-like Parallax)
-  const yFloatingPill1 = useTransform(scrollY, [0, 800], [0, -140]);
-  const yFloatingPill2 = useTransform(scrollY, [0, 800], [0, 90]);
-  const yFloatingCard = useTransform(scrollY, [0, 800], [0, -80]);
-  const rotateLeaf = useTransform(scrollY, [0, 1200], [0, 60]);
+  // Float different layers at different speeds (Scroll Parallax)
+  const yFloatingPill1 = useTransform(scrollY, [0, 800], [0, -180]);
+  const yFloatingPill2 = useTransform(scrollY, [0, 800], [0, 110]);
+  const yFloatingCard = useTransform(scrollY, [0, 800], [0, -100]);
+  const rotateLeaf = useTransform(scrollY, [0, 1200], [0, 75]);
+
+  // Mouse tilt movement for Apple-style 3D cursor interaction
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const handleHeroMouseMove = (e: React.MouseEvent) => {
+    if (!heroRef.current) return;
+    const rect = heroRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleHeroMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  // Mouse tilt transforms
+  const cursorTransX = useTransform(mouseX, [-0.5, 0.5], [-20, 20]);
+  const cursorTransY = useTransform(mouseY, [-0.5, 0.5], [-20, 20]);
+  const globeTransX = useTransform(mouseX, [-0.5, 0.5], [-45, 45]);
+  const globeTransY = useTransform(mouseY, [-0.5, 0.5], [-45, 45]);
 
   // Interactive Calculator States
   const [sector, setSector] = useState<"tech" | "manufacturing" | "aviation" | "logistics">("tech");
@@ -156,9 +182,9 @@ export default function Home() {
     <div ref={targetRef} className="min-h-screen flex flex-col bg-white font-sans overflow-x-hidden">
       
       {/* Light-Themed Transaction Marquee Ticker */}
-      <div className="bg-slate-50 border-b border-slate-200/60 text-slate-600 py-2.5 overflow-hidden text-[9px] font-mono tracking-wider select-none relative z-50">
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none"></div>
+      <div className="bg-slate-50 border-b border-slate-200/60 text-slate-600 py-3 overflow-hidden text-[9px] font-mono tracking-wider select-none relative z-50">
+        <div className="absolute left-0 top-0 bottom-0 w-36 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-36 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none"></div>
         <div className="animate-marquee whitespace-nowrap flex gap-12 items-center">
           {[...mockMarqueeLog, ...mockMarqueeLog].map((log, idx) => (
             <div key={idx} className="flex items-center gap-2">
@@ -171,148 +197,162 @@ export default function Home() {
 
       <Navbar />
 
-      {/* Hero Section (Fresh Light-Mint Theme + Dotted Grid + Parallax floating elements) */}
-      <section className="bg-gradient-to-b from-[#F0FDF4]/60 to-white text-slate-800 py-20 lg:py-28 border-b border-slate-200/50 relative overflow-hidden dotted-grid">
+      {/* Hero Section (Apple-style Parallax + Animated Gradient Mesh & Noise) */}
+      <section 
+        ref={heroRef}
+        onMouseMove={handleHeroMouseMove}
+        onMouseLeave={handleHeroMouseLeave}
+        className="animated-mesh text-slate-800 py-20 lg:py-28 border-b border-slate-200/50 relative overflow-hidden dotted-grid"
+      >
         
-        {/* Decorative Parallax elements (Figma alignment) */}
+        {/* Parallax layers mapping scroll and mouse tracking */}
         <motion.div 
-          style={{ y: yFloatingPill1 }}
-          className="absolute top-20 right-12 hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-slate-200/60 shadow-lg rounded-2xl text-[10px] font-bold text-slate-700 select-none z-25 cursor-default"
+          style={{ y: yFloatingPill1, x: cursorTransX }}
+          className="absolute top-20 right-16 hidden lg:flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200/60 shadow-lg rounded-2xl text-[10px] font-extrabold text-slate-700 select-none z-25 cursor-default"
         >
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
           Escrow: ₹1.2 Cr Safe Locked
         </motion.div>
 
         <motion.div 
-          style={{ y: yFloatingPill2 }}
-          className="absolute bottom-24 left-8 hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-slate-200/60 shadow-lg rounded-2xl text-[10px] font-bold text-slate-700 select-none z-25 cursor-default"
+          style={{ y: yFloatingPill2, x: cursorTransX }}
+          className="absolute bottom-28 left-20 hidden lg:flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200/60 shadow-lg rounded-2xl text-[10px] font-extrabold text-slate-700 select-none z-25 cursor-default"
         >
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          <ShieldCheck className="w-4 h-4 text-emerald-600" />
           eKYC Identity Confirmed
         </motion.div>
 
         <motion.div 
           style={{ y: yFloatingCard, rotate: rotateLeaf }}
-          className="absolute top-28 left-16 hidden lg:block select-none z-20 opacity-20 pointer-events-none"
+          className="absolute top-32 left-28 hidden lg:block select-none z-20 opacity-20 pointer-events-none"
         >
-          <TreePine className="w-16 h-16 text-emerald-600" />
+          <TreePine className="w-20 h-20 text-emerald-600" />
         </motion.div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             
             {/* Left Column: Heading Copy */}
-            <div className="lg:col-span-7 space-y-7 text-center lg:text-left">
+            <div className="lg:col-span-6 space-y-8 text-center lg:text-left">
               <motion.div
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded-full border border-emerald-200/60 mb-4 shadow-sm">
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-emerald-50 text-emerald-800 text-[10px] font-extrabold rounded-full border border-emerald-200/60 mb-5 shadow-sm">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                   National Grid Carbon Registry Handshake Live
                 </span>
                 
-                <h1 className="text-4xl sm:text-5xl lg:text-[62px] font-black tracking-tight leading-[1.05] text-[#064E3B]">
+                <h1 className="text-4xl sm:text-5xl lg:text-[62px] font-black tracking-tight leading-[0.98] text-[#064E3B] select-none">
                   Carbon credits you can <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-cyan-500">access.</span>
                   <br />
                   Transactions you can <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-800">trust.</span>
                 </h1>
                 
-                <p className="mt-4 text-xs sm:text-sm text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                <p className="mt-5 text-xs sm:text-sm text-slate-500 max-w-lg mx-auto lg:mx-0 leading-relaxed font-bold">
                   EcoVault connects verified voluntary carbon project developers across India directly with corporate sustainability buyers. Direct escrow settlement and satellite Lidar verification audits.
                 </p>
               </motion.div>
 
-              {/* Dynamic Offset Calculator (Light Themed Glass panel) */}
+              {/* Dynamic Offset Calculator (Premium 3D Tilt Card) */}
               <motion.div 
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="bg-white/85 backdrop-blur-md p-6 rounded-3xl border border-slate-200/80 text-slate-600 space-y-4 text-left max-w-lg mx-auto lg:mx-0 shadow-xl"
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-emerald-700 flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    ESG Offset Split Calculator
-                  </span>
-                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Instant valuation</span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 text-xs">
-                  {/* Sector */}
-                  <div className="space-y-1">
-                    <label className="text-slate-500 block font-semibold">Your Sector</label>
-                    <select
-                      value={sector}
-                      onChange={(e: any) => setSector(e.target.value)}
-                      className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-800 font-bold"
-                    >
-                      <option value="tech">Technology / SaaS</option>
-                      <option value="manufacturing">Heavy Industrial</option>
-                      <option value="aviation">Aviation / Travel</option>
-                      <option value="logistics">Supply Chain</option>
-                    </select>
+                <TiltCard 
+                  className="bg-white/90 backdrop-blur-md p-6 border border-slate-200/80 text-slate-600 space-y-4 shadow-xl"
+                  shadowColor="rgba(16, 185, 129, 0.08)"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black text-emerald-700 flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      ESG Offset Split Calculator
+                    </span>
+                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Instant valuation</span>
                   </div>
 
-                  {/* Volume Slider */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between font-semibold">
-                      <span className="text-slate-500">Emissions Target</span>
-                      <span className="text-emerald-700 font-bold">{emissions.toLocaleString()} t</span>
+                  <div className="grid grid-cols-2 gap-4 text-xs">
+                    {/* Sector */}
+                    <div className="space-y-1">
+                      <label className="text-slate-500 block font-semibold">Your Sector</label>
+                      <select
+                        value={sector}
+                        onChange={(e: any) => setSector(e.target.value)}
+                        className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-800 font-bold"
+                      >
+                        <option value="tech">Technology / SaaS</option>
+                        <option value="manufacturing">Heavy Industrial</option>
+                        <option value="aviation">Aviation / Travel</option>
+                        <option value="logistics">Supply Chain</option>
+                      </select>
                     </div>
-                    <input
-                      type="range"
-                      min="500"
-                      max="100000"
-                      step="500"
-                      value={emissions}
-                      onChange={(e) => setEmissions(parseInt(e.target.value, 10))}
-                      className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600 mt-2.5"
-                    />
-                  </div>
-                </div>
 
-                <hr className="border-slate-100" />
+                    {/* Volume Slider */}
+                    <div className="space-y-1">
+                      <div className="flex justify-between font-semibold">
+                        <span className="text-slate-500">Emissions Target</span>
+                        <span className="text-emerald-700 font-bold">{emissions.toLocaleString()} t</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="500"
+                        max="100000"
+                        step="500"
+                        value={emissions}
+                        onChange={(e) => setEmissions(parseInt(e.target.value, 10))}
+                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600 mt-2.5"
+                      />
+                    </div>
+                  </div>
 
-                {/* Calculation Outputs */}
-                <div className="grid grid-cols-3 gap-3 text-center">
-                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
-                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Estimated Cost</span>
-                    <strong className="text-xs text-slate-800 font-black">₹{(metrics.estimatedCost / 100000).toFixed(2)} L</strong>
-                  </div>
-                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
-                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Trees Sequest.</span>
-                    <strong className="text-xs text-emerald-600 font-black flex items-center justify-center gap-0.5">
-                      <TreePine className="w-3.5 h-3.5 text-emerald-600" />
-                      {metrics.treesEquivalent.toLocaleString()}
-                    </strong>
-                  </div>
-                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
-                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Flight Offset</span>
-                    <strong className="text-xs text-sky-600 font-black flex items-center justify-center gap-0.5">
-                      <PlaneTakeoff className="w-3.5 h-3.5 text-sky-600" />
-                      {metrics.flightsEquivalent.toLocaleString()}
-                    </strong>
-                  </div>
-                </div>
+                  <hr className="border-slate-100" />
 
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-[9px] text-slate-400 font-medium">Recommended: {metrics.forestryRatio}% Forestry / {metrics.biogasRatio}% Biogas</span>
-                  <button
-                    onClick={handleApplyCalculatorSplit}
-                    className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-[9px] transition-colors shadow flex items-center gap-1"
-                  >
-                    Apply Split
-                    <ArrowRight className="w-3 h-3" />
-                  </button>
-                </div>
+                  {/* Calculation Outputs */}
+                  <div className="grid grid-cols-3 gap-3 text-center">
+                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Estimated Cost</span>
+                      <strong className="text-xs text-slate-800 font-black">₹{(metrics.estimatedCost / 100000).toFixed(2)} L</strong>
+                    </div>
+                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Trees Sequest.</span>
+                      <strong className="text-xs text-emerald-600 font-black flex items-center justify-center gap-0.5">
+                        <TreePine className="w-3.5 h-3.5 text-emerald-600" />
+                        {metrics.treesEquivalent.toLocaleString()}
+                      </strong>
+                    </div>
+                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Flight Offset</span>
+                      <strong className="text-xs text-sky-600 font-black flex items-center justify-center gap-0.5">
+                        <PlaneTakeoff className="w-3.5 h-3.5 text-sky-600" />
+                        {metrics.flightsEquivalent.toLocaleString()}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[9px] text-slate-400 font-bold">Recommended: {metrics.forestryRatio}% Forestry / {metrics.biogasRatio}% Biogas</span>
+                    <button
+                      onClick={handleApplyCalculatorSplit}
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-[10px] transition-colors shadow-md btn-premium flex items-center gap-1"
+                    >
+                      Apply Split
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </TiltCard>
               </motion.div>
             </div>
 
-            {/* Right Column: Globe Area (Light Mesh backdrop) */}
-            <div className="lg:col-span-5 flex justify-center relative w-full h-[350px] lg:h-[500px]">
-              <InteractiveGlobe interactive={false} />
+            {/* Right Column: Globe Area (Bleeds off screen like Stripe, responds to mouse movement) */}
+            <div className="lg:col-span-6 flex justify-center relative w-full h-[400px] lg:h-[550px] overflow-visible">
+              <motion.div 
+                style={{ x: globeTransX, y: globeTransY }}
+                className="w-full lg:w-[130%] h-full relative overflow-visible flex items-center justify-center lg:-mr-32"
+              >
+                <InteractiveGlobe interactive={true} />
+              </motion.div>
             </div>
 
           </div>
@@ -329,7 +369,7 @@ export default function Home() {
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#064E3B] tracking-tight">
               Anti-Greenwashing Laser Verification Scanner
             </h2>
-            <p className="text-slate-500 text-xs leading-relaxed max-w-lg mx-auto font-medium">
+            <p className="text-slate-500 text-xs leading-relaxed max-w-lg mx-auto font-bold">
               Validate credit integrity by running queries directly on the Grid Controller of India registry files. Select a certificate serial to start.
             </p>
           </div>
@@ -338,48 +378,53 @@ export default function Home() {
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
             
             {/* Left Console Controller (5 cols) */}
-            <div className="md:col-span-5 bg-white border border-slate-200/80 rounded-3xl p-6 shadow-md flex flex-col justify-between space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Terminal className="w-5 h-5 text-emerald-600" />
-                  <h3 className="text-sm font-bold text-slate-800">Scanner Controller</h3>
-                </div>
-                
-                <div className="space-y-2 text-xs">
-                  <label className="text-slate-500 block font-semibold">Select Certificate Registry ID</label>
-                  <div className="grid grid-cols-1 gap-2">
-                    <button
-                      onClick={() => setTerminalInput("GCI-REG-2026-OD812")}
-                      className={`text-left p-2.5 rounded-xl border text-[10px] font-mono transition-all ${
-                        terminalInput === "GCI-REG-2026-OD812" 
-                          ? "border-emerald-500 bg-emerald-50/50 text-emerald-800 font-bold" 
-                          : "border-slate-100 hover:bg-slate-50 text-slate-600"
-                      }`}
-                    >
-                      📄 GCI-REG-2026-OD812 (Mahanadi Mangroves)
-                    </button>
-                    <button
-                      onClick={() => setTerminalInput("GCI-REG-2026-PB291")}
-                      className={`text-left p-2.5 rounded-xl border text-[10px] font-mono transition-all ${
-                        terminalInput === "GCI-REG-2026-PB291" 
-                          ? "border-emerald-500 bg-emerald-50/50 text-emerald-800 font-bold" 
-                          : "border-slate-100 hover:bg-slate-50 text-slate-600"
-                      }`}
-                    >
-                      📄 GCI-REG-2026-PB291 (Malwa Biogas)
-                    </button>
+            <div className="md:col-span-5 flex flex-col justify-between">
+              <TiltCard 
+                className="bg-white border border-slate-200/80 p-6 shadow-md flex flex-col justify-between h-full space-y-6"
+                shadowColor="rgba(16, 185, 129, 0.05)"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Terminal className="w-5 h-5 text-emerald-600" />
+                    <h3 className="text-sm font-bold text-slate-800">Scanner Controller</h3>
+                  </div>
+                  
+                  <div className="space-y-2 text-xs">
+                    <label className="text-slate-500 block font-semibold">Select Certificate Registry ID</label>
+                    <div className="grid grid-cols-1 gap-2">
+                      <button
+                        onClick={() => setTerminalInput("GCI-REG-2026-OD812")}
+                        className={`text-left p-2.5 rounded-xl border text-[10px] font-mono transition-all ${
+                          terminalInput === "GCI-REG-2026-OD812" 
+                            ? "border-emerald-500 bg-emerald-50/50 text-emerald-800 font-bold" 
+                            : "border-slate-100 hover:bg-slate-50 text-slate-600"
+                        }`}
+                      >
+                        📄 GCI-REG-2026-OD812 (Mahanadi Mangroves)
+                      </button>
+                      <button
+                        onClick={() => setTerminalInput("GCI-REG-2026-PB291")}
+                        className={`text-left p-2.5 rounded-xl border text-[10px] font-mono transition-all ${
+                          terminalInput === "GCI-REG-2026-PB291" 
+                            ? "border-emerald-500 bg-emerald-50/50 text-emerald-800 font-bold" 
+                            : "border-slate-100 hover:bg-slate-50 text-slate-600"
+                        }`}
+                      >
+                        📄 GCI-REG-2026-PB291 (Malwa Biogas)
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <button
-                onClick={runRegistryAudit}
-                disabled={terminalStatus === "running"}
-                className="w-full py-3 bg-[#0B3D2E] hover:bg-emerald-950 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-colors shadow-md flex items-center justify-center gap-1.5"
-              >
-                <Activity className="w-4 h-4 text-white" />
-                Initialize Laser Scanner
-              </button>
+                <button
+                  onClick={runRegistryAudit}
+                  disabled={terminalStatus === "running"}
+                  className="w-full py-3 bg-[#0B3D2E] hover:bg-emerald-950 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-colors shadow-md btn-premium flex items-center justify-center gap-1.5"
+                >
+                  <Activity className="w-4 h-4 text-white" />
+                  Initialize Laser Scanner
+                </button>
+              </TiltCard>
             </div>
 
             {/* Right Scanner Terminal (Frosted glass light layout) */}
@@ -442,7 +487,7 @@ export default function Home() {
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
             <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Adaptable Platform</span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#064E3B] tracking-tight">Direct Trading Portal Preview</h2>
-            <p className="text-slate-500 text-xs max-w-md mx-auto font-medium">
+            <p className="text-slate-500 text-xs max-w-md mx-auto font-bold">
               EcoVault provides verified interfaces for both voluntary buyers and local project developers.
             </p>
 
@@ -470,135 +515,140 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Showcase Panel */}
-          <div className="max-w-5xl mx-auto bg-white border border-slate-200/80 rounded-3xl p-8 shadow-md min-h-[380px]">
-            <AnimatePresence mode="wait">
-              {activeView === "buyer" ? (
-                <motion.div
-                  key="buyer-panel"
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 12 }}
-                  transition={{ duration: 0.2 }}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
-                >
-                  <div className="space-y-5 text-xs text-slate-500">
-                    <span className="text-[9px] uppercase font-bold text-emerald-600 block">Corporate Buyers</span>
-                    <h3 className="text-xl font-extrabold text-slate-800 tracking-tight leading-snug">
-                      Purchase verified voluntary credits with zero greenwashing risk.
-                    </h3>
-                    <p className="leading-relaxed font-medium">
-                      Corporate buyers need credits to hit carbon net-zero targets. However, greenwashing represents severe brand risks. EcoVault requires GCI registry verification and third-party ACVA audits, giving you complete trust.
-                    </p>
-                    <ul className="space-y-2 text-slate-600 font-medium">
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                        Explore credits on our Interactive 3D Globe map
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                        AI-generated carbon footprint offset insights
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                        Escrow protection: capital released only upon transfer verification
-                      </li>
-                    </ul>
-                    <button
-                      onClick={() => handleChoosePersona("buyer")}
-                      className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors flex items-center gap-1 shadow"
-                    >
-                      Enter Buyer Portal
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+          {/* Showcase Panel with 3D Tilt Wrapper */}
+          <div className="max-w-5xl mx-auto">
+            <TiltCard 
+              className="bg-white border border-slate-200/80 p-8 shadow-md min-h-[380px]"
+              shadowColor="rgba(16, 185, 129, 0.05)"
+            >
+              <AnimatePresence mode="wait">
+                {activeView === "buyer" ? (
+                  <motion.div
+                    key="buyer-panel"
+                    initial={{ opacity: 0, x: -15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 15 }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
+                  >
+                    <div className="space-y-5 text-xs text-slate-500">
+                      <span className="text-[9px] uppercase font-bold text-emerald-600 block">Corporate Buyers</span>
+                      <h3 className="text-xl font-extrabold text-slate-800 tracking-tight leading-snug">
+                        Purchase verified voluntary credits with zero greenwashing risk.
+                      </h3>
+                      <p className="leading-relaxed font-bold">
+                        Corporate buyers need credits to hit carbon net-zero targets. However, greenwashing represents severe brand risks. EcoVault requires GCI registry verification and third-party ACVA audits, giving you complete trust.
+                      </p>
+                      <ul className="space-y-2 text-slate-600 font-bold">
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                          Explore credits on our Interactive 3D Globe map
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                          AI-generated carbon footprint offset insights
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                          Escrow protection: capital released only upon transfer verification
+                        </li>
+                      </ul>
+                      <button
+                        onClick={() => handleChoosePersona("buyer")}
+                        className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors flex items-center gap-1 shadow btn-premium"
+                      >
+                        Enter Buyer Portal
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
 
-                  {/* UI Preview mockup */}
-                  <div className="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4">
-                    <div className="flex justify-between items-center text-xs">
-                      <strong className="text-slate-800">Tata ESG Group Portfolio</strong>
-                      <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">14,200 t Offset</span>
+                    {/* UI Preview mockup */}
+                    <div className="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4">
+                      <div className="flex justify-between items-center text-xs">
+                        <strong className="text-slate-800">Tata ESG Group Portfolio</strong>
+                        <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">14,200 t Offset</span>
+                      </div>
+                      <hr className="border-slate-200" />
+                      <div className="space-y-3 text-xs text-slate-500 font-bold">
+                        <div className="flex justify-between">
+                          <span>Offset Target:</span>
+                          <strong className="text-slate-800">50,000 tons</strong>
+                        </div>
+                        <div className="w-full bg-slate-200 rounded-full h-1.5">
+                          <div className="bg-emerald-600 h-1.5 rounded-full" style={{ width: "28%" }}></div>
+                        </div>
+                        <div className="bg-white p-2.5 rounded-lg border border-slate-100 font-mono text-[9px] text-slate-400">
+                          // Latest Certificate: EV-CERT-OD812-4029
+                        </div>
+                      </div>
                     </div>
-                    <hr className="border-slate-200" />
-                    <div className="space-y-3 text-xs text-slate-500 font-semibold">
-                      <div className="flex justify-between">
-                        <span>Offset Target:</span>
-                        <strong className="text-slate-800">50,000 tons</strong>
-                      </div>
-                      <div className="w-full bg-slate-200 rounded-full h-1.5">
-                        <div className="bg-emerald-600 h-1.5 rounded-full" style={{ width: "28%" }}></div>
-                      </div>
-                      <div className="bg-white p-2.5 rounded-lg border border-slate-100 font-mono text-[9px] text-slate-400">
-                        // Latest Certificate: EV-CERT-OD812-4029
-                      </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="seller-panel"
+                    initial={{ opacity: 0, x: 15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -15 }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
+                  >
+                    <div className="space-y-5 text-xs text-slate-500">
+                      <span className="text-[9px] uppercase font-bold text-emerald-600 block">Project Developers</span>
+                      <h3 className="text-xl font-extrabold text-slate-800 tracking-tight leading-snug">
+                        Your Projects. Verified Once. Sold Fair.
+                      </h3>
+                      <p className="leading-relaxed font-bold">
+                        Sellers of voluntary offsets (forestry, biogas) face opacity and lack broker access, losing huge margins. EcoVault provides direct access to corporate buyers, locks assets safely in digital vaults, and settles payouts inside 48 hours.
+                      </p>
+                      <ul className="space-y-2 text-slate-600 font-bold">
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
+                          AI Reference Price Assistant to optimize listings
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
+                          Escrow eLock: direct payouts settled within 48h
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
+                          One-time eKYC and GCI registry matching
+                        </li>
+                      </ul>
+                      <button
+                        onClick={() => handleChoosePersona("seller")}
+                        className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors flex items-center gap-1 shadow btn-premium"
+                      >
+                        Enter Seller Portal
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
                     </div>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="seller-panel"
-                  initial={{ opacity: 0, x: 12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -12 }}
-                  transition={{ duration: 0.2 }}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
-                >
-                  <div className="space-y-5 text-xs text-slate-500">
-                    <span className="text-[9px] uppercase font-bold text-emerald-600 block">Project Developers</span>
-                    <h3 className="text-xl font-extrabold text-slate-800 tracking-tight leading-snug">
-                      Your Projects. Verified Once. Sold Fair.
-                    </h3>
-                    <p className="leading-relaxed font-medium">
-                      Sellers of voluntary offsets (forestry, biogas) face opacity and lack broker access, losing huge margins. EcoVault provides direct access to corporate buyers, locks assets safely in digital vaults, and settles payouts inside 48 hours.
-                    </p>
-                    <ul className="space-y-2 text-slate-600 font-medium">
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
-                        AI Reference Price Assistant to optimize listings
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
-                        Escrow eLock: direct payouts settled within 48h
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
-                        One-time eKYC and GCI registry matching
-                      </li>
-                    </ul>
-                    <button
-                      onClick={() => handleChoosePersona("seller")}
-                      className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors flex items-center gap-1 shadow"
-                    >
-                      Enter Seller Portal
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
 
-                  {/* UI Preview mockup */}
-                  <div className="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4">
-                    <div className="flex justify-between items-center text-xs">
-                      <strong className="text-slate-800">Rakesh Forestry Dashboard</strong>
-                      <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Locked Vault</span>
+                    {/* UI Preview mockup */}
+                    <div className="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4">
+                      <div className="flex justify-between items-center text-xs">
+                        <strong className="text-slate-800">Rakesh Forestry Dashboard</strong>
+                        <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Locked Vault</span>
+                      </div>
+                      <hr className="border-slate-200" />
+                      <div className="space-y-3 text-xs text-slate-500 font-bold">
+                        <div className="flex justify-between">
+                          <span>Total Payouts:</span>
+                          <strong className="text-slate-800">₹7,87,500</strong>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Escrow Locked Bids:</span>
+                          <strong className="text-emerald-600">2 Pending Offers</strong>
+                        </div>
+                        <div className="bg-white text-emerald-700 border border-emerald-100 p-2 rounded-lg text-[9px] flex items-center justify-between font-bold">
+                          <span>Odisha Community Forestry</span>
+                          <span>Locked in Custody ✅</span>
+                        </div>
+                      </div>
                     </div>
-                    <hr className="border-slate-200" />
-                    <div className="space-y-3 text-xs text-slate-500 font-semibold">
-                      <div className="flex justify-between">
-                        <span>Total Payouts:</span>
-                        <strong className="text-slate-800">₹7,87,500</strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Escrow Locked Bids:</span>
-                        <strong className="text-emerald-600">2 Pending Offers</strong>
-                      </div>
-                      <div className="bg-white text-emerald-700 border border-emerald-100 p-2 rounded-lg text-[9px] flex items-center justify-between font-bold">
-                        <span>Odisha Community Forestry</span>
-                        <span>Locked in Custody ✅</span>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </TiltCard>
           </div>
         </div>
       </section>
@@ -609,14 +659,14 @@ export default function Home() {
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
             <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Platform Scaling</span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#064E3B] tracking-tight">Compliance Roadmap 2026/27</h2>
-            <p className="text-slate-500 text-xs max-w-sm mx-auto leading-relaxed font-medium">
+            <p className="text-slate-500 text-xs max-w-sm mx-auto leading-relaxed font-bold">
               Paving the path towards regulated compliance exchanges, CBAM exporting, and tokenized carbon registries.
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto bg-slate-50/50 border border-slate-200 rounded-3xl p-8 shadow-sm text-xs relative overflow-hidden">
-            <div className="space-y-8 font-medium">
-              <div className="flex gap-4 items-start">
+            <div className="space-y-8 font-bold">
+              <div className="flex gap-4 items-start animate-fadeIn">
                 <span className="px-3 py-1 bg-emerald-100 text-emerald-800 font-bold rounded-lg mt-0.5 uppercase tracking-wide text-[9px] border border-emerald-200">
                   Phase 1
                 </span>
@@ -625,13 +675,13 @@ export default function Home() {
                     Voluntary Trust Infrastructure
                     <span className="text-[9px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold shadow-sm">ACTIVE</span>
                   </h4>
-                  <p className="text-slate-500 mt-1 leading-relaxed">
+                  <p className="text-slate-500 mt-1 leading-relaxed font-medium">
                     Establishing registry handshake verification logs, direct eKYC developer validation, and the voluntary credit escrow custody shield.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4 items-start border-t border-slate-200/60 pt-6">
+              <div className="flex gap-4 items-start border-t border-slate-200/60 pt-6 animate-fadeIn">
                 <span className="px-3 py-1 bg-sky-50 text-sky-700 font-bold rounded-lg mt-0.5 uppercase tracking-wide text-[9px] border border-sky-200">
                   Phase 2
                 </span>
@@ -640,13 +690,13 @@ export default function Home() {
                     CCTS & CBAM Integrations
                     <span className="text-[9px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full font-bold">2026 ROADMAP</span>
                   </h4>
-                  <p className="text-slate-500 mt-1 leading-relaxed">
+                  <p className="text-slate-500 mt-1 leading-relaxed font-medium">
                     Adding CCTS regulated market support and carbon boundary pricing calculations for exporters (steel, iron) seeking ESG credit validation.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4 items-start border-t border-slate-200/60 pt-6">
+              <div className="flex gap-4 items-start border-t border-slate-200/60 pt-6 animate-fadeIn">
                 <span className="px-3 py-1 bg-amber-50 text-amber-700 font-bold rounded-lg mt-0.5 uppercase tracking-wide text-[9px] border border-amber-200">
                   Phase 3
                 </span>
@@ -655,7 +705,7 @@ export default function Home() {
                     Autonomous Satellite MRV
                     <span className="text-[9px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">2027 FUTURE</span>
                   </h4>
-                  <p className="text-slate-500 mt-1 leading-relaxed">
+                  <p className="text-slate-500 mt-1 leading-relaxed font-medium">
                     Integrating automated Lidar biomass density telemetry and blockchain smart contract escrow vaults to eliminate brokerage entirely.
                   </p>
                 </div>

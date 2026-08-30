@@ -92,22 +92,41 @@ export default function GlobeComponent({ interactive = true, onSelectProject, mi
     }
   }, [activeProject, mini]);
 
-  // Auto-rotate setup when no project is active
+  // Custom lights and controls setup
   useEffect(() => {
     if (!globeRef.current) return;
+    
+    // Configure OrbitControls damping & inertia
     const controls = globeRef.current.controls();
     if (controls) {
-      controls.autoRotate = !activeProject;
-      controls.autoRotateSpeed = 0.6;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = activeProject ? 0.15 : 0.5;
       controls.enableZoom = interactive;
       controls.enablePan = interactive;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+    }
+
+    // Set high-contrast day/night lighting using Three.js scenes
+    const scene = globeRef.current.scene();
+    if (scene) {
+      // Darken ambient light so night textures pop
+      const ambient = scene.children.find((c: any) => c.isAmbientLight);
+      if (ambient) {
+        ambient.intensity = 0.35;
+      }
+      
+      // Strengthen directional light for sharp day/night terminator line
+      const directional = scene.children.find((c: any) => c.isDirectionalLight);
+      if (directional) {
+        directional.intensity = 2.0;
+        directional.position.set(250, 150, 200);
+      }
     }
   }, [activeProject, interactive]);
 
-  // Choose earth texture based on the app theme context
-  const globeImage = globeTheme === "dark" 
-    ? "//unpkg.com/three-globe/example/img/earth-dark.jpg"
-    : "//unpkg.com/three-globe/example/img/earth-blue-marble.jpg";
+  // Use natural earth night lights texture
+  const globeImage = "//unpkg.com/three-globe/example/img/earth-night.jpg";
 
   return (
     <div ref={containerRef} className="w-full h-full relative flex items-center justify-center overflow-hidden">
@@ -120,7 +139,8 @@ export default function GlobeComponent({ interactive = true, onSelectProject, mi
         bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
         backgroundColor="rgba(0,0,0,0)"
         showAtmosphere={true}
-        atmosphereColor={globeTheme === "dark" ? "#0F3C2C" : "#38BDF8"}
+        atmosphereColor="#10B981"
+        atmosphereAltitude={0.25}
         
         // Points (Pins)
         pointsData={pointsData}

@@ -19,6 +19,7 @@ import {
   Award
 } from "lucide-react";
 import Link from "next/link";
+import TiltCard from "@/components/TiltCard";
 
 export default function BuyerDashboard() {
   const { purchasedCredits, userProfile } = useApp();
@@ -78,73 +79,81 @@ export default function BuyerDashboard() {
         {/* Stats Cards Row (Enhanced Grid cards) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Card 1 */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Total Tons Offset</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-slate-800">{totalOffsetTons.toLocaleString()}</span>
-              <span className="text-xs text-slate-400 font-semibold">Tons CO₂e</span>
+          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={5}>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 space-y-2 h-full">
+              <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Total Tons Offset</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-black text-slate-800">{totalOffsetTons.toLocaleString()}</span>
+                <span className="text-xs text-slate-400 font-semibold">Tons CO₂e</span>
+              </div>
+              <span className="text-[10px] text-emerald-600 font-medium block">▼ GCI Registry Certified</span>
             </div>
-            <span className="text-[10px] text-emerald-600 font-medium block">▼ GCI Registry Certified</span>
-          </div>
+          </TiltCard>
 
           {/* Card 2: Dynamic Radial Progress Gauge */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center justify-between gap-4">
-            <div className="space-y-1">
-              <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Target Progress</span>
-              <div className="flex items-baseline gap-0.5">
-                <span className="text-2xl font-black text-[#0B3D2E]">{progressPercent}%</span>
-                <span className="text-[10px] text-slate-400 font-semibold">completed</span>
+          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={5}>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 flex items-center justify-between gap-4 h-full">
+              <div className="space-y-1">
+                <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Target Progress</span>
+                <div className="flex items-baseline gap-0.5">
+                  <span className="text-2xl font-black text-[#0B3D2E]">{progressPercent}%</span>
+                  <span className="text-[10px] text-slate-400 font-semibold">completed</span>
+                </div>
+                <span className="text-[9px] text-slate-400 block font-semibold">Goal: {targetTons.toLocaleString()} t</span>
               </div>
-              <span className="text-[9px] text-slate-400 block font-semibold">Goal: {targetTons.toLocaleString()} t</span>
+              
+              {/* SVG Circle Gauge */}
+              <div className="relative w-16 h-16 flex items-center justify-center flex-shrink-0">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r={radius}
+                    fill="transparent"
+                    stroke="#F1F5F9"
+                    strokeWidth="6"
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r={radius}
+                    fill="transparent"
+                    stroke="#10B981"
+                    strokeWidth="6"
+                    strokeDasharray={circumference}
+                    strokeDashoffset={strokeDashoffset}
+                    strokeLinecap="round"
+                    className="transition-all duration-700 ease-out"
+                  />
+                </svg>
+                <div className="absolute text-[8px] font-black text-[#0B3D2E]">{progressPercent}%</div>
+              </div>
             </div>
-            
-            {/* SVG Circle Gauge */}
-            <div className="relative w-16 h-16 flex items-center justify-center flex-shrink-0">
-              <svg className="w-full h-full transform -rotate-90">
-                <circle
-                  cx="32"
-                  cy="32"
-                  r={radius}
-                  fill="transparent"
-                  stroke="#F1F5F9"
-                  strokeWidth="6"
-                />
-                <circle
-                  cx="32"
-                  cy="32"
-                  r={radius}
-                  fill="transparent"
-                  stroke="#10B981"
-                  strokeWidth="6"
-                  strokeDasharray={circumference}
-                  strokeDashoffset={strokeDashoffset}
-                  strokeLinecap="round"
-                  className="transition-all duration-700 ease-out"
-                />
-              </svg>
-              <div className="absolute text-[8px] font-black text-[#0B3D2E]">{progressPercent}%</div>
-            </div>
-          </div>
+          </TiltCard>
 
           {/* Card 3 */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Average Credit Price</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-slate-800">₹{averagePrice}</span>
-              <span className="text-xs text-slate-400 font-semibold">per Ton CO₂e</span>
+          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={5}>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 space-y-2 h-full">
+              <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Average Credit Price</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-black text-slate-800">₹{averagePrice}</span>
+                <span className="text-xs text-slate-400 font-semibold">per Ton CO₂e</span>
+              </div>
+              <span className="text-[10px] text-slate-500 font-medium block">Compared to market: -4.2%</span>
             </div>
-            <span className="text-[10px] text-slate-500 font-medium block">Compared to market: -4.2%</span>
-          </div>
+          </TiltCard>
 
           {/* Card 4 */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Verification Rate</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-slate-800">100%</span>
-              <span className="text-xs text-emerald-600 font-semibold">ACVA Audited</span>
+          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={5}>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 space-y-2 h-full">
+              <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Verification Rate</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-black text-slate-800">100%</span>
+                <span className="text-xs text-emerald-600 font-semibold">ACVA Audited</span>
+              </div>
+              <span className="text-[10px] text-slate-500 font-medium block">Zero Greenwash Incidents</span>
             </div>
-            <span className="text-[10px] text-slate-500 font-medium block">Zero Greenwash Incidents</span>
-          </div>
+          </TiltCard>
         </div>
 
         {/* Dashboard Grid (Insights on Left, Assets on Right) */}
