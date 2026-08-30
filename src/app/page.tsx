@@ -9,6 +9,7 @@ import Logo from "@/components/Logo";
 import InteractiveGlobe from "@/components/InteractiveGlobe";
 import AIChatDrawer from "@/components/AIChatDrawer";
 import TiltCard from "@/components/TiltCard";
+import MagneticButton from "@/components/MagneticButton";
 import { 
   ShieldCheck, 
   ArrowRight, 
@@ -181,14 +182,14 @@ export default function Home() {
   return (
     <div ref={targetRef} className="min-h-screen flex flex-col bg-white font-sans overflow-x-hidden">
       
-      {/* Light-Themed Transaction Marquee Ticker */}
+      {/* Light-Themed Transaction Marquee Ticker with smooth edge fades */}
       <div className="bg-slate-50 border-b border-slate-200/60 text-slate-600 py-3 overflow-hidden text-[9px] font-mono tracking-wider select-none relative z-50">
-        <div className="absolute left-0 top-0 bottom-0 w-36 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-36 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute left-0 top-0 bottom-0 w-44 bg-gradient-to-r from-slate-50 via-slate-50/80 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-44 bg-gradient-to-l from-slate-50 via-slate-50/80 to-transparent z-10 pointer-events-none" />
         <div className="animate-marquee whitespace-nowrap flex gap-12 items-center">
           {[...mockMarqueeLog, ...mockMarqueeLog].map((log, idx) => (
             <div key={idx} className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span>{log}</span>
             </div>
           ))}
@@ -197,7 +198,7 @@ export default function Home() {
 
       <Navbar />
 
-      {/* Hero Section (Apple-style Parallax + Animated Gradient Mesh & Noise) */}
+      {/* Hero Section (Apple/Stripe Parallax + Animated Gradient Mesh & Noise) */}
       <section 
         ref={heroRef}
         onMouseMove={handleHeroMouseMove}
@@ -210,7 +211,7 @@ export default function Home() {
           style={{ y: yFloatingPill1, x: cursorTransX }}
           className="absolute top-20 right-16 hidden lg:flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200/60 shadow-lg rounded-2xl text-[10px] font-extrabold text-slate-700 select-none z-25 cursor-default"
         >
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
           Escrow: ₹1.2 Cr Safe Locked
         </motion.div>
 
@@ -237,7 +238,7 @@ export default function Home() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               >
                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-emerald-50 text-emerald-800 text-[10px] font-extrabold rounded-full border border-emerald-200/60 mb-5 shadow-sm">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -259,7 +260,7 @@ export default function Home() {
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
               >
                 <TiltCard 
                   className="bg-white/90 backdrop-blur-md p-6 border border-slate-200/80 text-slate-600 space-y-4 shadow-xl"
@@ -333,19 +334,20 @@ export default function Home() {
 
                   <div className="flex items-center justify-between pt-1">
                     <span className="text-[9px] text-slate-400 font-bold">Recommended: {metrics.forestryRatio}% Forestry / {metrics.biogasRatio}% Biogas</span>
-                    <button
+                    <MagneticButton
+                      variant="primary"
                       onClick={handleApplyCalculatorSplit}
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-[10px] transition-colors shadow-md btn-premium flex items-center gap-1"
+                      className="px-4 py-2 text-[10px]"
                     >
                       Apply Split
                       <ArrowRight className="w-3 h-3" />
-                    </button>
+                    </MagneticButton>
                   </div>
                 </TiltCard>
               </motion.div>
             </div>
 
-            {/* Right Column: Globe Area (Bleeds off screen like Stripe, responds to mouse movement) */}
+            {/* Right Column: Globe Area (Bleeds off screen like Stripe/Lusion, responds to mouse movement) */}
             <div className="lg:col-span-6 flex justify-center relative w-full h-[400px] lg:h-[550px] overflow-visible">
               <motion.div 
                 style={{ x: globeTransX, y: globeTransY }}
@@ -416,14 +418,15 @@ export default function Home() {
                   </div>
                 </div>
 
-                <button
+                <MagneticButton
+                  variant="secondary"
                   onClick={runRegistryAudit}
                   disabled={terminalStatus === "running"}
-                  className="w-full py-3 bg-[#0B3D2E] hover:bg-emerald-950 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-colors shadow-md btn-premium flex items-center justify-center gap-1.5"
+                  className="w-full py-3 text-xs"
                 >
                   <Activity className="w-4 h-4 text-white" />
                   Initialize Laser Scanner
-                </button>
+                </MagneticButton>
               </TiltCard>
             </div>
 
@@ -431,7 +434,7 @@ export default function Home() {
             <div className="md:col-span-7 bg-[#F8FAF9] rounded-3xl p-6 shadow-lg border border-slate-200/80 relative overflow-hidden flex flex-col justify-between min-h-[300px]">
               
               {/* Laser Sweep Overlay Line */}
-              {terminalStatus === "running" && <div className="laser-line"></div>}
+              {terminalStatus === "running" && <div className="laser-line" />}
 
               {/* Console log output (Clean light monospace text) */}
               <div className="space-y-3 font-mono text-[10px] text-slate-600 select-none overflow-y-auto max-h-[220px]">
@@ -458,19 +461,19 @@ export default function Home() {
               {/* Audit checks checklist display */}
               <div className="border-t border-slate-200 pt-4 mt-4 grid grid-cols-2 gap-4 text-[9px] font-mono text-slate-500">
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 3 ? "bg-emerald-500" : "bg-slate-300"}`}></span>
+                  <span className={`w-2 h-2 rounded-full ${activeStep >= 3 ? "bg-emerald-500" : "bg-slate-300"}`} />
                   <span>eKYC Verified</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 4 ? "bg-emerald-500" : "bg-slate-300"}`}></span>
+                  <span className={`w-2 h-2 rounded-full ${activeStep >= 4 ? "bg-emerald-500" : "bg-slate-300"}`} />
                   <span>Registry match</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 5 ? "bg-emerald-500" : "bg-slate-300"}`}></span>
+                  <span className={`w-2 h-2 rounded-full ${activeStep >= 5 ? "bg-emerald-500" : "bg-slate-300"}`} />
                   <span>Duplicate check clear</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 6 ? "bg-emerald-500" : "bg-slate-300"}`}></span>
+                  <span className={`w-2 h-2 rounded-full ${activeStep >= 6 ? "bg-emerald-500" : "bg-slate-300"}`} />
                   <span>Satellite Lidar pass</span>
                 </div>
               </div>
@@ -553,13 +556,14 @@ export default function Home() {
                           Escrow protection: capital released only upon transfer verification
                         </li>
                       </ul>
-                      <button
+                      <MagneticButton
+                        variant="primary"
                         onClick={() => handleChoosePersona("buyer")}
-                        className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors flex items-center gap-1 shadow btn-premium"
+                        className="px-6 py-2.5 text-xs"
                       >
                         Enter Buyer Portal
                         <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
+                      </MagneticButton>
                     </div>
 
                     {/* UI Preview mockup */}
@@ -575,7 +579,7 @@ export default function Home() {
                           <strong className="text-slate-800">50,000 tons</strong>
                         </div>
                         <div className="w-full bg-slate-200 rounded-full h-1.5">
-                          <div className="bg-emerald-600 h-1.5 rounded-full" style={{ width: "28%" }}></div>
+                          <div className="bg-emerald-600 h-1.5 rounded-full" style={{ width: "28%" }} />
                         </div>
                         <div className="bg-white p-2.5 rounded-lg border border-slate-100 font-mono text-[9px] text-slate-400">
                           // Latest Certificate: EV-CERT-OD812-4029
@@ -614,13 +618,14 @@ export default function Home() {
                           One-time eKYC and GCI registry matching
                         </li>
                       </ul>
-                      <button
+                      <MagneticButton
+                        variant="primary"
                         onClick={() => handleChoosePersona("seller")}
-                        className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors flex items-center gap-1 shadow btn-premium"
+                        className="px-6 py-2.5 text-xs"
                       >
                         Enter Seller Portal
                         <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
+                      </MagneticButton>
                     </div>
 
                     {/* UI Preview mockup */}

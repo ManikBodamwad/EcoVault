@@ -23,6 +23,8 @@ import {
   ExternalLink,
   Award
 } from "lucide-react";
+import TiltCard from "@/components/TiltCard";
+import MagneticButton from "@/components/MagneticButton";
 
 export default function ProjectDetails() {
   const { id } = useParams();
@@ -390,130 +392,133 @@ export default function ProjectDetails() {
             <div className="lg:col-span-5 space-y-6">
               
               {/* Purchase Card */}
-              <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-md space-y-5">
-                <div>
-                  <span className="text-[8px] text-emerald-600 block uppercase font-bold tracking-wider leading-none mb-1">Escrow Purchase</span>
-                  <h3 className="text-base font-black text-slate-800">Secure Capital Offset</h3>
-                </div>
+              <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.07)" maxTilt={3}>
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-md space-y-5">
+                  <div>
+                    <span className="text-[8px] text-emerald-600 block uppercase font-bold tracking-wider leading-none mb-1">Escrow Purchase</span>
+                    <h3 className="text-base font-black text-slate-800">Secure Capital Offset</h3>
+                  </div>
 
-                <div className="space-y-4">
-                  {/* Select Volume Slider Input */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-xs text-slate-600 font-semibold">
-                      <span>Enter Offset Volume</span>
-                      <span>Max Available: {project.volume.toLocaleString()} Tons</span>
-                    </div>
-                    
-                    {/* Range slider for volume selection */}
-                    <input
-                      type="range"
-                      min="50"
-                      max={project.volume}
-                      step="50"
-                      value={purchaseVolume}
-                      onChange={(e) => setPurchaseVolume(parseInt(e.target.value, 10))}
-                      className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-500 mb-2"
-                    />
-
-                    <div className="relative">
+                  <div className="space-y-4">
+                    {/* Select Volume Slider Input */}
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-xs text-slate-600 font-semibold">
+                        <span>Enter Offset Volume</span>
+                        <span>Max Available: {project.volume.toLocaleString()} Tons</span>
+                      </div>
+                      
+                      {/* Range slider for volume selection */}
                       <input
-                        type="number"
-                        min="1"
+                        type="range"
+                        min="50"
                         max={project.volume}
+                        step="50"
                         value={purchaseVolume}
-                        onChange={(e) => setPurchaseVolume(Math.min(project.volume, Math.max(1, parseInt(e.target.value, 10) || 0)))}
-                        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50 font-bold"
+                        onChange={(e) => setPurchaseVolume(parseInt(e.target.value, 10))}
+                        className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-500 mb-2"
                       />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 font-semibold">Tons CO₂e</span>
-                    </div>
-                  </div>
 
-                  {/* Calculations */}
-                  <div className="space-y-2 text-xs border-t border-slate-100 pt-3">
-                    <div className="flex justify-between text-slate-400">
-                      <span>Carbon Offset Cost (₹{project.price}/t)</span>
-                      <span className="font-bold text-slate-700">₹{subtotal.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-slate-400">
-                      <span>EcoVault Settlement Fee (2%)</span>
-                      <span className="font-bold text-slate-700">₹{transactionFee.toLocaleString()}</span>
-                    </div>
-                    <hr className="border-slate-100" />
-                    <div className="flex justify-between text-sm text-[#0B3D2E] font-extrabold">
-                      <span>Total Payout Cost</span>
-                      <span>₹{totalCost.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Submit button */}
-                <button
-                  onClick={handleCheckoutSubmit}
-                  className="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl text-xs transition-colors shadow flex items-center justify-center gap-1.5"
-                >
-                  <Lock className="w-3.5 h-3.5" />
-                  Lock Escrow & Purchase
-                </button>
-
-                {/* AI Price Negotiation Button */}
-                <div className="text-center">
-                  <button
-                    onClick={() => {
-                      setNegotiating(!negotiating);
-                      setBidStatus("idle");
-                      setBidFeedback("");
-                    }}
-                    className="text-[10px] text-emerald-600 hover:text-emerald-700 font-bold border-b border-emerald-600 border-dotted"
-                  >
-                    Negotiate terms with developer
-                  </button>
-                </div>
-
-                {/* Negotiation drawer inside checkout */}
-                {negotiating && (
-                  <div className="mt-4 p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100 text-xs space-y-3 animate-slideDown">
-                    <div>
-                      <strong className="text-[#0B3D2E] flex items-center gap-1">
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                        EcoVault AI Negotiation Agent
-                      </strong>
-                      <span className="text-[9px] text-slate-400 block mt-0.5">Submit your bid to developer's automated pricing portal.</span>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <div className="relative flex-1">
+                      <div className="relative">
                         <input
                           type="number"
-                          value={bidPrice}
-                          onChange={(e) => setBidPrice(parseInt(e.target.value, 10) || 0)}
-                          className="w-full border border-emerald-200 rounded-lg px-2.5 py-1.5 text-xs bg-white font-semibold"
+                          min="1"
+                          max={project.volume}
+                          value={purchaseVolume}
+                          onChange={(e) => setPurchaseVolume(Math.min(project.volume, Math.max(1, parseInt(e.target.value, 10) || 0)))}
+                          className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50 font-bold"
                         />
-                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-slate-400">₹/t</span>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 font-semibold">Tons CO₂e</span>
                       </div>
-                      <button
-                        onClick={handleNegotiationSubmit}
-                        disabled={bidStatus === "submitting"}
-                        className="px-4 py-1.5 bg-[#0B3D2E] hover:bg-[#0B3D2E]/90 text-white font-bold rounded-lg text-xs transition-colors disabled:opacity-50"
-                      >
-                        Submit Bid
-                      </button>
                     </div>
 
-                    {bidStatus === "submitting" && (
-                      <div className="flex items-center gap-1 text-[9px] text-slate-400">
-                        <Clock className="w-3.5 h-3.5 animate-spin text-emerald-600" />
-                        <span>AI Negotiation Agent analyzing bid floor...</span>
+                    {/* Calculations */}
+                    <div className="space-y-2 text-xs border-t border-slate-100 pt-3">
+                      <div className="flex justify-between text-slate-400">
+                        <span>Carbon Offset Cost (₹{project.price}/t)</span>
+                        <span className="font-bold text-slate-700">₹{subtotal.toLocaleString()}</span>
                       </div>
-                    )}
-
-                    {bidStatus === "replied" && (
-                      <div className="bg-white border border-emerald-100 p-2.5 rounded-lg text-[10px] text-slate-600 leading-normal">
-                        {bidFeedback}
+                      <div className="flex justify-between text-slate-400">
+                        <span>EcoVault Settlement Fee (2%)</span>
+                        <span className="font-bold text-slate-700">₹{transactionFee.toLocaleString()}</span>
                       </div>
-                    )}
+                      <hr className="border-slate-100" />
+                      <div className="flex justify-between text-sm text-[#0B3D2E] font-extrabold">
+                        <span>Total Payout Cost</span>
+                        <span>₹{totalCost.toLocaleString()}</span>
+                      </div>
+                    </div>
                   </div>
-                )}
-              </div>
+
+                  {/* Submit button */}
+                  <MagneticButton
+                    variant="primary"
+                    onClick={handleCheckoutSubmit}
+                    className="w-full py-3 text-xs"
+                  >
+                    <Lock className="w-3.5 h-3.5" />
+                    Lock Escrow & Purchase
+                  </MagneticButton>
+
+                  {/* AI Price Negotiation Button */}
+                  <div className="text-center">
+                    <button
+                      onClick={() => {
+                        setNegotiating(!negotiating);
+                        setBidStatus("idle");
+                        setBidFeedback("");
+                      }}
+                      className="text-[10px] text-emerald-600 hover:text-emerald-700 font-bold border-b border-emerald-600 border-dotted"
+                    >
+                      Negotiate terms with developer
+                    </button>
+                  </div>
+
+                  {/* Negotiation drawer inside checkout */}
+                  {negotiating && (
+                    <div className="mt-4 p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100 text-xs space-y-3 animate-slideDown">
+                      <div>
+                        <strong className="text-[#0B3D2E] flex items-center gap-1">
+                          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                          EcoVault AI Negotiation Agent
+                        </strong>
+                        <span className="text-[9px] text-slate-400 block mt-0.5">Submit your bid to developer's automated pricing portal.</span>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <div className="relative flex-1">
+                          <input
+                            type="number"
+                            value={bidPrice}
+                            onChange={(e) => setBidPrice(parseInt(e.target.value, 10) || 0)}
+                            className="w-full border border-emerald-200 rounded-lg px-2.5 py-1.5 text-xs bg-white font-semibold"
+                          />
+                          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-slate-400">₹/t</span>
+                        </div>
+                        <button
+                          onClick={handleNegotiationSubmit}
+                          disabled={bidStatus === "submitting"}
+                          className="px-4 py-1.5 bg-[#0B3D2E] hover:bg-[#0B3D2E]/90 text-white font-bold rounded-lg text-xs transition-colors disabled:opacity-50"
+                        >
+                          Submit Bid
+                        </button>
+                      </div>
+
+                      {bidStatus === "submitting" && (
+                        <div className="flex items-center gap-1 text-[9px] text-slate-400">
+                          <Clock className="w-3.5 h-3.5 animate-spin text-emerald-600" />
+                          <span>AI Negotiation Agent analyzing bid floor...</span>
+                        </div>
+                      )}
+
+                      {bidStatus === "replied" && (
+                        <div className="bg-white border border-emerald-100 p-2.5 rounded-lg text-[10px] text-slate-600 leading-normal">
+                          {bidFeedback}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </TiltCard>
 
               {/* Security Escrow explanation banner */}
               <div className="bg-[#F0FDFA] p-5 rounded-3xl border border-emerald-100 space-y-3">

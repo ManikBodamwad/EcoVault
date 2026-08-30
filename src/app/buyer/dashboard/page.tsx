@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import TiltCard from "@/components/TiltCard";
+import MagneticButton from "@/components/MagneticButton";
 
 export default function BuyerDashboard() {
   const { purchasedCredits, userProfile } = useApp();
@@ -67,12 +68,14 @@ export default function BuyerDashboard() {
             <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Sustainability Portfolio</h1>
             <p className="text-xs text-slate-500 mt-1">Manage offsets, audit certifications, and review environmental impact insights.</p>
           </div>
-          <Link
-            href="/buyer/marketplace"
-            className="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors shadow flex items-center gap-1.5"
-          >
-            Offset More Emissions
-            <ArrowRight className="w-4 h-4" />
+          <Link href="/buyer/marketplace">
+            <MagneticButton
+              variant="primary"
+              className="px-5 py-2 text-xs"
+            >
+              Offset More Emissions
+              <ArrowRight className="w-4 h-4" />
+            </MagneticButton>
           </Link>
         </div>
 
@@ -237,42 +240,44 @@ export default function BuyerDashboard() {
               </div>
 
               {/* Premium Gold/Emerald Certificate Mock */}
-              <div className="bg-gradient-to-b from-[#030704] to-[#0B3D2E] text-white rounded-3xl p-6 border-2 border-yellow-500/20 shadow-xl space-y-6 relative overflow-hidden">
-                <div className="absolute top-2 right-2 w-12 h-12 border-r border-t border-yellow-500/20 rounded-tr-lg"></div>
-                <div className="absolute bottom-2 left-2 w-12 h-12 border-l border-b border-yellow-500/20 rounded-bl-lg"></div>
-                
-                <div className="flex justify-between items-center relative z-10">
-                  <Logo variant="icon" light={true} />
-                  <div className="flex items-center gap-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/25 px-2 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase">
-                    <Award className="w-3 h-3" />
-                    Seal Lock
+              <TiltCard className="w-full" shadowColor="rgba(245, 158, 11, 0.16)" maxTilt={6}>
+                <div className="bg-gradient-to-b from-[#030704] to-[#0B3D2E] text-white rounded-3xl p-6 border-2 border-yellow-500/20 shadow-xl space-y-6 relative overflow-hidden">
+                  <div className="absolute top-2 right-2 w-12 h-12 border-r border-t border-yellow-500/20 rounded-tr-lg" />
+                  <div className="absolute bottom-2 left-2 w-12 h-12 border-l border-b border-yellow-500/20 rounded-bl-lg" />
+                  
+                  <div className="flex justify-between items-center relative z-10">
+                    <Logo variant="icon" light={true} />
+                    <div className="flex items-center gap-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/25 px-2 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase">
+                      <Award className="w-3 h-3" />
+                      Seal Lock
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-4 relative z-10">
-                  <div>
-                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Beneficiary</span>
-                    <strong className="text-xs block text-white">{userProfile?.companyName || "Tata ESG Solutions"}</strong>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-4 relative z-10">
                     <div>
-                      <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Retires</span>
-                      <strong className="text-emerald-400 font-extrabold text-sm">{totalOffsetTons.toLocaleString()} Tons</strong>
+                      <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Beneficiary</span>
+                      <strong className="text-xs block text-white">{userProfile?.companyName || "Tata ESG Solutions"}</strong>
                     </div>
-                    <div>
-                      <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Fee Schema</span>
-                      <strong className="text-slate-200 font-mono text-[9px]">Escrow Protected</strong>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Retires</span>
+                        <strong className="text-emerald-400 font-extrabold text-sm">{totalOffsetTons.toLocaleString()} Tons</strong>
+                      </div>
+                      <div>
+                        <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Fee Schema</span>
+                        <strong className="text-slate-200 font-mono text-[9px]">Escrow Protected</strong>
+                      </div>
                     </div>
+                    
+                    <hr className="border-emerald-800" />
+                    
+                    <p className="text-[8px] text-slate-400 leading-relaxed font-medium">
+                      This document verifies that carbon offsets representing actual biomass absorption have been retired from the market logs, preventing double allocation under voluntary registry frameworks.
+                    </p>
                   </div>
-                  
-                  <hr className="border-emerald-800" />
-                  
-                  <p className="text-[8px] text-slate-400 leading-relaxed font-medium">
-                    This document verifies that carbon offsets representing actual biomass absorption have been retired from the market logs, preventing double allocation under voluntary registry frameworks.
-                  </p>
                 </div>
-              </div>
+              </TiltCard>
 
               {/* Action buttons */}
               <button
