@@ -277,10 +277,10 @@ export default function Marketplace() {
           <div className="lg:sticky lg:top-24 space-y-4">
             
             {/* Globe container card */}
-            <div className="bg-[#030704] rounded-3xl border border-emerald-950/20 overflow-hidden shadow-2xl p-4 flex flex-col justify-between relative group">
+            <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md overflow-hidden p-4 flex flex-col justify-between relative group">
               <div className="absolute top-4 left-4 z-10">
-                <span className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-950/80 text-emerald-400 text-[9px] font-semibold rounded border border-emerald-900/50">
-                  <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                <span className="flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-50 text-emerald-800 text-[9px] font-bold rounded border border-emerald-200">
+                  <Activity className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
                   Live Indian Grid Map
                 </span>
               </div>
@@ -292,24 +292,24 @@ export default function Marketplace() {
 
               {/* Reveal Context Card if a project is focused */}
               {activeProject ? (
-                <div className="bg-[#0B3D2E]/80 backdrop-blur-md p-4 rounded-2xl border border-emerald-500/20 text-white space-y-2.5 animate-fadeIn">
+                <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200 text-slate-800 space-y-2.5 shadow-lg animate-fadeIn">
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold px-2 py-0.5 bg-emerald-600 text-white rounded tracking-wide uppercase">
+                    <span className="text-[9px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded tracking-wide uppercase">
                       {activeProject.type}
                     </span>
-                    <span className="text-[10px] text-emerald-300 font-semibold">{activeProject.location}, India</span>
+                    <span className="text-[10px] text-slate-500 font-semibold">{activeProject.location}, India</span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white tracking-tight">{activeProject.name}</h4>
-                    <p className="text-[10px] text-slate-300 mt-1 leading-relaxed line-clamp-2">
+                    <h4 className="text-sm font-bold text-slate-800 tracking-tight">{activeProject.name}</h4>
+                    <p className="text-[10px] text-slate-500 mt-1 leading-relaxed line-clamp-2 font-medium">
                       {activeProject.description}
                     </p>
                   </div>
-                  <hr className="border-emerald-800" />
+                  <hr className="border-slate-100" />
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none">Market Price</span>
-                      <span className="text-base font-black">₹{activeProject.price}/ton</span>
+                      <span className="text-base font-black text-slate-800">₹{activeProject.price}/ton</span>
                     </div>
                     <Link
                       href={`/buyer/marketplace/${activeProject.id}`}
@@ -321,7 +321,7 @@ export default function Marketplace() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-[#0B3D2E]/30 p-4 rounded-xl border border-emerald-950/20 text-slate-400 text-center text-[10px] leading-relaxed">
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-slate-400 text-center text-[10px] leading-relaxed font-semibold">
                   Select any listing on the left to activate high-accuracy coordinate zoom and view certified project specifications.
                 </div>
               )}

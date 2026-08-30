@@ -249,24 +249,24 @@ export default function SellerDashboard() {
                 {sellerListings.map((l) => (
                   <div 
                     key={l.id} 
-                    className="bg-[#030704] text-white p-4.5 rounded-2xl border border-emerald-500/10 flex items-center justify-between gap-4 relative overflow-hidden shadow-md"
+                    className="bg-slate-50 text-slate-700 p-4.5 rounded-2xl border border-slate-200/80 flex items-center justify-between gap-4 relative overflow-hidden shadow-sm hover:border-emerald-300 transition-colors"
                   >
-                    {/* Glowing server status light */}
+                    {/* Glowing status light */}
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 absolute top-3 right-3 animate-pulse"></div>
                     
-                    <div className="absolute -right-4 -bottom-4 opacity-5">
-                      <FolderLock className="w-16 h-16 text-emerald-400" />
+                    <div className="absolute -right-4 -bottom-4 opacity-5 animate-pulse-slow">
+                      <FolderLock className="w-16 h-16 text-emerald-600" />
                     </div>
                     
                     <div className="space-y-1.5 text-xs relative z-10">
-                      <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
-                        <Lock className="w-3.5 h-3.5" />
+                      <div className="flex items-center gap-1.5 text-emerald-700 font-bold">
+                        <Lock className="w-3.5 h-3.5 text-emerald-600" />
                         Vault Block Custody
                       </div>
-                      <h4 className="font-bold text-white text-[11px] truncate max-w-[150px]">{l.name}</h4>
+                      <h4 className="font-bold text-slate-800 text-[11px] truncate max-w-[150px]">{l.name}</h4>
                       <code className="text-[9px] font-mono text-slate-400 block">{l.certRegistry}</code>
                     </div>
-                    <div className="bg-emerald-950 text-emerald-400 border border-emerald-800/60 px-3 py-1 rounded-lg text-[9px] font-bold font-mono">
+                    <div className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-lg text-[9px] font-bold font-mono">
                       ELOCKED
                     </div>
                   </div>

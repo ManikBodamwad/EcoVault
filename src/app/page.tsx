@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 import Navbar from "@/components/Navbar";
@@ -11,30 +11,33 @@ import AIChatDrawer from "@/components/AIChatDrawer";
 import { 
   ShieldCheck, 
   ArrowRight, 
-  Search, 
   CheckCircle, 
-  TrendingUp, 
-  Lock, 
-  FileCheck, 
-  Database, 
+  Activity, 
+  Terminal, 
   Sparkles, 
-  Landmark, 
-  Globe, 
-  Terminal,
-  Activity,
+  TreePine, 
+  PlaneTakeoff, 
+  Award,
+  Lock,
   Layers,
-  ArrowRightLeft,
-  Flame,
-  TreePine,
-  PlaneTakeoff,
-  Award
+  MapPin
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 
 export default function Home() {
   const { switchPersona, selectProject } = useApp();
   const router = useRouter();
   
+  // Parallax scroll controllers using framer-motion hooks
+  const targetRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+  
+  // Float different layers at different speeds (Figma-like Parallax)
+  const yFloatingPill1 = useTransform(scrollY, [0, 800], [0, -140]);
+  const yFloatingPill2 = useTransform(scrollY, [0, 800], [0, 90]);
+  const yFloatingCard = useTransform(scrollY, [0, 800], [0, -80]);
+  const rotateLeaf = useTransform(scrollY, [0, 1200], [0, 60]);
+
   // Interactive Calculator States
   const [sector, setSector] = useState<"tech" | "manufacturing" | "aviation" | "logistics">("tech");
   const [emissions, setEmissions] = useState<number>(10000);
@@ -137,7 +140,6 @@ export default function Home() {
 
   const handleApplyCalculatorSplit = () => {
     switchPersona("buyer");
-    // Pre-populate filters based on calculator ratios in marketplace
     router.push(`/buyer/marketplace?type=${metrics.forestryRatio > 50 ? "Forestry" : "Biogas"}&price=${metrics.costPerTon + 20}`);
   };
 
@@ -151,14 +153,13 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAF9] font-sans">
+    <div ref={targetRef} className="min-h-screen flex flex-col bg-white font-sans overflow-x-hidden">
       
-      {/* Live Transaction Marquee Ticker */}
-      <div className="bg-[#030704] border-b border-emerald-950/40 text-slate-400 py-2.5 overflow-hidden text-[9px] font-mono tracking-wider select-none relative z-50">
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#030704] to-transparent z-10 pointer-events-none"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#030704] to-transparent z-10 pointer-events-none"></div>
+      {/* Light-Themed Transaction Marquee Ticker */}
+      <div className="bg-slate-50 border-b border-slate-200/60 text-slate-600 py-2.5 overflow-hidden text-[9px] font-mono tracking-wider select-none relative z-50">
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none"></div>
         <div className="animate-marquee whitespace-nowrap flex gap-12 items-center">
-          {/* Double map list to make scrolling loop seamless */}
           {[...mockMarqueeLog, ...mockMarqueeLog].map((log, idx) => (
             <div key={idx} className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -170,10 +171,33 @@ export default function Home() {
 
       <Navbar />
 
-      {/* Hero Section (Forest-Graphite Dark Theme + Radial Grid) */}
-      <section className="bg-[#030704] text-white py-20 lg:py-24 border-b border-emerald-950/30 relative overflow-hidden dotted-grid-dark">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-emerald-500/10 to-transparent rounded-full blur-[140px] pointer-events-none"></div>
+      {/* Hero Section (Fresh Light-Mint Theme + Dotted Grid + Parallax floating elements) */}
+      <section className="bg-gradient-to-b from-[#F0FDF4]/60 to-white text-slate-800 py-20 lg:py-28 border-b border-slate-200/50 relative overflow-hidden dotted-grid">
         
+        {/* Decorative Parallax elements (Figma alignment) */}
+        <motion.div 
+          style={{ y: yFloatingPill1 }}
+          className="absolute top-20 right-12 hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-slate-200/60 shadow-lg rounded-2xl text-[10px] font-bold text-slate-700 select-none z-25 cursor-default"
+        >
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Escrow: ₹1.2 Cr Safe Locked
+        </motion.div>
+
+        <motion.div 
+          style={{ y: yFloatingPill2 }}
+          className="absolute bottom-24 left-8 hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-slate-200/60 shadow-lg rounded-2xl text-[10px] font-bold text-slate-700 select-none z-25 cursor-default"
+        >
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          eKYC Identity Confirmed
+        </motion.div>
+
+        <motion.div 
+          style={{ y: yFloatingCard, rotate: rotateLeaf }}
+          className="absolute top-28 left-16 hidden lg:block select-none z-20 opacity-20 pointer-events-none"
+        >
+          <TreePine className="w-16 h-16 text-emerald-600" />
+        </motion.div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
@@ -184,45 +208,45 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-950/60 text-emerald-400 text-[10px] font-bold rounded-full border border-emerald-900/50 mb-4 glow-pill">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  National Carbon Grid Registry Handshake Active
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded-full border border-emerald-200/60 mb-4 shadow-sm">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  National Grid Carbon Registry Handshake Live
                 </span>
                 
-                <h1 className="text-4xl sm:text-5xl lg:text-[58px] font-black tracking-tight leading-[1.05] text-white">
-                  Carbon credits you can <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-lime-300">access.</span>
+                <h1 className="text-4xl sm:text-5xl lg:text-[62px] font-black tracking-tight leading-[1.05] text-[#064E3B]">
+                  Carbon credits you can <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-cyan-500">access.</span>
                   <br />
-                  Transactions you can <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-300">trust.</span>
+                  Transactions you can <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-800">trust.</span>
                 </h1>
                 
-                <p className="mt-4 text-xs sm:text-sm text-slate-400 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                  EcoVault connects verified voluntary carbon project developers across India directly with corporate sustainability buyers. Secure escrow, transparent pricing, and zero greenwashing.
+                <p className="mt-4 text-xs sm:text-sm text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                  EcoVault connects verified voluntary carbon project developers across India directly with corporate sustainability buyers. Direct escrow settlement and satellite Lidar verification audits.
                 </p>
               </motion.div>
 
-              {/* Dynamic Offset Calculator (Interactive WOW) */}
+              {/* Dynamic Offset Calculator (Light Themed Glass panel) */}
               <motion.div 
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="glass-panel-dark p-5 rounded-2xl border border-emerald-500/10 text-slate-300 space-y-4 text-left max-w-lg mx-auto lg:mx-0"
+                className="bg-white/85 backdrop-blur-md p-6 rounded-3xl border border-slate-200/80 text-slate-600 space-y-4 text-left max-w-lg mx-auto lg:mx-0 shadow-xl"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                  <span className="text-[10px] font-bold text-emerald-700 flex items-center gap-1">
                     <Sparkles className="w-3.5 h-3.5" />
                     ESG Offset Split Calculator
                   </span>
-                  <span className="text-[9px] text-slate-500 font-semibold">Real-time Valuation</span>
+                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Instant valuation</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-xs">
                   {/* Sector */}
                   <div className="space-y-1">
-                    <label className="text-slate-400 block font-semibold">Your Sector</label>
+                    <label className="text-slate-500 block font-semibold">Your Sector</label>
                     <select
                       value={sector}
                       onChange={(e: any) => setSector(e.target.value)}
-                      className="w-full p-2 bg-slate-900 border border-emerald-950 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 text-white font-bold"
+                      className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-800 font-bold"
                     >
                       <option value="tech">Technology / SaaS</option>
                       <option value="manufacturing">Heavy Industrial</option>
@@ -234,8 +258,8 @@ export default function Home() {
                   {/* Volume Slider */}
                   <div className="space-y-1">
                     <div className="flex justify-between font-semibold">
-                      <span className="text-slate-400">Emissions Target</span>
-                      <span className="text-emerald-400 font-bold">{emissions.toLocaleString()} t</span>
+                      <span className="text-slate-500">Emissions Target</span>
+                      <span className="text-emerald-700 font-bold">{emissions.toLocaleString()} t</span>
                     </div>
                     <input
                       type="range"
@@ -244,49 +268,49 @@ export default function Home() {
                       step="500"
                       value={emissions}
                       onChange={(e) => setEmissions(parseInt(e.target.value, 10))}
-                      className="w-full h-1 bg-emerald-950 rounded-lg appearance-none cursor-pointer accent-emerald-500 mt-2"
+                      className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600 mt-2.5"
                     />
                   </div>
                 </div>
 
-                <hr className="border-emerald-950" />
+                <hr className="border-slate-100" />
 
                 {/* Calculation Outputs */}
                 <div className="grid grid-cols-3 gap-3 text-center">
-                  <div className="p-2 bg-slate-900/60 rounded-xl border border-slate-900">
-                    <span className="text-[8px] text-slate-500 block uppercase font-bold tracking-wider">Estimated Cost</span>
-                    <strong className="text-xs text-white font-black">₹{(metrics.estimatedCost / 100000).toFixed(2)} L</strong>
+                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Estimated Cost</span>
+                    <strong className="text-xs text-slate-800 font-black">₹{(metrics.estimatedCost / 100000).toFixed(2)} L</strong>
                   </div>
-                  <div className="p-2 bg-slate-900/60 rounded-xl border border-slate-900">
-                    <span className="text-[8px] text-slate-500 block uppercase font-bold tracking-wider">Trees Sequest.</span>
-                    <strong className="text-xs text-emerald-400 font-black flex items-center justify-center gap-0.5">
-                      <TreePine className="w-3.5 h-3.5 text-emerald-400" />
+                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Trees Sequest.</span>
+                    <strong className="text-xs text-emerald-600 font-black flex items-center justify-center gap-0.5">
+                      <TreePine className="w-3.5 h-3.5 text-emerald-600" />
                       {metrics.treesEquivalent.toLocaleString()}
                     </strong>
                   </div>
-                  <div className="p-2 bg-slate-900/60 rounded-xl border border-slate-900">
-                    <span className="text-[8px] text-slate-500 block uppercase font-bold tracking-wider">Flight Offset</span>
-                    <strong className="text-xs text-sky-400 font-black flex items-center justify-center gap-0.5">
-                      <PlaneTakeoff className="w-3.5 h-3.5 text-sky-400" />
+                  <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Flight Offset</span>
+                    <strong className="text-xs text-sky-600 font-black flex items-center justify-center gap-0.5">
+                      <PlaneTakeoff className="w-3.5 h-3.5 text-sky-600" />
                       {metrics.flightsEquivalent.toLocaleString()}
                     </strong>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-[9px] text-slate-500">Recommended: {metrics.forestryRatio}% Forestry / {metrics.biogasRatio}% Biogas</span>
+                  <span className="text-[9px] text-slate-400 font-medium">Recommended: {metrics.forestryRatio}% Forestry / {metrics.biogasRatio}% Biogas</span>
                   <button
                     onClick={handleApplyCalculatorSplit}
                     className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-[9px] transition-colors shadow flex items-center gap-1"
                   >
-                    Lock this split
+                    Apply Split
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
               </motion.div>
             </div>
 
-            {/* Right Column: 3D Globe center */}
+            {/* Right Column: Globe Area (Light Mesh backdrop) */}
             <div className="lg:col-span-5 flex justify-center relative w-full h-[350px] lg:h-[500px]">
               <InteractiveGlobe interactive={false} />
             </div>
@@ -295,18 +319,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Advanced Laser Verification Scanner (WOW console) */}
-      <section className="py-24 bg-[#F8FAF9] border-b border-slate-200/60 dotted-grid relative">
+      {/* Advanced Light-Themed Verification Scanner */}
+      <section className="py-24 bg-white border-b border-slate-200/50 dotted-grid relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-[9px] uppercase font-bold tracking-wider bg-emerald-100/60 text-emerald-800 px-3 py-1 rounded-full border border-emerald-200/50">
-              Auditing Engine
+            <span className="text-[9px] uppercase font-bold tracking-wider bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full border border-emerald-200/50">
+              Audit Instrument console
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B3D2E] tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#064E3B] tracking-tight">
               Anti-Greenwashing Laser Verification Scanner
             </h2>
-            <p className="text-slate-500 text-xs leading-relaxed max-w-lg mx-auto">
-              EcoVault guarantees credit integrity by executing direct registry queries. Select a GCI certificate code below to test the laser sweep verification scanner.
+            <p className="text-slate-500 text-xs leading-relaxed max-w-lg mx-auto font-medium">
+              Validate credit integrity by running queries directly on the Grid Controller of India registry files. Select a certificate serial to start.
             </p>
           </div>
 
@@ -314,7 +338,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
             
             {/* Left Console Controller (5 cols) */}
-            <div className="md:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between space-y-6">
+            <div className="md:col-span-5 bg-white border border-slate-200/80 rounded-3xl p-6 shadow-md flex flex-col justify-between space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Terminal className="w-5 h-5 text-emerald-600" />
@@ -328,7 +352,7 @@ export default function Home() {
                       onClick={() => setTerminalInput("GCI-REG-2026-OD812")}
                       className={`text-left p-2.5 rounded-xl border text-[10px] font-mono transition-all ${
                         terminalInput === "GCI-REG-2026-OD812" 
-                          ? "border-emerald-500 bg-emerald-50/30 text-emerald-800 font-bold" 
+                          ? "border-emerald-500 bg-emerald-50/50 text-emerald-800 font-bold" 
                           : "border-slate-100 hover:bg-slate-50 text-slate-600"
                       }`}
                     >
@@ -338,7 +362,7 @@ export default function Home() {
                       onClick={() => setTerminalInput("GCI-REG-2026-PB291")}
                       className={`text-left p-2.5 rounded-xl border text-[10px] font-mono transition-all ${
                         terminalInput === "GCI-REG-2026-PB291" 
-                          ? "border-emerald-500 bg-emerald-50/30 text-emerald-800 font-bold" 
+                          ? "border-emerald-500 bg-emerald-50/50 text-emerald-800 font-bold" 
                           : "border-slate-100 hover:bg-slate-50 text-slate-600"
                       }`}
                     >
@@ -351,57 +375,57 @@ export default function Home() {
               <button
                 onClick={runRegistryAudit}
                 disabled={terminalStatus === "running"}
-                className="w-full py-3 bg-[#0B3D2E] hover:bg-emerald-950 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-colors shadow flex items-center justify-center gap-1.5"
+                className="w-full py-3 bg-[#0B3D2E] hover:bg-emerald-950 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-colors shadow-md flex items-center justify-center gap-1.5"
               >
                 <Activity className="w-4 h-4 text-white" />
                 Initialize Laser Scanner
               </button>
             </div>
 
-            {/* Right Scanner Terminal (7 cols) */}
-            <div className="md:col-span-7 bg-slate-950 rounded-3xl p-6 shadow-xl border border-emerald-950/40 relative overflow-hidden flex flex-col justify-between min-h-[300px]">
+            {/* Right Scanner Terminal (Frosted glass light layout) */}
+            <div className="md:col-span-7 bg-[#F8FAF9] rounded-3xl p-6 shadow-lg border border-slate-200/80 relative overflow-hidden flex flex-col justify-between min-h-[300px]">
               
               {/* Laser Sweep Overlay Line */}
               {terminalStatus === "running" && <div className="laser-line"></div>}
 
-              {/* Console log output */}
-              <div className="space-y-3 font-mono text-[9px] text-slate-400 select-none overflow-y-auto max-h-[220px]">
+              {/* Console log output (Clean light monospace text) */}
+              <div className="space-y-3 font-mono text-[10px] text-slate-600 select-none overflow-y-auto max-h-[220px]">
                 {terminalLogs.length > 0 ? (
                   terminalLogs.map((log, idx) => (
                     <div 
                       key={idx} 
                       className={`animate-fadeIn ${
                         idx === terminalLogs.length - 1 && terminalStatus === "success" 
-                          ? "text-emerald-400 font-bold" 
-                          : "text-slate-300"
+                          ? "text-emerald-700 font-bold" 
+                          : "text-slate-500"
                       }`}
                     >
                       {log}
                     </div>
                   ))
                 ) : (
-                  <div className="text-slate-600 text-center py-20">
+                  <div className="text-slate-400 text-center py-20">
                     // Handshake idle. Select certificate and execute scanner.
                   </div>
                 )}
               </div>
 
               {/* Audit checks checklist display */}
-              <div className="border-t border-emerald-950/40 pt-4 mt-4 grid grid-cols-2 gap-4 text-[9px] font-mono text-slate-400">
+              <div className="border-t border-slate-200 pt-4 mt-4 grid grid-cols-2 gap-4 text-[9px] font-mono text-slate-500">
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 3 ? "bg-emerald-400" : "bg-slate-800"}`}></span>
+                  <span className={`w-2 h-2 rounded-full ${activeStep >= 3 ? "bg-emerald-500" : "bg-slate-300"}`}></span>
                   <span>eKYC Verified</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 4 ? "bg-emerald-400" : "bg-slate-800"}`}></span>
+                  <span className={`w-2 h-2 rounded-full ${activeStep >= 4 ? "bg-emerald-500" : "bg-slate-300"}`}></span>
                   <span>Registry match</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 5 ? "bg-emerald-400" : "bg-slate-800"}`}></span>
+                  <span className={`w-2 h-2 rounded-full ${activeStep >= 5 ? "bg-emerald-500" : "bg-slate-300"}`}></span>
                   <span>Duplicate check clear</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 6 ? "bg-emerald-400" : "bg-slate-800"}`}></span>
+                  <span className={`w-2 h-2 rounded-full ${activeStep >= 6 ? "bg-emerald-500" : "bg-slate-300"}`}></span>
                   <span>Satellite Lidar pass</span>
                 </div>
               </div>
@@ -413,12 +437,12 @@ export default function Home() {
       </section>
 
       {/* Buyer vs Seller dynamic panel showcase */}
-      <section className="py-24 bg-white border-b border-slate-200/60 relative">
+      <section className="py-24 bg-slate-50/50 border-b border-slate-200/50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Adaptable Platform</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B3D2E] tracking-tight">Direct Trading Portal Preview</h2>
-            <p className="text-slate-500 text-xs max-w-md mx-auto">
+            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Adaptable Platform</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#064E3B] tracking-tight">Direct Trading Portal Preview</h2>
+            <p className="text-slate-500 text-xs max-w-md mx-auto font-medium">
               EcoVault provides verified interfaces for both voluntary buyers and local project developers.
             </p>
 
@@ -427,7 +451,7 @@ export default function Home() {
                 onClick={() => setActiveView("buyer")}
                 className={`px-6 py-2 rounded-lg transition-all ${
                   activeView === "buyer" 
-                    ? "bg-[#0B3D2E] text-white shadow" 
+                    ? "bg-[#0B3D2E] text-white shadow-sm" 
                     : "text-slate-500 hover:text-slate-800"
                 }`}
               >
@@ -437,7 +461,7 @@ export default function Home() {
                 onClick={() => setActiveView("seller")}
                 className={`px-6 py-2 rounded-lg transition-all ${
                   activeView === "seller" 
-                    ? "bg-[#0B3D2E] text-white shadow" 
+                    ? "bg-[#0B3D2E] text-white shadow-sm" 
                     : "text-slate-500 hover:text-slate-800"
                 }`}
               >
@@ -447,15 +471,15 @@ export default function Home() {
           </div>
 
           {/* Showcase Panel */}
-          <div className="max-w-5xl mx-auto bg-[#F8FAF9] border border-slate-200 rounded-3xl p-8 shadow-sm min-h-[380px]">
+          <div className="max-w-5xl mx-auto bg-white border border-slate-200/80 rounded-3xl p-8 shadow-md min-h-[380px]">
             <AnimatePresence mode="wait">
               {activeView === "buyer" ? (
                 <motion.div
                   key="buyer-panel"
-                  initial={{ opacity: 0, x: -15 }}
+                  initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 15 }}
-                  transition={{ duration: 0.25 }}
+                  exit={{ opacity: 0, x: 12 }}
+                  transition={{ duration: 0.2 }}
                   className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
                 >
                   <div className="space-y-5 text-xs text-slate-500">
@@ -463,10 +487,10 @@ export default function Home() {
                     <h3 className="text-xl font-extrabold text-slate-800 tracking-tight leading-snug">
                       Purchase verified voluntary credits with zero greenwashing risk.
                     </h3>
-                    <p className="leading-relaxed">
+                    <p className="leading-relaxed font-medium">
                       Corporate buyers need credits to hit carbon net-zero targets. However, greenwashing represents severe brand risks. EcoVault requires GCI registry verification and third-party ACVA audits, giving you complete trust.
                     </p>
-                    <ul className="space-y-2 text-slate-600">
+                    <ul className="space-y-2 text-slate-600 font-medium">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                         Explore credits on our Interactive 3D Globe map
@@ -490,21 +514,21 @@ export default function Home() {
                   </div>
 
                   {/* UI Preview mockup */}
-                  <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
+                  <div className="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4">
                     <div className="flex justify-between items-center text-xs">
                       <strong className="text-slate-800">Tata ESG Group Portfolio</strong>
                       <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">14,200 t Offset</span>
                     </div>
-                    <hr className="border-slate-100" />
-                    <div className="space-y-3 text-xs text-slate-500">
+                    <hr className="border-slate-200" />
+                    <div className="space-y-3 text-xs text-slate-500 font-semibold">
                       <div className="flex justify-between">
                         <span>Offset Target:</span>
                         <strong className="text-slate-800">50,000 tons</strong>
                       </div>
-                      <div className="w-full bg-slate-100 rounded-full h-1.5">
+                      <div className="w-full bg-slate-200 rounded-full h-1.5">
                         <div className="bg-emerald-600 h-1.5 rounded-full" style={{ width: "28%" }}></div>
                       </div>
-                      <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 font-mono text-[9px] text-slate-400">
+                      <div className="bg-white p-2.5 rounded-lg border border-slate-100 font-mono text-[9px] text-slate-400">
                         // Latest Certificate: EV-CERT-OD812-4029
                       </div>
                     </div>
@@ -513,10 +537,10 @@ export default function Home() {
               ) : (
                 <motion.div
                   key="seller-panel"
-                  initial={{ opacity: 0, x: 15 }}
+                  initial={{ opacity: 0, x: 12 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -15 }}
-                  transition={{ duration: 0.25 }}
+                  exit={{ opacity: 0, x: -12 }}
+                  transition={{ duration: 0.2 }}
                   className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
                 >
                   <div className="space-y-5 text-xs text-slate-500">
@@ -524,10 +548,10 @@ export default function Home() {
                     <h3 className="text-xl font-extrabold text-slate-800 tracking-tight leading-snug">
                       Your Projects. Verified Once. Sold Fair.
                     </h3>
-                    <p className="leading-relaxed">
+                    <p className="leading-relaxed font-medium">
                       Sellers of voluntary offsets (forestry, biogas) face opacity and lack broker access, losing huge margins. EcoVault provides direct access to corporate buyers, locks assets safely in digital vaults, and settles payouts inside 48 hours.
                     </p>
-                    <ul className="space-y-2 text-slate-600">
+                    <ul className="space-y-2 text-slate-600 font-medium">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
                         AI Reference Price Assistant to optimize listings
@@ -551,13 +575,13 @@ export default function Home() {
                   </div>
 
                   {/* UI Preview mockup */}
-                  <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
+                  <div className="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4">
                     <div className="flex justify-between items-center text-xs">
                       <strong className="text-slate-800">Rakesh Forestry Dashboard</strong>
-                      <span className="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-900/40 px-2 py-0.5 rounded font-bold">Locked Vault</span>
+                      <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Locked Vault</span>
                     </div>
-                    <hr className="border-slate-100" />
-                    <div className="space-y-3 text-xs text-slate-500">
+                    <hr className="border-slate-200" />
+                    <div className="space-y-3 text-xs text-slate-500 font-semibold">
                       <div className="flex justify-between">
                         <span>Total Payouts:</span>
                         <strong className="text-slate-800">₹7,87,500</strong>
@@ -566,7 +590,7 @@ export default function Home() {
                         <span>Escrow Locked Bids:</span>
                         <strong className="text-emerald-600">2 Pending Offers</strong>
                       </div>
-                      <div className="bg-emerald-950 text-emerald-400 border border-emerald-900/60 p-2 rounded-lg text-[9px] flex items-center justify-between font-semibold">
+                      <div className="bg-white text-emerald-700 border border-emerald-100 p-2 rounded-lg text-[9px] flex items-center justify-between font-bold">
                         <span>Odisha Community Forestry</span>
                         <span>Locked in Custody ✅</span>
                       </div>
@@ -580,18 +604,18 @@ export default function Home() {
       </section>
 
       {/* Strategic Roadmap (Sleek timeline) */}
-      <section className="py-24 bg-white border-b border-slate-200/60">
+      <section className="py-24 bg-white border-b border-slate-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Platform Scaling</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B3D2E] tracking-tight">Compliance Roadmap 2026/27</h2>
-            <p className="text-slate-500 text-xs max-w-sm mx-auto leading-relaxed">
+            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Platform Scaling</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#064E3B] tracking-tight">Compliance Roadmap 2026/27</h2>
+            <p className="text-slate-500 text-xs max-w-sm mx-auto leading-relaxed font-medium">
               Paving the path towards regulated compliance exchanges, CBAM exporting, and tokenized carbon registries.
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto bg-[#F8FAF9] border border-slate-200 rounded-3xl p-8 shadow-sm text-xs relative overflow-hidden">
-            <div className="space-y-8">
+          <div className="max-w-4xl mx-auto bg-slate-50/50 border border-slate-200 rounded-3xl p-8 shadow-sm text-xs relative overflow-hidden">
+            <div className="space-y-8 font-medium">
               <div className="flex gap-4 items-start">
                 <span className="px-3 py-1 bg-emerald-100 text-emerald-800 font-bold rounded-lg mt-0.5 uppercase tracking-wide text-[9px] border border-emerald-200">
                   Phase 1
@@ -599,9 +623,9 @@ export default function Home() {
                 <div>
                   <h4 className="font-bold text-slate-800 flex items-center gap-2">
                     Voluntary Trust Infrastructure
-                    <span className="text-[9px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">ACTIVE</span>
+                    <span className="text-[9px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold shadow-sm">ACTIVE</span>
                   </h4>
-                  <p className="text-slate-500 mt-1 leading-relaxed leading-normal">
+                  <p className="text-slate-500 mt-1 leading-relaxed">
                     Establishing registry handshake verification logs, direct eKYC developer validation, and the voluntary credit escrow custody shield.
                   </p>
                 </div>
@@ -616,7 +640,7 @@ export default function Home() {
                     CCTS & CBAM Integrations
                     <span className="text-[9px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full font-bold">2026 ROADMAP</span>
                   </h4>
-                  <p className="text-slate-500 mt-1 leading-relaxed leading-normal">
+                  <p className="text-slate-500 mt-1 leading-relaxed">
                     Adding CCTS regulated market support and carbon boundary pricing calculations for exporters (steel, iron) seeking ESG credit validation.
                   </p>
                 </div>
@@ -631,7 +655,7 @@ export default function Home() {
                     Autonomous Satellite MRV
                     <span className="text-[9px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">2027 FUTURE</span>
                   </h4>
-                  <p className="text-slate-500 mt-1 leading-relaxed leading-normal">
+                  <p className="text-slate-500 mt-1 leading-relaxed">
                     Integrating automated Lidar biomass density telemetry and blockchain smart contract escrow vaults to eliminate brokerage entirely.
                   </p>
                 </div>
