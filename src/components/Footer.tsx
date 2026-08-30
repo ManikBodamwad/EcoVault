@@ -76,10 +76,27 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto border-t border-slate-900 mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600">
-        <p>© 2026 EcoVault India. All rights reserved.</p>
-        <p className="font-semibold text-emerald-500/80 bg-emerald-950/30 px-3 py-1 rounded border border-emerald-900/40">
-          Prototype built for Marketing Management — EcoVault, Group 8 (IIM Lucknow)
-        </p>
+        <div className="flex flex-wrap items-center gap-3 font-medium text-slate-400">
+          <span>Built by <strong className="text-slate-200 font-bold">Manik Bodamwad</strong></span>
+          <span>•</span>
+          <a
+            href="https://github.com/ManikBodamwad/EcoVault"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-400 hover:text-emerald-300 transition-colors underline underline-offset-2"
+          >
+            GitHub
+          </a>
+          <span>•</span>
+          <a
+            href="https://www.linkedin.com/in/manikbodamwad/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-400 hover:text-emerald-300 transition-colors underline underline-offset-2"
+          >
+            LinkedIn
+          </a>
+        </div>
       </div>
     </footer>
   );

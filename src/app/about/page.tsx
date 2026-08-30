@@ -104,17 +104,32 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Academic Credit Box */}
+        {/* Creator / Built By Box */}
         <div className="bg-emerald-950 text-white rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 border border-emerald-900 shadow-sm">
           <div className="space-y-1 text-center sm:text-left">
-            <h4 className="font-bold text-sm">Academic Project Context</h4>
-            <p className="text-[10px] text-emerald-300 max-w-md leading-relaxed">
-              This platform is designed as an interactive marketing prototype for the Marketing Management course at the **Indian Institute of Management, Lucknow (IIM Lucknow)**. Crafted by Group 8.
+            <h4 className="font-bold text-sm">Built by Manik Bodamwad</h4>
+            <p className="text-[10px] text-emerald-300 max-w-md leading-relaxed font-medium">
+              Designed and developed by Manik Bodamwad — building next-generation climate fintech infrastructure, verified voluntary carbon credit registries, and direct institutional escrow architecture.
             </p>
           </div>
-          <span className="text-[10px] uppercase font-bold tracking-widest bg-emerald-900 border border-emerald-800 px-4 py-2 rounded-xl">
-            IIM Lucknow • Group 8
-          </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="https://github.com/ManikBodamwad/EcoVault"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] font-bold tracking-wide bg-emerald-900 hover:bg-emerald-800 border border-emerald-700 text-white px-4 py-2 rounded-xl transition-all shadow-sm"
+            >
+              GitHub Repository ↗
+            </a>
+            <a
+              href="https://www.linkedin.com/in/manikbodamwad/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] font-bold tracking-wide bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl transition-all shadow-sm"
+            >
+              LinkedIn Profile ↗
+            </a>
+          </div>
         </div>
 
       </div>
