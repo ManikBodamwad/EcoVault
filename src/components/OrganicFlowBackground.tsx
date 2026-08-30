@@ -1,232 +1,257 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import * as THREE from "three";
 
 export default function OrganicFlowBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     let animationFrameId: number;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    let width = window.innerWidth;
+    let height = window.innerHeight;
 
-    // Particle system (Floating Lidar Bio-Spores & Carbon Specks)
-    const particleCount = 65;
-    const particles: Array<{
-      x: number;
-      y: number;
-      radius: number;
-      vx: number;
-      vy: number;
-      alpha: number;
-      baseAlpha: number;
-      color: string;
-      phase: number;
-    }> = [];
+    // 1. Setup Three.js Scene, Camera, and Renderer
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0xf8faf9, 0.015);
 
-    const particleColors = [
-      "16, 185, 129", // Emerald
-      "52, 211, 153", // Mint
-      "6, 182, 212",  // Cyan
-      "245, 158, 11", // Amber Gold
-      "132, 204, 22"  // Lime
-    ];
+    const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 1000);
+    camera.position.set(0, 12, 38);
+    camera.lookAt(0, 0, 0);
 
-    for (let i = 0; i < particleCount; i++) {
-      const col = particleColors[Math.floor(Math.random() * particleColors.length)];
-      const baseAlpha = Math.random() * 0.55 + 0.25;
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 2.8 + 1.2,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: -Math.random() * 0.6 - 0.2, // Continuous upward organic drift
-        alpha: baseAlpha,
-        baseAlpha: baseAlpha,
-        color: col,
-        phase: Math.random() * Math.PI * 2
-      });
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: "high-performance"
+    });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0); // Transparent background
+
+    // Clear any existing children before appending
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+    container.appendChild(renderer.domElement);
+
+    // 2. Create Volumetric 3D Wave Mesh (Atlas Motion by Lusion style)
+    const gridWidth = 90;
+    const gridHeight = 90;
+    const gridSegments = 60;
+    const planeGeo = new THREE.PlaneGeometry(gridWidth, gridHeight, gridSegments, gridSegments);
+    planeGeo.rotateX(-Math.PI / 2.2);
+
+    const count = planeGeo.attributes.position.count;
+    const colors = new Float32Array(count * 3);
+
+    // Gradient colors: Deep Emerald to Cyan & Mint
+    const colorEmerald = new THREE.Color(0x10b981);
+    const colorCyan = new THREE.Color(0x06b6d4);
+    const colorMint = new THREE.Color(0x34d399);
+
+    const posAttr = planeGeo.attributes.position;
+    const originalPositions = posAttr.clone();
+
+    for (let i = 0; i < count; i++) {
+      const x = posAttr.getX(i);
+      const ratio = (x + gridWidth / 2) / gridWidth;
+      const c = ratio < 0.5 
+        ? colorEmerald.clone().lerp(colorCyan, ratio * 2)
+        : colorCyan.clone().lerp(colorMint, (ratio - 0.5) * 2);
+
+      colors[i * 3] = c.r;
+      colors[i * 3 + 1] = c.g;
+      colors[i * 3 + 2] = c.b;
     }
 
-    // Scroll and mouse physics
-    let scrollY = window.scrollY;
-    let targetScrollY = window.scrollY;
-    let mouseX = width / 2;
-    let mouseY = height / 2;
-    let targetMouseX = width / 2;
-    let targetMouseY = height / 2;
+    planeGeo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+    // Custom Wireframe/Points hybrid material for glowing Lidar terrain
+    const wireframeMat = new THREE.MeshBasicMaterial({
+      vertexColors: true,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.32
+    });
+
+    const waveMesh = new THREE.Mesh(planeGeo, wireframeMat);
+    waveMesh.position.set(0, -6, -10);
+    scene.add(waveMesh);
+
+    // 3. Floating 3D Luminescent Spores & Carbon Particles
+    const particleCount = 180;
+    const particleGeo = new THREE.BufferGeometry();
+    const particlePos = new Float32Array(particleCount * 3);
+    const particleColors = new Float32Array(particleCount * 3);
+    const particleSpeeds = new Float32Array(particleCount);
+
+    for (let i = 0; i < particleCount; i++) {
+      particlePos[i * 3] = (Math.random() - 0.5) * 80;
+      particlePos[i * 3 + 1] = Math.random() * 40 - 10;
+      particlePos[i * 3 + 2] = (Math.random() - 0.5) * 60;
+
+      const c = Math.random() > 0.5 ? colorEmerald : colorCyan;
+      particleColors[i * 3] = c.r;
+      particleColors[i * 3 + 1] = c.g;
+      particleColors[i * 3 + 2] = c.b;
+
+      particleSpeeds[i] = Math.random() * 0.04 + 0.015;
+    }
+
+    particleGeo.setAttribute("position", new THREE.BufferAttribute(particlePos, 3));
+    particleGeo.setAttribute("color", new THREE.BufferAttribute(particleColors, 3));
+
+    // Texture sprite for soft circular particle glow
+    const canvasPoint = document.createElement("canvas");
+    canvasPoint.width = 64;
+    canvasPoint.height = 64;
+    const cCtx = canvasPoint.getContext("2d");
+    if (cCtx) {
+      const grad = cCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, "rgba(255, 255, 255, 1)");
+      grad.addColorStop(0.3, "rgba(52, 211, 153, 0.8)");
+      grad.addColorStop(0.8, "rgba(16, 185, 129, 0.15)");
+      grad.addColorStop(1, "rgba(16, 185, 129, 0)");
+      cCtx.fillStyle = grad;
+      cCtx.fillRect(0, 0, 64, 64);
+    }
+    const particleTexture = new THREE.CanvasTexture(canvasPoint);
+
+    const particleMat = new THREE.PointsMaterial({
+      size: 1.8,
+      map: particleTexture,
+      transparent: true,
+      vertexColors: true,
+      opacity: 0.65,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    const particles = new THREE.Points(particleGeo, particleMat);
+    scene.add(particles);
+
+    // 4. Interaction, Scroll and Mouse Listeners
+    let targetScrollY = 0;
+    let currentScrollY = 0;
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetMouseX = 0;
+    let targetMouseY = 0;
 
     const handleScroll = () => {
       targetScrollY = window.scrollY;
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      targetMouseX = e.clientX;
-      targetMouseY = e.clientY;
+      targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      targetMouseY = -(e.clientY / window.innerHeight - 0.5) * 2;
     };
 
     const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("resize", handleResize);
 
-    // Wave parameters (Topography / Lidar contours)
-    const waveCount = 9;
-    let time = 0;
+    // 5. Animation Render Loop (Continuous scroll tracking across entire page)
+    let clock = new THREE.Clock();
 
-    const render = () => {
-      time += 0.012;
+    const animate = () => {
+      const time = clock.getElapsedTime();
 
-      // Smooth scroll & mouse interpolation with momentum
-      scrollY += (targetScrollY - scrollY) * 0.09;
-      mouseX += (targetMouseX - mouseX) * 0.06;
-      mouseY += (targetMouseY - mouseY) * 0.06;
+      // Smooth interpolation for scroll & mouse with fluid momentum
+      currentScrollY += (targetScrollY - currentScrollY) * 0.08;
+      mouseX += (targetMouseX - mouseX) * 0.05;
+      mouseY += (targetMouseY - mouseY) * 0.05;
 
-      ctx.clearRect(0, 0, width, height);
+      // Camera continuously travels through 3D space as you scroll
+      camera.position.y = 12 - (currentScrollY * 0.012);
+      camera.position.x = mouseX * 4;
+      camera.position.z = 38 + (currentScrollY * 0.003);
+      camera.rotation.x = -0.22 - (mouseY * 0.08) - (currentScrollY * 0.00015);
+      camera.rotation.y = -mouseX * 0.06;
 
-      // 1. Fluid Aurora Light Gradients (Of The Oak ambient washes)
-      const grad1 = ctx.createRadialGradient(
-        width * 0.15 + Math.sin(time * 0.7) * 120 + (mouseX - width / 2) * 0.1,
-        height * 0.25 + Math.cos(time * 0.5) * 90 + (scrollY * 0.08) % height,
-        0,
-        width * 0.15,
-        height * 0.25,
-        width * 0.55
-      );
-      grad1.addColorStop(0, "rgba(16, 185, 129, 0.14)");
-      grad1.addColorStop(0.5, "rgba(52, 211, 153, 0.06)");
-      grad1.addColorStop(1, "rgba(255, 255, 255, 0)");
-      ctx.fillStyle = grad1;
-      ctx.fillRect(0, 0, width, height);
+      // Animate 3D Wave vertices (Lidar contour ripples)
+      const positions = posAttr.array as Float32Array;
+      const origs = originalPositions.array as Float32Array;
 
-      const grad2 = ctx.createRadialGradient(
-        width * 0.85 + Math.cos(time * 0.6) * 100,
-        height * 0.7 + Math.sin(time * 0.4) * 80 - (scrollY * 0.05) % height,
-        0,
-        width * 0.85,
-        height * 0.7,
-        width * 0.5
-      );
-      grad2.addColorStop(0, "rgba(6, 182, 212, 0.12)");
-      grad2.addColorStop(0.5, "rgba(16, 185, 129, 0.05)");
-      grad2.addColorStop(1, "rgba(255, 255, 255, 0)");
-      ctx.fillStyle = grad2;
-      ctx.fillRect(0, 0, width, height);
+      for (let i = 0; i < count; i++) {
+        const i3 = i * 3;
+        const ox = origs[i3];
+        const oz = origs[i3 + 2];
 
-      const grad3 = ctx.createRadialGradient(
-        width * 0.5 + Math.sin(time * 0.9) * 80,
-        height * 0.5 + Math.cos(time * 0.8) * 70,
-        0,
-        width * 0.5,
-        height * 0.5,
-        width * 0.4
-      );
-      grad3.addColorStop(0, "rgba(245, 158, 11, 0.06)");
-      grad3.addColorStop(0.7, "rgba(255, 255, 255, 0)");
-      ctx.fillStyle = grad3;
-      ctx.fillRect(0, 0, width, height);
-
-      // 2. Multi-Layered Lidar Topography Waves (Of The Oak flowing contour lines)
-      ctx.save();
-      for (let i = 0; i < waveCount; i++) {
-        const progress = i / waveCount;
-        const waveY = height * (0.12 + progress * 0.8) - (scrollY * 0.22 * (i + 1)) % (height * 1.6) + (height * 0.15);
+        // Complex multi-frequency wave math
+        const wave1 = Math.sin(ox * 0.15 + time * 1.5 + oz * 0.1) * 2.8;
+        const wave2 = Math.cos(ox * 0.08 - time * 0.9 + oz * 0.18) * 1.6;
+        const wave3 = Math.sin(ox * 0.03 + time * 0.4) * 2.2;
         
-        ctx.beginPath();
-        ctx.lineWidth = 1.6;
-        
-        // Dynamic color gradient for each wave contour
-        const lineGrad = ctx.createLinearGradient(0, 0, width, 0);
-        lineGrad.addColorStop(0, "rgba(16, 185, 129, 0)");
-        lineGrad.addColorStop(0.2, `rgba(16, 185, 129, ${0.28 - i * 0.02})`);
-        lineGrad.addColorStop(0.5, `rgba(6, 182, 212, ${0.35 - i * 0.025})`);
-        lineGrad.addColorStop(0.8, `rgba(52, 211, 153, ${0.28 - i * 0.02})`);
-        lineGrad.addColorStop(1, "rgba(16, 185, 129, 0)");
-        ctx.strokeStyle = lineGrad;
+        // Mouse disturbance ripple
+        const distToMouse = Math.hypot(ox - mouseX * 25, oz - mouseY * 25);
+        const mouseRipple = Math.sin(time * 4 - distToMouse * 0.3) * Math.max(0, 2.5 - distToMouse * 0.1);
 
-        const segmentWidth = 14;
-        const totalSegments = Math.ceil(width / segmentWidth);
+        positions[i3 + 1] = origs[i3 + 1] + wave1 + wave2 + wave3 + mouseRipple;
+      }
+      posAttr.needsUpdate = true;
 
-        for (let j = 0; j <= totalSegments; j++) {
-          const x = j * segmentWidth;
-          // Harmonic wave calculation with mouse gravity
-          const wave1 = Math.sin(x * 0.0028 + time * 1.4 + i * 1.2) * 45;
-          const wave2 = Math.cos(x * 0.0055 - time * 1.1 + i * 0.8) * 25;
-          const wave3 = Math.sin(x * 0.0012 + time * 0.6) * 20;
-          const mouseDist = Math.max(0, 1 - Math.hypot(x - mouseX, waveY - mouseY) / 380);
-          const mouseWave = Math.sin(time * 3.5 + j * 0.25) * (mouseDist * 28);
+      // Animate floating particles
+      const pPositions = particleGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+        pPositions[i3 + 1] += particleSpeeds[i] + (targetScrollY - currentScrollY) * 0.0005;
+        pPositions[i3] += Math.sin(time * 0.8 + i) * 0.02;
 
-          const y = waveY + wave1 + wave2 + wave3 + mouseWave;
-
-          if (j === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
+        // Reset particle on top exit
+        if (pPositions[i3 + 1] > 35) {
+          pPositions[i3 + 1] = -15;
+          pPositions[i3] = (Math.random() - 0.5) * 80;
         }
-        ctx.stroke();
       }
-      ctx.restore();
+      particleGeo.attributes.position.needsUpdate = true;
 
-      // 3. Floating Luminescent Bio-Spores & Radiant Carbon Particles
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-
-        p.x += p.vx + Math.sin(time + p.phase) * 0.35;
-        p.y += p.vy - (targetScrollY - scrollY) * 0.008; // React to scroll velocity
-        p.alpha = p.baseAlpha + Math.sin(time * 2.5 + p.phase) * 0.2;
-
-        // Wrap boundaries
-        if (p.y < -20) p.y = height + 20;
-        if (p.y > height + 20) p.y = -20;
-        if (p.x < -20) p.x = width + 20;
-        if (p.x > width + 20) p.x = -20;
-
-        // Outer ambient glow
-        ctx.beginPath();
-        const radGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 4.5);
-        radGrad.addColorStop(0, `rgba(${p.color}, ${Math.max(0, p.alpha)})`);
-        radGrad.addColorStop(1, `rgba(${p.color}, 0)`);
-        ctx.fillStyle = radGrad;
-        ctx.arc(p.x, p.y, p.radius * 4.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Inner solid core
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(${p.color}, ${Math.min(1, p.alpha * 2)})`;
-        ctx.arc(p.x, p.y, p.radius * 0.8, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      animationFrameId = requestAnimationFrame(render);
+      renderer.render(scene, camera);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
-    render();
+    animate();
 
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
+      renderer.dispose();
+      planeGeo.dispose();
+      wireframeMat.dispose();
+      particleGeo.dispose();
+      particleMat.dispose();
+      particleTexture.dispose();
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
     };
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* HTML5 Canvas Render Layer */}
-      <canvas ref={canvasRef} className="w-full h-full block" />
-      
-      {/* Film Grain Noise Texture */}
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">
+      {/* 3D WebGL Canvas Container */}
+      <div ref={containerRef} className="w-full h-full block" />
+
+      {/* Luminous Ambient Aurora Glows (Atlas Motion style deep light pools) */}
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none -translate-x-1/2 -translate-y-1/3" />
+      <div className="absolute top-1/2 right-10 w-[700px] h-[700px] bg-cyan-500/10 rounded-full blur-[160px] pointer-events-none translate-x-1/3" />
+      <div className="absolute bottom-10 left-1/3 w-[500px] h-[500px] bg-emerald-400/8 rounded-full blur-[150px] pointer-events-none" />
+
+      {/* Film Grain Texture Overlay */}
       <div 
         className="absolute inset-0 opacity-[0.035] mix-blend-overlay pointer-events-none"
         style={{
