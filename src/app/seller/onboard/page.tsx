@@ -66,11 +66,10 @@ export default function SellerOnboarding() {
     setValidating(true);
     setValidationStage(0);
 
-    // Timeline of checks
     const intervals = [
-      () => setValidationStage(1), // Corporate ID verified
-      () => setValidationStage(2), // Certificate hash matched
-      () => setValidationStage(3), // Double-allocation clear
+      () => setValidationStage(1),
+      () => setValidationStage(2),
+      () => setValidationStage(3),
       () => {
         setValidating(false);
         setValidationSuccess(true);
@@ -88,39 +87,39 @@ export default function SellerOnboarding() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7FAF8] font-sans">
+    <div className="min-h-screen flex flex-col bg-[#F8FAF9] font-sans">
       <Navbar />
 
       <div className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
         
-        {/* Step Indicator Header */}
-        <div className="flex justify-between items-center mb-8 max-w-xl mx-auto">
+        {/* Step Indicator Header (Enhanced look) */}
+        <div className="flex justify-between items-center mb-10 max-w-xl mx-auto select-none">
           <div className="flex flex-col items-center">
-            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-              step >= 1 ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-500"
+            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+              step >= 1 ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20" : "bg-slate-200 text-slate-500"
             }`}>1</span>
-            <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase">Corporate KYC</span>
+            <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase tracking-wider">Corporate KYC</span>
           </div>
-          <div className="w-12 h-0.5 bg-slate-200"></div>
+          <div className={`w-12 h-0.5 transition-colors duration-300 ${step >= 2 ? "bg-emerald-600" : "bg-slate-200"}`}></div>
           <div className="flex flex-col items-center">
-            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-              step >= 2 ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-500"
+            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+              step >= 2 ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20" : "bg-slate-200 text-slate-500"
             }`}>2</span>
-            <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase">Upload Certs</span>
+            <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase tracking-wider">Upload Certs</span>
           </div>
-          <div className="w-12 h-0.5 bg-slate-200"></div>
+          <div className={`w-12 h-0.5 transition-colors duration-300 ${step >= 3 ? "bg-emerald-600" : "bg-slate-200"}`}></div>
           <div className="flex flex-col items-center">
-            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-              step >= 3 ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-500"
+            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+              step >= 3 ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20" : "bg-slate-200 text-slate-500"
             }`}>3</span>
-            <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase">Registry Audit</span>
+            <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase tracking-wider">Registry Audit</span>
           </div>
-          <div className="w-12 h-0.5 bg-slate-200"></div>
+          <div className={`w-12 h-0.5 transition-colors duration-300 ${step >= 4 ? "bg-emerald-600" : "bg-slate-200"}`}></div>
           <div className="flex flex-col items-center">
-            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-              step >= 4 ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-500"
+            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+              step >= 4 ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20" : "bg-slate-200 text-slate-500"
             }`}>4</span>
-            <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase">Coordinates</span>
+            <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase tracking-wider">Coordinates</span>
           </div>
         </div>
 
@@ -144,7 +143,7 @@ export default function SellerOnboarding() {
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
                     placeholder="e.g. Mahanadi Forestry Developers"
-                    className="w-full border border-slate-200 rounded-xl px-3 py-2 bg-slate-50"
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-semibold"
                   />
                 </div>
 
@@ -155,12 +154,12 @@ export default function SellerOnboarding() {
                     value={pan}
                     onChange={(e) => setPan(e.target.value)}
                     placeholder="e.g. AAACM4802E"
-                    className="w-full border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 uppercase"
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 uppercase focus:outline-none focus:ring-1 focus:ring-emerald-500 font-semibold"
                   />
                 </div>
 
                 {isOtpSent ? (
-                  <div className="space-y-3 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 mt-4">
+                  <div className="space-y-3 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 mt-4 animate-slideDown">
                     <div className="space-y-1">
                       <label className="font-semibold text-slate-700">OTP Code (Sent to registered phone)</label>
                       <input
@@ -169,13 +168,13 @@ export default function SellerOnboarding() {
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
                         placeholder="Enter 6-digit mock OTP"
-                        className="w-full border border-slate-200 rounded-lg px-3 py-2 bg-white"
+                        className="w-full border border-slate-200 rounded-lg px-3 py-2 bg-white font-mono font-bold"
                       />
                     </div>
                     <button
                       onClick={handleVerifyOtp}
                       disabled={otp.length < 4}
-                      className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition-colors"
+                      className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition-colors text-xs"
                     >
                       Verify and Continue
                     </button>
@@ -184,7 +183,7 @@ export default function SellerOnboarding() {
                   <button
                     onClick={handleSendOtp}
                     disabled={!pan || !company}
-                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold rounded-xl transition-colors shadow flex items-center justify-center gap-1 mt-4"
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold rounded-xl transition-colors shadow flex items-center justify-center gap-1 mt-4 text-xs"
                   >
                     Send OTP Verification
                     <ArrowRight className="w-4 h-4" />
@@ -207,7 +206,7 @@ export default function SellerOnboarding() {
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onClick={handleManualUpload}
-                className="border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/20 py-10 rounded-2xl text-center cursor-pointer transition-colors space-y-3"
+                className="border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/20 py-12 rounded-2xl text-center cursor-pointer transition-colors space-y-3"
               >
                 <Upload className="w-8 h-8 text-slate-400 mx-auto" />
                 <div className="text-xs text-slate-500 font-medium">
@@ -217,13 +216,13 @@ export default function SellerOnboarding() {
                     <span>Drag and drop certificate PDF here or click to upload</span>
                   )}
                 </div>
-                <span className="text-[10px] text-slate-400 block">Supports GCI XML/PDF formats up to 10MB</span>
+                <span className="text-[9px] text-slate-400 block">Supports GCI XML/PDF formats up to 10MB</span>
               </div>
 
               {uploadedFile && (
                 <button
                   onClick={startRegistryVerification}
-                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow flex items-center justify-center gap-1 mt-4"
+                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow flex items-center justify-center gap-1 mt-4 text-xs"
                 >
                   Cross-verify with GCI Registry
                   <ArrowRight className="w-4 h-4" />
@@ -236,7 +235,7 @@ export default function SellerOnboarding() {
           {step === 3 && (
             <div className="space-y-6 animate-fadeIn">
               <div className="text-center space-y-2">
-                <Database className="w-10 h-10 text-[#38BDF8] mx-auto animate-pulse" />
+                <Database className="w-10 h-10 text-[#06B6D4] mx-auto animate-pulse" />
                 <h2 className="text-xl font-bold text-slate-800">Registry Verification Audit</h2>
                 <p className="text-xs text-slate-500">EcoVault is executing real-time API verification checks against the Grid Controller of India registry.</p>
               </div>
@@ -245,7 +244,7 @@ export default function SellerOnboarding() {
               <div className="space-y-4 text-xs max-w-sm mx-auto">
                 <div className="flex gap-3 items-center">
                   <span className={`w-5 h-5 rounded-full font-bold flex items-center justify-center text-[9px] ${
-                    validationStage >= 1 ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-400"
+                    validationStage >= 1 ? "bg-emerald-600 text-white shadow-sm shadow-emerald-500/25" : "bg-slate-100 text-slate-400"
                   }`}>
                     {validationStage >= 1 ? "✓" : "⌛"}
                   </span>
@@ -256,7 +255,7 @@ export default function SellerOnboarding() {
 
                 <div className="flex gap-3 items-center border-t border-slate-100 pt-3">
                   <span className={`w-5 h-5 rounded-full font-bold flex items-center justify-center text-[9px] ${
-                    validationStage >= 2 ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-400"
+                    validationStage >= 2 ? "bg-emerald-600 text-white shadow-sm shadow-emerald-500/25" : "bg-slate-100 text-slate-400"
                   }`}>
                     {validationStage >= 2 ? "✓" : "⌛"}
                   </span>
@@ -267,7 +266,7 @@ export default function SellerOnboarding() {
 
                 <div className="flex gap-3 items-center border-t border-slate-100 pt-3">
                   <span className={`w-5 h-5 rounded-full font-bold flex items-center justify-center text-[9px] ${
-                    validationStage >= 3 ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-400"
+                    validationStage >= 3 ? "bg-emerald-600 text-white shadow-sm shadow-emerald-500/25" : "bg-slate-100 text-slate-400"
                   }`}>
                     {validationStage >= 3 ? "✓" : "⌛"}
                   </span>
@@ -283,13 +282,13 @@ export default function SellerOnboarding() {
                   <span>Auditing registry data packets...</span>
                 </div>
               ) : validationSuccess ? (
-                <div className="space-y-4">
+                <div className="space-y-4 animate-slideDown">
                   <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl border border-emerald-100 text-xs text-center font-bold">
                     ✅ GCI Match Confirmed! Certificate serial is valid and unlocked for marketplace.
                   </div>
                   <button
                     onClick={() => setStep(4)}
-                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow flex items-center justify-center gap-1"
+                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow flex items-center justify-center gap-1 text-xs"
                   >
                     Locate Coordinates
                     <ArrowRight className="w-4 h-4" />
@@ -316,7 +315,7 @@ export default function SellerOnboarding() {
                     type="number"
                     value={coordinates.lat}
                     onChange={(e) => setCoordinates(prev => ({ ...prev, lat: parseFloat(e.target.value) || 20 }))}
-                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50"
+                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 font-bold"
                   />
                 </div>
                 <div className="space-y-1">
@@ -325,7 +324,7 @@ export default function SellerOnboarding() {
                     type="number"
                     value={coordinates.lng}
                     onChange={(e) => setCoordinates(prev => ({ ...prev, lng: parseFloat(e.target.value) || 85 }))}
-                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50"
+                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 font-bold"
                   />
                 </div>
                 <div className="space-y-1">
@@ -334,13 +333,13 @@ export default function SellerOnboarding() {
                     type="text"
                     value={coordinates.state}
                     onChange={(e) => setCoordinates(prev => ({ ...prev, state: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50"
+                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 font-bold"
                   />
                 </div>
               </div>
 
               {/* Embedded Mini Globe */}
-              <div className="w-full h-56 bg-[#0A0F0D] rounded-2xl overflow-hidden border border-emerald-950/20 relative">
+              <div className="w-full h-56 bg-[#030704] rounded-2xl overflow-hidden border border-emerald-950/20 relative">
                 <InteractiveGlobe mini={true} interactive={false} />
                 <div className="absolute bottom-2 left-2 bg-black/60 px-2 py-0.5 rounded text-[8px] text-slate-300">
                   Odisha Centered coordinates

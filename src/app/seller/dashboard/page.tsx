@@ -15,7 +15,9 @@ import {
   PlusCircle, 
   Check, 
   X, 
-  Landmark 
+  Landmark,
+  Layers,
+  Award
 } from "lucide-react";
 import Link from "next/link";
 
@@ -44,7 +46,7 @@ export default function SellerDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7FAF8] font-sans">
+    <div className="min-h-screen flex flex-col bg-[#F8FAF9] font-sans">
       <Navbar />
 
       <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -59,7 +61,7 @@ export default function SellerDashboard() {
         {/* Header summary */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[10px] font-bold rounded mb-2 border border-emerald-900/60">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-950 text-emerald-400 text-[10px] font-bold rounded-full mb-2 border border-emerald-900/60">
               Seller Control Portal
             </div>
             <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Developer Dashboard</h1>
@@ -91,7 +93,7 @@ export default function SellerDashboard() {
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-black text-[#0B3D2E]">₹{pendingEscrow.toLocaleString()}</span>
             </div>
-            <span className="text-[10px] text-[#38BDF8] font-medium block">Pending buyer release</span>
+            <span className="text-[10px] text-[#06B6D4] font-medium block">Pending buyer release</span>
           </div>
 
           {/* Card 3 */}
@@ -108,7 +110,7 @@ export default function SellerDashboard() {
           <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
             <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Pending Bids</span>
             <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-[#FBBF24]">{activeOffersCount}</span>
+              <span className="text-3xl font-black text-[#F59E0B]">{activeOffersCount}</span>
               <span className="text-xs text-slate-400 font-semibold">Offers</span>
             </div>
             <span className="text-[10px] text-slate-500 font-medium block">Action required</span>
@@ -164,7 +166,7 @@ export default function SellerDashboard() {
                           <>
                             <button
                               onClick={() => handleAction(off.id, "Accepted", off.buyerName)}
-                              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-[10px] transition-colors shadow-sm flex items-center gap-0.5"
+                              className="px-3.5 py-1.5 bg-[#10B981] hover:bg-emerald-500 text-white font-bold rounded-lg text-[10px] transition-colors shadow-sm flex items-center gap-0.5"
                             >
                               <Check className="w-3.5 h-3.5" />
                               Accept
@@ -236,7 +238,7 @@ export default function SellerDashboard() {
           {/* Right Column: Custody Vault & Escrow Info (1 col) */}
           <div className="w-full space-y-6">
             
-            {/* Vault Custody Status */}
+            {/* Vault Custody Status (Locked Server Rack Look) */}
             <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-5">
               <div>
                 <h3 className="text-xs font-extrabold text-slate-800 tracking-tight">Vault Custody Status</h3>
@@ -247,21 +249,25 @@ export default function SellerDashboard() {
                 {sellerListings.map((l) => (
                   <div 
                     key={l.id} 
-                    className="bg-[#0B3D2E] text-white p-4 rounded-2xl border border-emerald-800 flex items-center justify-between gap-4 relative overflow-hidden"
+                    className="bg-[#030704] text-white p-4.5 rounded-2xl border border-emerald-500/10 flex items-center justify-between gap-4 relative overflow-hidden shadow-md"
                   >
+                    {/* Glowing server status light */}
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 absolute top-3 right-3 animate-pulse"></div>
+                    
                     <div className="absolute -right-4 -bottom-4 opacity-5">
-                      <FolderLock className="w-16 h-16" />
+                      <FolderLock className="w-16 h-16 text-emerald-400" />
                     </div>
+                    
                     <div className="space-y-1.5 text-xs relative z-10">
                       <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
                         <Lock className="w-3.5 h-3.5" />
-                        In Vault Custody
+                        Vault Block Custody
                       </div>
                       <h4 className="font-bold text-white text-[11px] truncate max-w-[150px]">{l.name}</h4>
-                      <code className="text-[9px] font-mono text-slate-300 block">{l.certRegistry}</code>
+                      <code className="text-[9px] font-mono text-slate-400 block">{l.certRegistry}</code>
                     </div>
-                    <div className="bg-emerald-950 text-emerald-400 border border-emerald-800 px-3 py-1 rounded text-[10px] font-bold">
-                      Locked ✅
+                    <div className="bg-emerald-950 text-emerald-400 border border-emerald-800/60 px-3 py-1 rounded-lg text-[9px] font-bold font-mono">
+                      ELOCKED
                     </div>
                   </div>
                 ))}

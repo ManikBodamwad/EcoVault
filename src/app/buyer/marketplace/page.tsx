@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InteractiveGlobe from "@/components/InteractiveGlobe";
 import AIChatDrawer from "@/components/AIChatDrawer";
-import { Search, Filter, ShieldCheck, ChevronRight, SlidersHorizontal, Map } from "lucide-react";
+import { Search, Filter, ShieldCheck, ChevronRight, SlidersHorizontal, Map, Landmark, Activity, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 export default function Marketplace() {
@@ -21,10 +21,8 @@ export default function Marketplace() {
   const [filteredProjects, setFilteredProjects] = useState<CarbonProject[]>(projects);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Sync filtering based on state and inputs, as well as AI chat commands (e.g. if the user asked the AI to show biogas projects, etc.)
+  // Sync filtering based on AI chat commands
   useEffect(() => {
-    // If the last message from AI contained project recommendations, let's parse or let it handle standard filters.
-    // In our mock, the AI chat updates messages. We can check the last message text to auto-filter.
     const lastMsg = chatMessages[chatMessages.length - 1];
     if (lastMsg && lastMsg.sender === "ai") {
       const txt = lastMsg.text.toLowerCase();
@@ -67,25 +65,26 @@ export default function Marketplace() {
   }, [searchTerm, selectedType, maxPrice, acvaOnly, projects]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7FAF8] font-sans">
+    <div className="min-h-screen flex flex-col bg-[#F8FAF9] font-sans">
       <Navbar />
 
+      {/* Main Container */}
       <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8">
         
         {/* Left Side: Filter and Cards (65% width on desktop) */}
         <div className="w-full lg:w-3/5 space-y-6">
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-100/60 text-emerald-800 text-[10px] font-bold rounded mb-2">
-              Carbon Marketplace
-            </div>
-            <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Explore Verified Carbon Credits</h1>
-            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-              Click on any listing card to zoom the 3D globe coordinates and verify the project details, registry logs, and ACVA audit records.
+          <div className="space-y-1">
+            <span className="text-[9px] uppercase font-bold tracking-wider bg-emerald-100/60 text-emerald-800 px-2.5 py-0.5 rounded border border-emerald-200/50 w-fit block">
+              Escrow-Protected Listings
+            </span>
+            <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Ecosystem Carbon Marketplace</h1>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Verify real-time project metrics. Click on any card to automatically rotate and focus coordinates on the 3D grid globe.
             </p>
           </div>
 
-          {/* Search and Quick Filters bar */}
-          <div className="bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm space-y-3">
+          {/* Search and Filters Bar */}
+          <div className="bg-white p-4 rounded-2xl border border-slate-200/60 shadow-sm space-y-3">
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -94,12 +93,12 @@ export default function Marketplace() {
                   placeholder="Search project name, state, developer..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50 focus:bg-white transition-all"
+                  className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50 focus:bg-white transition-all font-medium"
                 />
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-1.5 px-3 py-2 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-700 transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-xl text-xs font-bold text-slate-700 transition-colors"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 Filters
@@ -116,7 +115,7 @@ export default function Marketplace() {
                   <select
                     value={selectedType}
                     onChange={(e) => setSelectedType(e.target.value)}
-                    className="w-full p-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    className="w-full p-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-bold"
                   >
                     <option value="All">All Categories</option>
                     <option value="Forestry">Forestry</option>
@@ -151,7 +150,7 @@ export default function Marketplace() {
                     id="acva-checkbox"
                     checked={acvaOnly}
                     onChange={(e) => setAcvaOnly(e.target.checked)}
-                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300"
+                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
                   />
                   <label htmlFor="acva-checkbox" className="font-semibold text-slate-700 select-none cursor-pointer">
                     ACVA Verified Only
@@ -162,36 +161,45 @@ export default function Marketplace() {
             )}
           </div>
 
-          {/* Listings Grid */}
+          {/* Listings High Density Grid */}
           <div className="space-y-3">
             {filteredProjects.length > 0 ? (
               filteredProjects.map((p) => {
                 const isActive = activeProject?.id === p.id;
+                
+                // Micro sparkline SVG coordinates generator
+                const getSparklineD = () => {
+                  if (p.type === "Forestry") return "M0 16 C10 12, 20 8, 30 14 C40 8, 45 4, 50 2";
+                  if (p.type === "Biogas") return "M0 18 C12 14, 22 10, 32 12 C40 10, 45 8, 50 6";
+                  if (p.type === "Solar") return "M0 15 C10 15, 20 12, 30 10 C38 8, 45 9, 50 4";
+                  return "M0 12 C10 10, 20 15, 30 11 C40 14, 45 6, 50 8";
+                };
+
                 return (
                   <div
                     key={p.id}
                     onClick={() => selectProject(isActive ? null : p)}
-                    className={`bg-white rounded-xl border p-5 cursor-pointer shadow-sm hover:shadow-md transition-all relative overflow-hidden flex flex-col md:flex-row justify-between gap-4 group ${
+                    className={`bg-white rounded-2xl border p-5 cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden flex flex-col md:flex-row justify-between gap-4 group ${
                       isActive 
-                        ? "border-[#38BDF8] ring-1 ring-[#38BDF8]/30" 
-                        : "border-slate-200 hover:border-emerald-300"
+                        ? "border-emerald-500 ring-1 ring-emerald-500/20" 
+                        : "border-slate-200/80 hover:border-emerald-300"
                     }`}
                   >
                     {/* Left content block */}
                     <div className="space-y-2 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
-                          p.type === "Forestry" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
-                          p.type === "Biogas" ? "bg-amber-50 text-amber-700 border border-amber-200" :
-                          p.type === "Solar" ? "bg-sky-50 text-sky-700 border border-sky-200" :
-                          p.type === "Wind" ? "bg-purple-50 text-purple-700 border border-purple-200" :
-                          "bg-rose-50 text-rose-700 border border-rose-200"
+                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
+                          p.type === "Forestry" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                          p.type === "Biogas" ? "bg-amber-50 text-amber-700 border border-amber-100" :
+                          p.type === "Solar" ? "bg-sky-50 text-sky-700 border border-sky-100" :
+                          p.type === "Wind" ? "bg-purple-50 text-purple-700 border border-purple-100" :
+                          "bg-rose-50 text-rose-700 border border-rose-100"
                         }`}>
                           {p.type}
                         </span>
                         <span className="text-[10px] text-slate-400 font-semibold">{p.location}, India</span>
                         {p.acvaVerified && (
-                          <span className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[9px] font-bold rounded border border-emerald-900/50">
+                          <span className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[9px] font-bold rounded-md border border-emerald-900/50">
                             <ShieldCheck className="w-3 h-3 text-emerald-400" />
                             ACVA Audit
                           </span>
@@ -205,28 +213,45 @@ export default function Marketplace() {
                         {p.description}
                       </p>
                       
-                      <div className="flex items-center gap-4 text-[10px] text-slate-400 pt-2 font-semibold">
-                        <span>Trust Score: <strong className="text-emerald-600">{p.trustScore}%</strong></span>
-                        <span>Registry: <code>{p.certRegistry}</code></span>
-                        <span>Risk: <strong className={p.riskScore === "Low" ? "text-emerald-600" : "text-amber-500"}>{p.riskScore}</strong></span>
+                      <div className="flex items-center gap-4 text-[10px] text-slate-400 pt-2 font-semibold border-t border-slate-50">
+                        <span className="flex items-center gap-0.5">Trust Score: <strong className="text-emerald-600">{p.trustScore}%</strong></span>
+                        <span>Registry ID: <code className="font-mono">{p.certRegistry}</code></span>
+                        <span className="flex items-center gap-0.5">Risk: <strong className={p.riskScore === "Low" ? "text-emerald-600" : "text-amber-500"}>{p.riskScore}</strong></span>
                       </div>
                     </div>
 
+                    {/* Middle: Sparkline Mini Chart */}
+                    <div className="hidden md:flex flex-col justify-center items-center px-4 border-l border-r border-slate-50 min-w-[70px]">
+                      <span className="text-[8px] uppercase font-bold text-slate-400 block mb-1">12M Trend</span>
+                      <svg className={`w-14 h-6 ${
+                        p.type === "Forestry" ? "text-emerald-500" : 
+                        p.type === "Biogas" ? "text-amber-500" : "text-sky-500"
+                      }`} viewBox="0 0 50 20">
+                        <path
+                          d={getSparklineD()}
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+
                     {/* Right pricing block */}
-                    <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 border-t md:border-t-0 md:border-l border-slate-100 pt-3 md:pt-0 md:pl-5 min-w-[120px]">
+                    <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 border-t md:border-t-0 md:pl-5 min-w-[120px]">
                       <div className="text-left md:text-right">
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Asking Price</span>
+                        <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Asking Price</span>
                         <span className="text-xl font-black text-slate-800">₹{p.price}</span>
                         <span className="text-[9px] text-slate-400 block font-semibold mt-0.5">per Ton CO₂e</span>
                       </div>
                       <div className="text-right">
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Volume</span>
+                        <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Volume</span>
                         <span className="text-xs font-bold text-slate-700">{p.volume.toLocaleString()} tons</span>
                       </div>
                       <Link
                         href={`/buyer/marketplace/${p.id}`}
                         onClick={(e) => e.stopPropagation()} // Stop event bubbling
-                        className="p-1.5 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white rounded-lg transition-all group-hover:translate-x-1"
+                        className="p-1.5 bg-slate-50 hover:bg-emerald-600 text-slate-600 hover:text-white rounded-xl transition-all group-hover:translate-x-1 border border-slate-200/60"
                       >
                         <ChevronRight className="w-4 h-4" />
                       </Link>
@@ -252,10 +277,10 @@ export default function Marketplace() {
           <div className="lg:sticky lg:top-24 space-y-4">
             
             {/* Globe container card */}
-            <div className="bg-[#0A0F0D] rounded-2xl border border-emerald-950/20 overflow-hidden shadow-xl p-4 flex flex-col justify-between relative group">
+            <div className="bg-[#030704] rounded-3xl border border-emerald-950/20 overflow-hidden shadow-2xl p-4 flex flex-col justify-between relative group">
               <div className="absolute top-4 left-4 z-10">
                 <span className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-950/80 text-emerald-400 text-[9px] font-semibold rounded border border-emerald-900/50">
-                  <Map className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                  <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
                   Live Indian Grid Map
                 </span>
               </div>
@@ -267,7 +292,7 @@ export default function Marketplace() {
 
               {/* Reveal Context Card if a project is focused */}
               {activeProject ? (
-                <div className="bg-[#0B3D2E]/80 backdrop-blur-md p-4 rounded-xl border border-emerald-500/20 text-white space-y-2.5 animate-fadeIn">
+                <div className="bg-[#0B3D2E]/80 backdrop-blur-md p-4 rounded-2xl border border-emerald-500/20 text-white space-y-2.5 animate-fadeIn">
                   <div className="flex items-center justify-between">
                     <span className="text-[9px] font-bold px-2 py-0.5 bg-emerald-600 text-white rounded tracking-wide uppercase">
                       {activeProject.type}
@@ -288,7 +313,7 @@ export default function Marketplace() {
                     </div>
                     <Link
                       href={`/buyer/marketplace/${activeProject.id}`}
-                      className="px-4 py-2 bg-[#16A34A] hover:bg-emerald-500 text-white text-[10px] font-bold rounded-lg shadow transition-all flex items-center gap-1"
+                      className="px-4 py-2 bg-[#10B981] hover:bg-emerald-500 text-white text-[10px] font-bold rounded-lg shadow transition-all flex items-center gap-1"
                     >
                       Verify details
                       <ChevronRight className="w-3.5 h-3.5" />
@@ -303,7 +328,7 @@ export default function Marketplace() {
             </div>
 
             {/* Quick guide card */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm text-xs text-slate-500 leading-relaxed flex items-start gap-2.5">
+            <div className="bg-white p-4 rounded-2xl border border-slate-200/60 shadow-sm text-xs text-slate-500 leading-relaxed flex items-start gap-2.5">
               <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>eKYC & Registry Matches:</strong> EcoVault guarantees that every listed certificate exists in the vault. Transactions route via institutional escrow to eliminate double-claiming risk.

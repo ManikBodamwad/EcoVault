@@ -15,7 +15,8 @@ import {
   Download, 
   Sparkles, 
   Landmark, 
-  Globe
+  Globe,
+  Award
 } from "lucide-react";
 import Link from "next/link";
 
@@ -24,7 +25,7 @@ export default function BuyerDashboard() {
 
   // Aggregate stats
   const totalPurchasedTons = purchasedCredits.reduce((acc, curr) => acc + curr.volume, 0);
-  const totalOffsetTons = totalPurchasedTons; // Mock mapping 1:1
+  const totalOffsetTons = totalPurchasedTons;
   const targetTons = userProfile?.offsetTarget || 50000;
   const progressPercent = Math.min(100, Math.floor((totalOffsetTons / targetTons) * 100));
   
@@ -40,13 +41,18 @@ export default function BuyerDashboard() {
 
     const forestryCredits = purchasedCredits.filter(c => c.project.type === "Forestry");
     const forestryPct = Math.round((forestryCredits.reduce((acc, curr) => acc + curr.volume, 0) / totalOffsetTons) * 100);
-    const equivalentFlights = Math.round(totalOffsetTons * 1.2); // 1.2 flights per ton approx
+    const equivalentFlights = Math.round(totalOffsetTons * 1.2);
 
     return `Your carbon offset portfolio is performing optimally this quarter. By retiring ${totalOffsetTons.toLocaleString()} tons of CO2 equivalents, you have offset emissions equivalent to approximately ${equivalentFlights} commercial flights from Delhi to Mumbai.\n\nApproximately ${forestryPct}% of your portfolio relies on Forestry projects in Eastern and Central India. These forestry offsets do more than lock away carbon; they stabilize estuary soils and support native fishing livelihoods in Odisha and Assam. EcoVault AI notes that your average price of ₹${averagePrice}/ton sits 4% below national exchange averages due to direct seller negotiations.`;
   };
 
+  // Radial progress calculations
+  const radius = 32;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7FAF8] font-sans">
+    <div className="min-h-screen flex flex-col bg-[#F8FAF9] font-sans">
       <Navbar />
 
       <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -54,7 +60,7 @@ export default function BuyerDashboard() {
         {/* Header summary */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-100/60 text-emerald-800 text-[10px] font-bold rounded mb-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full mb-2">
               Buyer Command Center
             </div>
             <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Sustainability Portfolio</h1>
@@ -69,7 +75,7 @@ export default function BuyerDashboard() {
           </Link>
         </div>
 
-        {/* Stats Cards Row */}
+        {/* Stats Cards Row (Enhanced Grid cards) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Card 1 */}
           <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
@@ -81,18 +87,42 @@ export default function BuyerDashboard() {
             <span className="text-[10px] text-emerald-600 font-medium block">▼ GCI Registry Certified</span>
           </div>
 
-          {/* Card 2 */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">ESG Target Completion</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-[#0B3D2E]">{progressPercent}%</span>
-              <span className="text-xs text-slate-400 font-semibold">of {targetTons.toLocaleString()}t</span>
+          {/* Card 2: Dynamic Radial Progress Gauge */}
+          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Target Progress</span>
+              <div className="flex items-baseline gap-0.5">
+                <span className="text-2xl font-black text-[#0B3D2E]">{progressPercent}%</span>
+                <span className="text-[10px] text-slate-400 font-semibold">completed</span>
+              </div>
+              <span className="text-[9px] text-slate-400 block font-semibold">Goal: {targetTons.toLocaleString()} t</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-1.5 mt-2">
-              <div 
-                className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500" 
-                style={{ width: `${progressPercent}%` }}
-              ></div>
+            
+            {/* SVG Circle Gauge */}
+            <div className="relative w-16 h-16 flex items-center justify-center flex-shrink-0">
+              <svg className="w-full h-full transform -rotate-90">
+                <circle
+                  cx="32"
+                  cy="32"
+                  r={radius}
+                  fill="transparent"
+                  stroke="#F1F5F9"
+                  strokeWidth="6"
+                />
+                <circle
+                  cx="32"
+                  cy="32"
+                  r={radius}
+                  fill="transparent"
+                  stroke="#10B981"
+                  strokeWidth="6"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={strokeDashoffset}
+                  strokeLinecap="round"
+                  className="transition-all duration-700 ease-out"
+                />
+              </svg>
+              <div className="absolute text-[8px] font-black text-[#0B3D2E]">{progressPercent}%</div>
             </div>
           </div>
 
@@ -197,22 +227,25 @@ export default function BuyerDashboard() {
                 <p className="text-[9px] text-slate-400 mt-0.5">Retirement of carbon credits audited by the Grid Controller of India</p>
               </div>
 
-              {/* Certificate mock */}
-              <div className="bg-gradient-to-b from-[#0B3D2E] to-emerald-950 text-white rounded-2xl p-5 border border-emerald-500/20 shadow space-y-5 relative overflow-hidden">
-                <div className="absolute top-2 right-2 opacity-5">
-                  <Globe className="w-32 h-32" />
-                </div>
-                <div className="flex justify-between items-center">
+              {/* Premium Gold/Emerald Certificate Mock */}
+              <div className="bg-gradient-to-b from-[#030704] to-[#0B3D2E] text-white rounded-3xl p-6 border-2 border-yellow-500/20 shadow-xl space-y-6 relative overflow-hidden">
+                <div className="absolute top-2 right-2 w-12 h-12 border-r border-t border-yellow-500/20 rounded-tr-lg"></div>
+                <div className="absolute bottom-2 left-2 w-12 h-12 border-l border-b border-yellow-500/20 rounded-bl-lg"></div>
+                
+                <div className="flex justify-between items-center relative z-10">
                   <Logo variant="icon" light={true} />
-                  <span className="text-[8px] bg-emerald-600 text-white px-2 py-0.5 rounded uppercase tracking-wider font-bold">
-                    Official
-                  </span>
+                  <div className="flex items-center gap-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/25 px-2 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase">
+                    <Award className="w-3 h-3" />
+                    Seal Lock
+                  </div>
                 </div>
-                <div className="space-y-4">
+
+                <div className="space-y-4 relative z-10">
                   <div>
                     <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Beneficiary</span>
                     <strong className="text-xs block text-white">{userProfile?.companyName || "Tata ESG Solutions"}</strong>
                   </div>
+                  
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Retires</span>
@@ -220,10 +253,12 @@ export default function BuyerDashboard() {
                     </div>
                     <div>
                       <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Fee Schema</span>
-                      <strong className="text-slate-200 font-mono text-[10px]">EcoVault Escrow</strong>
+                      <strong className="text-slate-200 font-mono text-[9px]">Escrow Protected</strong>
                     </div>
                   </div>
+                  
                   <hr className="border-emerald-800" />
+                  
                   <p className="text-[8px] text-slate-400 leading-relaxed font-medium">
                     This document verifies that carbon offsets representing actual biomass absorption have been retired from the market logs, preventing double allocation under voluntary registry frameworks.
                   </p>

@@ -20,7 +20,8 @@ import {
   Sparkles,
   HelpCircle,
   Clock,
-  ExternalLink
+  ExternalLink,
+  Award
 } from "lucide-react";
 
 export default function ProjectDetails() {
@@ -72,7 +73,7 @@ export default function ProjectDetails() {
       // Update user target offsets
       if (userProfile) {
         updateUserProfile({
-          offsetTarget: userProfile.offsetTarget // keep same but can add to tons offset
+          offsetTarget: userProfile.offsetTarget
         });
       }
 
@@ -100,7 +101,7 @@ export default function ProjectDetails() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7FAF8] font-sans">
+    <div className="min-h-screen flex flex-col bg-[#F8FAF9] font-sans">
       <Navbar />
 
       <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
@@ -131,36 +132,43 @@ export default function ProjectDetails() {
               </p>
             </div>
 
-            {/* Premium downloadable Certificate Card */}
-            <div className="bg-gradient-to-br from-[#0B3D2E] to-emerald-950 text-white rounded-2xl p-6 text-left relative overflow-hidden shadow-lg border border-emerald-500/20 max-w-md mx-auto">
-              <div className="absolute top-4 right-4 opacity-10">
-                <ShieldCheck className="w-24 h-24 text-white" />
-              </div>
-              <div className="flex items-center justify-between mb-6">
+            {/* Premium Gold/Emerald certificate card with border details */}
+            <div className="bg-gradient-to-br from-[#030704] to-[#0B3D2E] text-white rounded-3xl p-7 text-left relative overflow-hidden shadow-2xl border-2 border-yellow-500/30 max-w-md mx-auto">
+              <div className="absolute top-2 right-2 w-16 h-16 border-r-2 border-t-2 border-yellow-500/20 rounded-tr-xl"></div>
+              <div className="absolute bottom-2 left-2 w-16 h-16 border-l-2 border-b-2 border-yellow-500/20 rounded-bl-xl"></div>
+              
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.04)_0%,transparent_70%)]"></div>
+
+              <div className="flex items-center justify-between mb-8 relative z-10">
                 <Logo variant="icon" light={true} />
-                <span className="text-[8px] bg-emerald-600 text-emerald-100 font-bold px-2 py-0.5 rounded tracking-widest uppercase">
-                  Offical Retirement Cert
-                </span>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider">Beneficiary</span>
-                  <span className="text-sm font-bold text-white">{userProfile?.companyName || "Tata ESG Solutions"}</span>
+                <div className="flex items-center gap-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/25 px-2.5 py-0.5 rounded-full text-[8px] font-bold tracking-widest uppercase">
+                  <Award className="w-3 h-3" />
+                  Official Retirement Seal
                 </div>
+              </div>
+              
+              <div className="space-y-5 relative z-10 text-xs">
+                <div>
+                  <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Retirement Beneficiary</span>
+                  <span className="text-sm font-extrabold text-white">{userProfile?.companyName || "Tata ESG Solutions"}</span>
+                </div>
+                
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider">Volume Offset</span>
-                    <span className="text-xs font-bold text-emerald-400">{purchaseVolume.toLocaleString()} Tons CO₂e</span>
+                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Volume Retired</span>
+                    <span className="text-sm font-black text-emerald-400">{purchaseVolume.toLocaleString()} Tons CO₂e</span>
                   </div>
                   <div>
-                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider">Registry ID</span>
-                    <span className="text-xs font-bold font-mono text-slate-200">{certCode}</span>
+                    <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider leading-none mb-1">Certificate Serial</span>
+                    <span className="text-xs font-bold font-mono text-slate-200 block truncate">{certCode}</span>
                   </div>
                 </div>
+                
                 <hr className="border-emerald-800" />
-                <div className="flex items-center justify-between text-[8px] text-slate-500">
-                  <span>Audited by ACVA Agency</span>
-                  <span>EcoVault Vault Contract Secured</span>
+                
+                <div className="flex items-center justify-between text-[8px] text-slate-400 font-semibold leading-none">
+                  <span>Cross-Matched against GCI registry</span>
+                  <span>Escrow cleared by EcoVault</span>
                 </div>
               </div>
             </div>
@@ -171,13 +179,13 @@ export default function ProjectDetails() {
                   selectProject(null);
                   router.push("/buyer/dashboard");
                 }}
-                className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors shadow"
+                className="w-full sm:w-auto px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors shadow"
               >
                 Go to Portfolio Dashboard
               </button>
               <button
                 onClick={() => window.print()}
-                className="w-full sm:w-auto px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-2 border border-slate-200"
+                className="w-full sm:w-auto px-8 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-2 border border-slate-200"
               >
                 <Download className="w-3.5 h-3.5" />
                 Download PDF
@@ -210,7 +218,7 @@ export default function ProjectDetails() {
               </div>
 
               <div className="flex gap-4 items-start border-t border-slate-100 pt-4">
-                <span className="w-5 h-5 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5">⌛</span>
+                <span className="w-5 h-5 rounded-full bg-[#06B6D4] text-white font-bold flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5">⌛</span>
                 <div>
                   <h4 className="font-bold text-slate-800">National Registry Ownership Transfer</h4>
                   <p className="text-[10px] text-slate-400 mt-0.5">Executing retirement records on Grid Controller of India registry logs. Disbursing funds to {project.developer}.</p>
@@ -307,16 +315,16 @@ export default function ProjectDetails() {
                     <path
                       d="M20 100 Q80 90 140 92 T260 84 T380 75"
                       fill="none"
-                      stroke="#16A34A"
+                      stroke="#10B981"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                     />
 
                     {/* Nodes along the trend line */}
-                    <circle cx="20" cy="100" r="3.5" fill="#16A34A" />
-                    <circle cx="140" cy="92" r="3.5" fill="#16A34A" />
-                    <circle cx="260" cy="84" r="3.5" fill="#16A34A" />
-                    <circle cx="380" cy="75" r="4.5" fill="#38BDF8" className="animate-pulse" />
+                    <circle cx="20" cy="100" r="3.5" fill="#10B981" />
+                    <circle cx="140" cy="92" r="3.5" fill="#10B981" />
+                    <circle cx="260" cy="84" r="3.5" fill="#10B981" />
+                    <circle cx="380" cy="75" r="4.5" fill="#06B6D4" className="animate-pulse" />
 
                     {/* Horizontal grid lines */}
                     <line x1="20" y1="40" x2="380" y2="40" stroke="#E2E8F0" strokeWidth="0.5" strokeDasharray="3 3" />
@@ -389,12 +397,24 @@ export default function ProjectDetails() {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Select Volume */}
+                  {/* Select Volume Slider Input */}
                   <div className="space-y-1">
                     <div className="flex justify-between text-xs text-slate-600 font-semibold">
                       <span>Enter Offset Volume</span>
                       <span>Max Available: {project.volume.toLocaleString()} Tons</span>
                     </div>
+                    
+                    {/* Range slider for volume selection */}
+                    <input
+                      type="range"
+                      min="50"
+                      max={project.volume}
+                      step="50"
+                      value={purchaseVolume}
+                      onChange={(e) => setPurchaseVolume(parseInt(e.target.value, 10))}
+                      className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-500 mb-2"
+                    />
+
                     <div className="relative">
                       <input
                         type="number"
