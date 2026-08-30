@@ -10,6 +10,7 @@ import InteractiveGlobe from "@/components/InteractiveGlobe";
 import AIChatDrawer from "@/components/AIChatDrawer";
 import TiltCard from "@/components/TiltCard";
 import MagneticButton from "@/components/MagneticButton";
+import SensoryImpactShowcase from "@/components/SensoryImpactShowcase";
 import { 
   ShieldCheck, 
   ArrowRight, 
@@ -360,6 +361,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Carbon Sensory Showcase (Kumo Matcha-style liquid flavor & impact explorer) */}
+      <SensoryImpactShowcase />
 
       {/* Advanced Light-Themed Verification Scanner */}
       <section className="py-24 bg-white border-b border-slate-200/50 dotted-grid relative">
