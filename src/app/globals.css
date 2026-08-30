@@ -5,7 +5,7 @@
   --color-primary-light: #4ADE80;
   --color-pine: #0B3D2E;
   --color-bg-light: #F7FAF8;
-  --color-bg-dark: #0A0F0D;
+  --color-bg-dark: #070B09;
   --color-accent-blue: #38BDF8;
   --color-accent-amber: #FBBF24;
   --color-slate-900: #0F172A;
@@ -15,14 +15,14 @@
   --color-slate-200: #E2E8F0;
   --color-slate-100: #F1F5F9;
 
-  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-pulse-slow: pulse 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-float: float 6s ease-in-out infinite;
   --animate-shimmer: shimmer 2s linear infinite;
   --animate-gradient-shift: gradient-shift 10s ease infinite;
 
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-8px); }
   }
   @keyframes shimmer {
     0% { background-position: -200% 0; }
@@ -42,7 +42,7 @@
 }
 
 .dark-theme-root {
-  --background: #0A0F0D;
+  --background: #070B09;
   --foreground: #F1F5F9;
 }
 
@@ -51,33 +51,64 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Glassmorphism Classes */
+/* Premium Grid Patterns */
+.grid-pattern {
+  background-size: 30px 30px;
+  background-image: 
+    linear-gradient(to right, rgba(22, 163, 74, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(22, 163, 74, 0.03) 1px, transparent 1px);
+}
+
+.grid-pattern-dark {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+/* Glassmorphism Classes (Premium FinTech Styling) */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.5);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(22, 163, 74, 0.08);
+  box-shadow: 0 4px 30px rgba(11, 61, 46, 0.015);
 }
 
 .glass-panel-dark {
-  background: rgba(11, 61, 46, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(22, 163, 74, 0.2);
+  background: rgba(7, 11, 9, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(22, 163, 74, 0.12);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Glowing Border effect */
+.glow-border {
+  position: relative;
+}
+
+.glow-border::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(90deg, #16A34A, #38BDF8, #4ADE80);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glow-border:hover::after {
+  opacity: 0.15;
 }
 
 /* Shimmer Loading Effect */
 .shimmer-bg {
   background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-.shimmer-bg-dark {
-  background: linear-gradient(90deg, #1E293B 25%, #334155 50%, #1E293B 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -101,10 +132,11 @@ body {
   background: #94a3b8;
 }
 
-/* Scroll Snap */
-.snap-y-mandatory {
-  scroll-snap-type: y mandatory;
+/* Glow effects */
+.radial-glow {
+  background: radial-gradient(circle at center, var(--color-primary) 0%, transparent 70%);
 }
-.snap-start {
-  scroll-snap-align: start;
+
+.glow-pill {
+  box-shadow: 0 0 15px rgba(22, 163, 74, 0.1);
 }
