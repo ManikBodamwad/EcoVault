@@ -40,14 +40,14 @@ export default function VerificationExplainer() {
       <div className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 space-y-12">
         {/* Banner */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-semibold rounded-full border border-emerald-200 mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-full border border-emerald-200 mb-2">
             Verification Protocol
           </div>
-          <h1 className="text-3xl font-extrabold text-[#0B3D2E] tracking-tight sm:text-4xl">
+          <h1 className="text-3xl font-extrabold text-[#06281E] tracking-tight sm:text-4xl">
             How EcoVault Verification Works
           </h1>
-          <p className="text-base text-slate-500 max-w-2xl mx-auto leading-relaxed">
-            Voluntary carbon trading should not require trust. Every listing on our platform undergoes strict GCI registry cross-checks and third-party audits before trading can occur.
+          <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
+            Voluntary carbon trading should not rely on blind trust. Every listing on our platform undergoes strict GCI registry cross-checks, corporate eKYC, and multi-spectral MRV audits.
           </p>
         </div>
 
@@ -58,21 +58,21 @@ export default function VerificationExplainer() {
             return (
               <div 
                 key={idx}
-                className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-3 flex flex-col justify-between"
+                className="bg-white p-7 rounded-3xl border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between hover:border-emerald-300 transition-colors"
               >
                 <div className="space-y-3">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${st.color}`}>
-                    <Icon className="w-5 h-5" />
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${st.color}`}>
+                    <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-base font-bold text-slate-800">{st.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">
+                  <h3 className="text-lg font-bold text-slate-900">{st.title}</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed font-medium">
                     {st.desc}
                   </p>
                 </div>
                 
-                <div className="pt-2 flex items-center gap-1.5 text-[10px] text-emerald-600 font-bold uppercase tracking-wider">
+                <div className="pt-3 border-t border-slate-100 flex items-center gap-2 text-xs text-emerald-700 font-bold uppercase tracking-wider">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  Active Audit Point
+                  <span>Active Audit Point</span>
                 </div>
               </div>
             );
@@ -80,13 +80,18 @@ export default function VerificationExplainer() {
         </div>
 
         {/* ACVA Seal description */}
-        <div className="bg-[#0B3D2E] text-white rounded-3xl p-8 space-y-4 border border-emerald-800 shadow-sm">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-6 h-6 text-emerald-400" />
-            <h3 className="text-sm font-bold tracking-tight">Accredited Carbon Verification Agency (ACVA) Badge</h3>
+        <div className="bg-gradient-to-br from-[#03140F] via-[#06281E] to-[#020C09] text-white rounded-3xl p-8 space-y-4 border-2 border-emerald-500/30 shadow-2xl relative overflow-hidden">
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-base font-extrabold tracking-tight text-white">Accredited Carbon Verification Agency (ACVA) Standard</h3>
+              <span className="text-xs text-emerald-400 font-mono">Institutional Trust Architecture</span>
+            </div>
           </div>
-          <p className="text-xs text-slate-300 leading-relaxed">
-            The ACVA Badge indicates a credit has passed third-party physical canopy audits, soil carbon sampling, and developer identity verification. EcoVault requires ACVA checks on all forestry and biogas assets before they are eligible for transaction under our Escrow Shield protocol. This removes greenwashing risks entirely for sustainability managers.
+          <p className="text-xs text-slate-300 leading-relaxed font-medium">
+            The ACVA Badge indicates a credit has passed third-party physical canopy audits, soil carbon sampling, and developer identity verification. EcoVault requires ACVA checks on all forestry and biogas assets before they are eligible for transaction under our Escrow Shield protocol. This removes greenwashing risks entirely for sustainability managers and compliance auditors.
           </p>
         </div>
 

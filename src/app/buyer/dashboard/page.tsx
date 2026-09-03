@@ -16,7 +16,8 @@ import {
   Sparkles, 
   Landmark, 
   Globe,
-  Award
+  Award,
+  ShieldCheck
 } from "lucide-react";
 import Link from "next/link";
 import TiltCard from "@/components/TiltCard";
@@ -58,51 +59,53 @@ export default function BuyerDashboard() {
       <Navbar />
 
       <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        
-        {/* Header summary */}
+               {/* Header summary */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-full mb-2 border border-emerald-200">
               Buyer Command Center
             </div>
-            <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Sustainability Portfolio</h1>
-            <p className="text-xs text-slate-500 mt-1">Manage offsets, audit certifications, and review environmental impact insights.</p>
+            <h1 className="text-3xl font-extrabold text-[#06281E] tracking-tight">Sustainability Portfolio</h1>
+            <p className="text-sm text-slate-600 mt-1">Manage offsets, audit certifications, and review environmental impact insights.</p>
           </div>
           <Link href="/buyer/marketplace">
             <MagneticButton
               variant="primary"
-              className="px-5 py-2 text-xs"
+              className="px-6 py-3 text-xs shadow-md"
             >
-              Offset More Emissions
+              <span>Offset More Emissions</span>
               <ArrowRight className="w-4 h-4" />
             </MagneticButton>
           </Link>
         </div>
 
-        {/* Stats Cards Row (Enhanced Grid cards) */}
+        {/* Stats Cards Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Card 1 */}
-          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={5}>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 space-y-2 h-full">
-              <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Total Tons Offset</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black text-slate-800">{totalOffsetTons.toLocaleString()}</span>
-                <span className="text-xs text-slate-400 font-semibold">Tons CO₂e</span>
+          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={4}>
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2 h-full">
+              <span className="text-xs uppercase font-bold tracking-wider text-slate-500 block">Total Tons Offset</span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-extrabold text-slate-900">{totalOffsetTons.toLocaleString()}</span>
+                <span className="text-xs text-slate-500 font-semibold">Tons CO2e</span>
               </div>
-              <span className="text-[10px] text-emerald-600 font-medium block">▼ GCI Registry Certified</span>
+              <span className="text-xs text-emerald-700 font-bold block flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                GCI Registry Certified
+              </span>
             </div>
           </TiltCard>
 
           {/* Card 2: Dynamic Radial Progress Gauge */}
-          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={5}>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 flex items-center justify-between gap-4 h-full">
+          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={4}>
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between gap-4 h-full">
               <div className="space-y-1">
-                <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Target Progress</span>
-                <div className="flex items-baseline gap-0.5">
-                  <span className="text-2xl font-black text-[#0B3D2E]">{progressPercent}%</span>
-                  <span className="text-[10px] text-slate-400 font-semibold">completed</span>
+                <span className="text-xs uppercase font-bold tracking-wider text-slate-500 block">Target Progress</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-extrabold text-[#06281E]">{progressPercent}%</span>
+                  <span className="text-xs text-slate-500 font-semibold">completed</span>
                 </div>
-                <span className="text-[9px] text-slate-400 block font-semibold">Goal: {targetTons.toLocaleString()} t</span>
+                <span className="text-xs text-slate-600 block font-medium">Goal: {targetTons.toLocaleString()} t</span>
               </div>
               
               {/* SVG Circle Gauge */}
@@ -121,7 +124,7 @@ export default function BuyerDashboard() {
                     cy="32"
                     r={radius}
                     fill="transparent"
-                    stroke="#10B981"
+                    stroke="#059669"
                     strokeWidth="6"
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeDashoffset}
@@ -129,32 +132,32 @@ export default function BuyerDashboard() {
                     className="transition-all duration-700 ease-out"
                   />
                 </svg>
-                <div className="absolute text-[8px] font-black text-[#0B3D2E]">{progressPercent}%</div>
+                <div className="absolute text-xs font-black text-[#06281E]">{progressPercent}%</div>
               </div>
             </div>
           </TiltCard>
 
           {/* Card 3 */}
-          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={5}>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 space-y-2 h-full">
-              <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Average Credit Price</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black text-slate-800">₹{averagePrice}</span>
-                <span className="text-xs text-slate-400 font-semibold">per Ton CO₂e</span>
+          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={4}>
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2 h-full">
+              <span className="text-xs uppercase font-bold tracking-wider text-slate-500 block">Average Credit Price</span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-extrabold text-slate-900">₹{averagePrice}</span>
+                <span className="text-xs text-slate-500 font-semibold">/ Ton CO2e</span>
               </div>
-              <span className="text-[10px] text-slate-500 font-medium block">Compared to market: -4.2%</span>
+              <span className="text-xs text-emerald-700 font-semibold block">Market advantage: -4.2%</span>
             </div>
           </TiltCard>
 
           {/* Card 4 */}
-          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={5}>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 space-y-2 h-full">
-              <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Verification Rate</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black text-slate-800">100%</span>
-                <span className="text-xs text-emerald-600 font-semibold">ACVA Audited</span>
+          <TiltCard className="w-full" shadowColor="rgba(16, 185, 129, 0.05)" maxTilt={4}>
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2 h-full">
+              <span className="text-xs uppercase font-bold tracking-wider text-slate-500 block">Audit Pass Rate</span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-extrabold text-slate-900">100%</span>
+                <span className="text-xs text-emerald-700 font-bold">ACVA Certified</span>
               </div>
-              <span className="text-[10px] text-slate-500 font-medium block">Zero Greenwash Incidents</span>
+              <span className="text-xs text-slate-600 font-medium block">Zero Greenwash Incidents</span>
             </div>
           </TiltCard>
         </div>

@@ -18,9 +18,9 @@ export default function Logo({
 }: LogoProps) {
   // Dimension mappings
   const dimensions = {
-    sm: { imgSize: 28, textClass: "text-lg", subClass: "text-[7.5px]" },
-    md: { imgSize: 38, textClass: "text-2xl", subClass: "text-[8.5px]" },
-    lg: { imgSize: 52, textClass: "text-3xl", subClass: "text-[10px]" }
+    sm: { imgSize: 36, textClass: "text-xl", subClass: "text-[9px]" },
+    md: { imgSize: 46, textClass: "text-2xl sm:text-[28px]", subClass: "text-[10px]" },
+    lg: { imgSize: 62, textClass: "text-3xl sm:text-4xl", subClass: "text-xs" }
   };
 
   const { imgSize, textClass, subClass } = dimensions[size] || dimensions.md;

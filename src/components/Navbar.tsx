@@ -12,6 +12,7 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [escrowModalOpen, setEscrowModalOpen] = useState(false);
 
   // Styling based on current persona
   const isSeller = persona === "seller";
@@ -42,26 +43,26 @@ export default function Navbar() {
   return (
     <nav className={`sticky top-0 z-50 w-full transition-all duration-300 ${navClass}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0 cursor-pointer" onClick={() => router.push("/")}>
-            <Logo variant="horizontal" light={isSeller} />
+            <Logo variant="horizontal" size="md" light={isSeller} />
           </div>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-7">
             {navLinks.filter(link => link.show).map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-emerald-500 ${
+                className={`text-sm font-semibold transition-colors hover:text-emerald-500 tracking-wide ${
                   pathname === link.href 
                     ? isSeller 
-                      ? "text-emerald-400 font-semibold" 
-                      : "text-emerald-600 font-semibold" 
+                      ? "text-emerald-400 font-bold" 
+                      : "text-emerald-700 font-bold" 
                     : isSeller 
                       ? "text-slate-200" 
-                      : "text-slate-600"
+                      : "text-slate-700"
                 }`}
               >
                 {link.label}
@@ -71,19 +72,23 @@ export default function Navbar() {
 
           {/* Persona Switcher & Profile (Desktop) */}
           <div className="hidden md:flex items-center gap-4">
-            {/* Escrow Badge */}
+            {/* Escrow Badge - Clickable to open Explainer */}
             {!isSeller && (
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-sky-50 text-sky-700 text-xs font-semibold rounded-full border border-sky-200/50">
-                <Landmark className="w-3.5 h-3.5" />
-                Escrow Protected
-              </div>
+              <button
+                onClick={() => setEscrowModalOpen(true)}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 bg-sky-50 text-sky-800 text-xs font-bold rounded-full border border-sky-200/80 shadow-sm hover:bg-sky-100/80 hover:border-sky-300 transition-all cursor-pointer group"
+                title="Click to view Escrow Architecture"
+              >
+                <Landmark className="w-3.5 h-3.5 text-sky-600 group-hover:scale-110 transition-transform" />
+                <span>Escrow Protected</span>
+              </button>
             )}
             
             {/* Persona Switch Controls */}
-            <div className="flex items-center bg-black/10 p-1 rounded-lg border border-white/5">
+            <div className="flex items-center bg-black/10 p-1 rounded-xl border border-white/5">
               <button
                 onClick={() => handlePersonaSwitch("buyer")}
-                className={`text-xs px-3 py-1.5 rounded-md font-medium transition-all ${
+                className={`text-xs sm:text-sm px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                   !isSeller 
                     ? "bg-emerald-600 text-white shadow-sm" 
                     : "text-slate-300 hover:text-white"
@@ -93,7 +98,7 @@ export default function Navbar() {
               </button>
               <button
                 onClick={() => handlePersonaSwitch("seller")}
-                className={`text-xs px-3 py-1.5 rounded-md font-medium transition-all ${
+                className={`text-xs sm:text-sm px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                   isSeller 
                     ? "bg-[#16A34A] text-white shadow-sm" 
                     : "text-slate-600 hover:text-emerald-600"
@@ -107,25 +112,25 @@ export default function Navbar() {
             {persona !== "public" ? (
               <Link 
                 href={isSeller ? "/seller/dashboard" : "/buyer/dashboard"}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium border transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all ${
                   isSeller 
                     ? "bg-transparent text-emerald-300 border-emerald-800 hover:bg-emerald-950/40" 
-                    : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                    : "bg-slate-50 text-slate-800 border-slate-200 hover:bg-slate-100 shadow-sm"
                 }`}
               >
-                <User className="w-3.5 h-3.5" />
-                <span className="max-w-[120px] truncate">
-                  {userProfile?.companyName || (isSeller ? "Rakesh (Seller)" : "Buyer Dashboard")}
+                <User className="w-4 h-4" />
+                <span className="max-w-[140px] truncate">
+                  {isSeller ? "Sharath Agro Energy" : (userProfile?.companyName || "Tata ESG Solutions")}
                 </span>
-                {isSeller && <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />}
+                {isSeller && <ShieldCheck className="w-4 h-4 text-emerald-400" />}
               </Link>
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-md text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm transition-all"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm transition-all"
               >
-                Sign In
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>Sign In</span>
+                <ArrowRight className="w-4 h-4" />
               </Link>
             )}
           </div>
@@ -212,7 +217,7 @@ export default function Navbar() {
                 >
                   <span className="flex items-center gap-2">
                     <User className="w-4 h-4" />
-                    {userProfile?.companyName || (isSeller ? "Rakesh" : "Dashboard")}
+                    {isSeller ? "Sharath Agro Energy" : (userProfile?.companyName || "Tata ESG Solutions")}
                   </span>
                   {isSeller && <ShieldCheck className="w-4 h-4 text-emerald-400" />}
                 </Link>
@@ -226,6 +231,86 @@ export default function Navbar() {
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Institutional Escrow Explainer Modal */}
+      {escrowModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 relative">
+            <button
+              onClick={() => setEscrowModalOpen(false)}
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-50 text-sky-800 text-xs font-bold rounded-full border border-sky-200">
+                <Landmark className="w-3.5 h-3.5 text-sky-600" />
+                <span>Institutional Escrow Architecture</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                How EcoVault Escrow Protects Every Rupee
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+                Zero broker risk. Capital is locked into institutional bank vaults and released only when digital carbon retirement is stamped on the National Registry.
+              </p>
+            </div>
+
+            <div className="space-y-3 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+              <div className="flex items-start gap-3">
+                <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">1</span>
+                <div>
+                  <strong className="text-slate-900 block font-bold">Deposit to Institutional Escrow</strong>
+                  <span className="text-slate-500 font-normal">Buyer capital is locked in secure ICICI/HDFC Escrow custody.</span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 border-t border-slate-200/60 pt-2.5">
+                <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">2</span>
+                <div>
+                  <strong className="text-slate-900 block font-bold">National Registry Serial Match</strong>
+                  <span className="text-slate-500 font-normal">API matches GCI certificate hash, preventing double-selling.</span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 border-t border-slate-200/60 pt-2.5">
+                <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">3</span>
+                <div>
+                  <strong className="text-slate-900 block font-bold">Lidar Satellite Biomass Check</strong>
+                  <span className="text-slate-500 font-normal">Multi-spectral canopy imaging confirms physical carbon density.</span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 border-t border-slate-200/60 pt-2.5">
+                <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">4</span>
+                <div>
+                  <strong className="text-slate-900 block font-bold">Atomic Settlement & Certificate</strong>
+                  <span className="text-slate-500 font-normal">Funds disburse to developer and official PDF certificate generates instantly.</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <button
+                onClick={() => {
+                  setEscrowModalOpen(false);
+                  router.push("/buyer/marketplace/ev-001");
+                }}
+                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Test Live Escrow Checkout</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setEscrowModalOpen(false)}
+                className="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors cursor-pointer"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

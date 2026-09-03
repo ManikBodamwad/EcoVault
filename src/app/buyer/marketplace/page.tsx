@@ -194,72 +194,73 @@ export default function Marketplace() {
                       {/* Left content block */}
                       <div className="space-y-2 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
-                            p.type === "Forestry" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
-                            p.type === "Biogas" ? "bg-amber-50 text-amber-700 border border-amber-100" :
-                            p.type === "Solar" ? "bg-sky-50 text-sky-700 border border-sky-100" :
-                            p.type === "Wind" ? "bg-purple-50 text-purple-700 border border-purple-100" :
-                            "bg-rose-50 text-rose-700 border border-rose-100"
+                          <span className={`text-xs font-bold px-2.5 py-0.5 rounded-lg uppercase tracking-wider ${
+                            p.type === "Forestry" ? "bg-emerald-50 text-emerald-800 border border-emerald-200" :
+                            p.type === "Biogas" ? "bg-amber-50 text-amber-800 border border-amber-200" :
+                            p.type === "Solar" ? "bg-sky-50 text-sky-800 border border-sky-200" :
+                            p.type === "Wind" ? "bg-purple-50 text-purple-800 border border-purple-200" :
+                            "bg-rose-50 text-rose-800 border border-rose-200"
                           }`}>
                             {p.type}
                           </span>
-                          <span className="text-[10px] text-slate-400 font-semibold">{p.location}, India</span>
+                          <span className="text-xs text-slate-500 font-semibold">{p.location}, India</span>
                           {p.acvaVerified && (
-                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[9px] font-bold rounded-md border border-emerald-900/50">
-                              <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                              ACVA Audit
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-950 text-emerald-400 text-xs font-bold rounded-lg border border-emerald-800">
+                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                              ACVA Verified
                             </span>
                           )}
                         </div>
 
-                        <h3 className="text-base font-extrabold text-slate-800 tracking-tight group-hover:text-emerald-700 transition-colors">
+                        <h3 className="text-lg font-extrabold text-slate-900 tracking-tight group-hover:text-emerald-700 transition-colors">
                           {p.name}
                         </h3>
-                        <p className="text-xs text-slate-500 leading-relaxed max-w-xl line-clamp-2">
+                        <p className="text-xs text-slate-600 leading-relaxed max-w-xl line-clamp-2 font-medium">
                           {p.description}
                         </p>
                         
-                        <div className="flex items-center gap-4 text-[10px] text-slate-400 pt-2 font-semibold border-t border-slate-50">
-                          <span className="flex items-center gap-0.5">Trust Score: <strong className="text-emerald-600">{p.trustScore}%</strong></span>
-                          <span>Registry ID: <code className="font-mono">{p.certRegistry}</code></span>
-                          <span className="flex items-center gap-0.5">Risk: <strong className={p.riskScore === "Low" ? "text-emerald-600" : "text-amber-500"}>{p.riskScore}</strong></span>
+                        <div className="flex items-center gap-4 text-xs text-slate-500 pt-2 font-semibold border-t border-slate-100">
+                          <span className="flex items-center gap-1">Trust Score: <strong className="text-emerald-700 font-bold">{p.trustScore}%</strong></span>
+                          <span>Registry: <code className="font-mono text-slate-700 font-bold">{p.certRegistry}</code></span>
+                          <span className="flex items-center gap-1">Risk: <strong className={p.riskScore === "Low" ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{p.riskScore}</strong></span>
                         </div>
                       </div>
 
                       {/* Middle: Sparkline Mini Chart */}
-                      <div className="hidden md:flex flex-col justify-center items-center px-4 border-l border-r border-slate-50 min-w-[70px]">
-                        <span className="text-[8px] uppercase font-bold text-slate-400 block mb-1">12M Trend</span>
-                        <svg className={`w-14 h-6 ${
-                          p.type === "Forestry" ? "text-emerald-500" : 
-                          p.type === "Biogas" ? "text-amber-500" : "text-sky-500"
+                      <div className="hidden md:flex flex-col justify-center items-center px-4 border-l border-r border-slate-100 min-w-[80px]">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">12M Trend</span>
+                        <svg className={`w-16 h-7 ${
+                          p.type === "Forestry" ? "text-emerald-600" : 
+                          p.type === "Biogas" ? "text-amber-600" : "text-sky-600"
                         }`} viewBox="0 0 50 20">
                           <path
                             d={getSparklineD()}
                             fill="none"
                             stroke="currentColor"
-                            strokeWidth="1.8"
+                            strokeWidth="2"
                             strokeLinecap="round"
                           />
                         </svg>
                       </div>
 
                       {/* Right pricing block */}
-                      <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 border-t md:border-t-0 md:pl-5 min-w-[120px]">
+                      <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 border-t md:border-t-0 md:pl-5 min-w-[130px]">
                         <div className="text-left md:text-right">
-                          <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Asking Price</span>
-                          <span className="text-xl font-black text-slate-800">₹{p.price}</span>
-                          <span className="text-[9px] text-slate-400 block font-semibold mt-0.5">per Ton CO₂e</span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block leading-none mb-1">Asking Price</span>
+                          <span className="text-2xl font-black text-slate-900">₹{p.price}</span>
+                          <span className="text-xs text-slate-500 block font-semibold mt-0.5">/ ton CO2e</span>
                         </div>
                         <div className="text-right">
-                          <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 block leading-none mb-1">Volume</span>
-                          <span className="text-xs font-bold text-slate-700">{p.volume.toLocaleString()} tons</span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block leading-none mb-0.5">Available</span>
+                          <span className="text-xs font-bold text-slate-800">{p.volume.toLocaleString()} t</span>
                         </div>
                         <Link
                           href={`/buyer/marketplace/${p.id}`}
-                          onClick={(e) => e.stopPropagation()} // Stop event bubbling
-                          className="p-1.5 bg-slate-50 hover:bg-emerald-600 text-slate-600 hover:text-white rounded-xl transition-all group-hover:translate-x-1 border border-slate-200/60"
+                          onClick={(e) => e.stopPropagation()}
+                          className="px-3 py-1.5 bg-slate-100 hover:bg-emerald-600 text-slate-700 hover:text-white rounded-xl transition-all font-bold text-xs flex items-center gap-1 border border-slate-200"
                         >
-                          <ChevronRight className="w-4 h-4" />
+                          <span>Inspect</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
                     </div>

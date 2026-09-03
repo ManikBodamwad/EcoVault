@@ -40,7 +40,7 @@ export const mockProjects: CarbonProject[] = [
     id: "ev-002",
     name: "Malwa Agricultural Biogas Hub",
     type: "Biogas",
-    developer: "Rakesh Agro Energy Pvt Ltd",
+    developer: "Sharath Agro Energy Pvt Ltd",
     location: "Punjab",
     lat: 30.9,
     lng: 75.85,

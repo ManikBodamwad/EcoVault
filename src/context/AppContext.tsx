@@ -105,13 +105,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (savedListings) {
       setSellerListings(JSON.parse(savedListings));
     } else {
-      // Initial mock listings for Rakesh
+      // Initial mock listings for Sharath
       setSellerListings([
         {
-          id: "ev-rakesh-01",
+          id: "ev-sharath-01",
           name: "Odisha Agroforestry Project",
           type: "Forestry",
-          developer: "Rakesh Forestry Projects",
+          developer: "Sharath Agro Energy",
           location: "Odisha",
           lat: 20.27,
           lng: 85.84,
@@ -128,37 +128,96 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       ]);
     }
 
+    const defaultOffers: SellerOffer[] = [
+      {
+        id: "off-1",
+        projectId: "ev-sharath-01",
+        projectName: "Odisha Agroforestry Project",
+        projectType: "Forestry",
+        buyerName: "Reliance ESG Group",
+        buyerSector: "Refining & Petrochemicals",
+        volume: 2500,
+        offeredPrice: 305,
+        status: "Pending",
+        date: new Date(Date.now() - 3600000 * 2).toLocaleDateString("en-IN")
+      },
+      {
+        id: "off-2",
+        projectId: "ev-sharath-01",
+        projectName: "Odisha Agroforestry Project",
+        projectType: "Forestry",
+        buyerName: "Infosys GreenTech Initiative",
+        buyerSector: "Enterprise SaaS",
+        volume: 1200,
+        offeredPrice: 315,
+        status: "Pending",
+        date: new Date(Date.now() - 3600000 * 6).toLocaleDateString("en-IN")
+      },
+      {
+        id: "off-3",
+        projectId: "ev-sharath-01",
+        projectName: "Odisha Agroforestry Project",
+        projectType: "Forestry",
+        buyerName: "Mahindra Sustainability Cell",
+        buyerSector: "Automotive & Manufacturing",
+        volume: 3000,
+        offeredPrice: 308,
+        status: "Pending",
+        date: new Date(Date.now() - 3600000 * 12).toLocaleDateString("en-IN")
+      },
+      {
+        id: "off-4",
+        projectId: "ev-sharath-01",
+        projectName: "Odisha Agroforestry Project",
+        projectType: "Forestry",
+        buyerName: "Adani Green Ventures",
+        buyerSector: "Energy & Utilities",
+        volume: 4500,
+        offeredPrice: 302,
+        status: "Pending",
+        date: new Date(Date.now() - 3600000 * 18).toLocaleDateString("en-IN")
+      },
+      {
+        id: "off-5",
+        projectId: "ev-sharath-01",
+        projectName: "Odisha Agroforestry Project",
+        projectType: "Forestry",
+        buyerName: "Wipro EcoSolutions",
+        buyerSector: "Technology Consulting",
+        volume: 800,
+        offeredPrice: 318,
+        status: "Pending",
+        date: new Date(Date.now() - 3600000 * 24).toLocaleDateString("en-IN")
+      },
+      {
+        id: "off-6",
+        projectId: "ev-sharath-01",
+        projectName: "Odisha Agroforestry Project",
+        projectType: "Forestry",
+        buyerName: "L&T Decarbonization Wing",
+        buyerSector: "Heavy Infrastructure",
+        volume: 2000,
+        offeredPrice: 312,
+        status: "Pending",
+        date: new Date(Date.now() - 3600000 * 30).toLocaleDateString("en-IN")
+      }
+    ];
+
     const savedOffers = localStorage.getItem("ev_offers");
     if (savedOffers) {
-      setSellerOffers(JSON.parse(savedOffers));
-    } else {
-      // Default mock offers for Rakesh's listings
-      setSellerOffers([
-        {
-          id: "off-1",
-          projectId: "ev-rakesh-01",
-          projectName: "Odisha Agroforestry Project",
-          projectType: "Forestry",
-          buyerName: "Reliance ESG Group",
-          buyerSector: "Refining",
-          volume: 2500,
-          offeredPrice: 305,
-          status: "Pending",
-          date: new Date(Date.now() - 3600000 * 4).toLocaleDateString("en-IN")
-        },
-        {
-          id: "off-2",
-          projectId: "ev-rakesh-01",
-          projectName: "Odisha Agroforestry Project",
-          projectType: "Forestry",
-          buyerName: "Infosys GreenTech",
-          buyerSector: "Technology",
-          volume: 1200,
-          offeredPrice: 315,
-          status: "Pending",
-          date: new Date(Date.now() - 3600000 * 24).toLocaleDateString("en-IN")
+      try {
+        const parsed = JSON.parse(savedOffers);
+        if (Array.isArray(parsed) && parsed.length >= 5) {
+          setSellerOffers(parsed);
+        } else {
+          setSellerOffers(defaultOffers);
+          localStorage.setItem("ev_offers", JSON.stringify(defaultOffers));
         }
-      ]);
+      } catch {
+        setSellerOffers(defaultOffers);
+      }
+    } else {
+      setSellerOffers(defaultOffers);
     }
 
     const savedChat = localStorage.getItem("ev_chat");
@@ -237,7 +296,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           if (status === "Accepted") {
             // Add to transaction log as payout completed
             setTimeout(() => {
-              // Deduct volume from rakesh listings
+              // Deduct volume from sharath listings
               setSellerListings((prevListings) =>
                 prevListings.map((l) =>
                   l.id === off.projectId ? { ...l, volume: Math.max(0, l.volume - off.volume) } : l
@@ -255,7 +314,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addNewListing = (listing: Omit<CarbonProject, "id" | "acvaVerified" | "trustScore" | "riskScore" | "riskRationale" | "certRegistry">) => {
-    const generatedId = `ev-rakesh-${Math.floor(100 + Math.random() * 900)}`;
+    const generatedId = `ev-sharath-${Math.floor(100 + Math.random() * 900)}`;
     const newProj: CarbonProject = {
       ...listing,
       id: generatedId,
@@ -276,8 +335,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  // Advanced context-aware chatbot simulation
-  const sendChatMessage = (text: string) => {
+  // Advanced context-aware AI chatbot with Groq AI integration
+  const sendChatMessage = async (text: string) => {
     if (!text.trim()) return;
 
     const userMsg: ChatMessage = {
@@ -293,53 +352,70 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       return updated;
     });
 
-    // Simulate AI thinking and reply
-    setTimeout(() => {
-      let aiText = "I parsed your query but couldn't find a direct command. I can help filter carbon credits. Try saying 'forestry', 'biogas', or 'under 300'.";
-      const normalized = text.toLowerCase();
-
-      if (normalized.includes("forestry") || normalized.includes("forest") || normalized.includes("tree")) {
-        aiText = "I found 3 verified Forestry projects: \n1. **Mahanadi Mangrove Restoration** (Odisha) - ₹320/ton\n2. **Western Ghats Community Forestry** (Maharashtra) - ₹360/ton\n3. **Brahmaputra Bamboo Reforestation** (Assam) - ₹345/ton.\n\nI have highlighted these on your marketplace view.";
-      } else if (normalized.includes("biogas") || normalized.includes("stubble") || normalized.includes("methane")) {
-        aiText = "We have 2 high-quality Biogas projects active:\n1. **Malwa Agricultural Biogas Hub** (Punjab) - ₹295/ton (95 trust score)\n2. **Haryana Dairy Biomethane Plant** (Haryana) - ₹305/ton (96 trust score).\n\nBoth prevent open stubble/manure emissions.";
-      } else if (normalized.includes("under") || normalized.includes("less than") || normalized.includes("cheap") || normalized.includes("price")) {
-        // Extract numbers
-        const match = normalized.match(/\d+/);
-        const limit = match ? parseInt(match[0], 10) : 300;
-        
-        const cheapProjs = projects.filter((p) => p.price <= limit);
-        if (cheapProjs.length > 0) {
-          aiText = `Here are projects priced under ₹${limit}/ton:\n` + 
-            cheapProjs.map((p, idx) => `${idx + 1}. **${p.name}** (${p.location}) - ₹${p.price}/ton`).join("\n") +
-            `\n\nWould you like me to filter your exploration feed to these?`;
-        } else {
-          aiText = `There are no projects under ₹${limit}/ton at the moment. Our lowest priced credit is the **Thar Desert Solar Harvest** in Rajasthan at ₹260/ton.`;
-        }
-      } else if (normalized.includes("acva") || normalized.includes("audit") || normalized.includes("verification")) {
-        aiText = "ACVA stands for **Accredited Carbon Verification Agency**. It is an independent regulatory body that performs third-party physical audits, biomass verification, and satellite canopy monitoring. Listings with the ACVA Badge have passed our most rigorous trust checks, lowering greenwashing risk to near-zero.";
-      } else if (normalized.includes("escrow") || normalized.includes("safety") || normalized.includes("pay")) {
-        aiText = "Our escrow system protects transactions: \n1. The buyer deposits funds into the EcoVault Escrow. \n2. The system locks the corresponding digital carbon certificate. \n3. Upon verifying certificate ownership transfer on the National Registry, funds are safely disbursed to the project developer. EcoVault takes a flat transaction fee of 2%, with no hidden spreads.";
-      } else if (normalized.includes("odisha") || normalized.includes("punjab") || normalized.includes("rajasthan")) {
-        const state = normalized.includes("odisha") ? "Odisha" : normalized.includes("punjab") ? "Punjab" : "Rajasthan";
-        const stateProjs = projects.filter(p => p.location.toLowerCase() === state.toLowerCase());
-        aiText = `I found project(s) in **${state}**:\n` + 
-          stateProjs.map((p, idx) => `${idx + 1}. **${p.name}** - ₹${p.price}/ton (Vol: ${p.volume.toLocaleString()} tons)`).join("\n") +
-          `\n\nClicking on any card will focus the 3D globe coordinates directly.`;
-      }
-
-      const aiMsg: ChatMessage = {
-        id: `msg-${Date.now() + 1}`,
-        sender: "ai",
-        text: aiText,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-
-      setChatMessages((prev) => {
-        const updated = [...prev, aiMsg];
-        localStorage.setItem("ev_chat", JSON.stringify(updated));
-        return updated;
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, history: chatMessages })
       });
-    }, 1000);
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.reply) {
+          const aiMsg: ChatMessage = {
+            id: `ai-${Date.now()}`,
+            sender: "ai",
+            text: data.reply,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          };
+          setChatMessages((prev) => {
+            const updated = [...prev, aiMsg];
+            localStorage.setItem("ev_chat", JSON.stringify(updated));
+            return updated;
+          });
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("API chat error, applying fallback:", err);
+    }
+
+    // Contextual Fallback Engine
+    let aiText = "I parsed your query. I can help filter carbon credits. Try asking 'forestry projects', 'biogas', or 'under 300'.";
+    const normalized = text.toLowerCase();
+
+    if (normalized.includes("forestry") || normalized.includes("forest") || normalized.includes("tree")) {
+      aiText = "I found 3 verified Forestry projects: \n1. **Mahanadi Mangrove Restoration** (Odisha) - ₹320/ton\n2. **Western Ghats Community Forestry** (Maharashtra) - ₹360/ton\n3. **Brahmaputra Bamboo Reforestation** (Assam) - ₹345/ton.\n\nI have highlighted these on your marketplace view.";
+    } else if (normalized.includes("biogas") || normalized.includes("stubble") || normalized.includes("methane")) {
+      aiText = "We have 2 high-quality Biogas projects active:\n1. **Malwa Agricultural Biogas Hub** (Punjab) - ₹295/ton (95 trust score)\n2. **Haryana Dairy Biomethane Plant** (Haryana) - ₹305/ton (96 trust score).\n\nBoth prevent open stubble/manure emissions.";
+    } else if (normalized.includes("under") || normalized.includes("less than") || normalized.includes("cheap") || normalized.includes("price")) {
+      const match = normalized.match(/\d+/);
+      const limit = match ? parseInt(match[0], 10) : 300;
+      const cheapProjs = projects.filter((p) => p.price <= limit);
+      if (cheapProjs.length > 0) {
+        aiText = `Here are projects priced under ₹${limit}/ton:\n` + 
+          cheapProjs.map((p, idx) => `${idx + 1}. **${p.name}** (${p.location}) - ₹${p.price}/ton`).join("\n");
+      } else {
+        aiText = `There are no projects under ₹${limit}/ton at the moment. Our lowest priced credit is the **Thar Desert Solar Harvest** in Rajasthan at ₹260/ton.`;
+      }
+    } else if (normalized.includes("acva") || normalized.includes("audit") || normalized.includes("verification")) {
+      aiText = "ACVA stands for **Accredited Carbon Verification Agency**. It performs third-party physical audits, biomass verification, and satellite canopy monitoring, lowering greenwashing risk to near-zero.";
+    } else if (normalized.includes("escrow") || normalized.includes("safety") || normalized.includes("pay")) {
+      aiText = "Our escrow system protects transactions: \n1. Buyer deposits funds into EcoVault Escrow. \n2. Digital carbon certificate is locked. \n3. Upon verified registry ownership transition, funds disburse to developer with a flat 2% fee.";
+    }
+
+    const aiMsg: ChatMessage = {
+      id: `ai-${Date.now()}`,
+      sender: "ai",
+      text: aiText,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setChatMessages((prev) => {
+      const updated = [...prev, aiMsg];
+      localStorage.setItem("ev_chat", JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const clearChat = () => {

@@ -15,7 +15,8 @@ import {
   Database, 
   MapPin, 
   Loader2, 
-  PartyPopper 
+  Check, 
+  Clock 
 } from "lucide-react";
 
 export default function SellerOnboarding() {
@@ -241,56 +242,57 @@ export default function SellerOnboarding() {
               </div>
 
               {/* Status timeline */}
-              <div className="space-y-4 text-xs max-w-sm mx-auto">
+              <div className="space-y-4 text-xs max-w-sm mx-auto font-semibold">
                 <div className="flex gap-3 items-center">
-                  <span className={`w-5 h-5 rounded-full font-bold flex items-center justify-center text-[9px] ${
+                  <span className={`w-6 h-6 rounded-full font-bold flex items-center justify-center text-xs ${
                     validationStage >= 1 ? "bg-emerald-600 text-white shadow-sm shadow-emerald-500/25" : "bg-slate-100 text-slate-400"
                   }`}>
-                    {validationStage >= 1 ? "✓" : "⌛"}
+                    {validationStage >= 1 ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Clock className="w-3.5 h-3.5" />}
                   </span>
-                  <span className={validationStage >= 1 ? "text-slate-800 font-bold" : "text-slate-400"}>
+                  <span className={validationStage >= 1 ? "text-slate-900 font-bold" : "text-slate-400"}>
                     Verify corporate PAN entity signature
                   </span>
                 </div>
 
                 <div className="flex gap-3 items-center border-t border-slate-100 pt-3">
-                  <span className={`w-5 h-5 rounded-full font-bold flex items-center justify-center text-[9px] ${
+                  <span className={`w-6 h-6 rounded-full font-bold flex items-center justify-center text-xs ${
                     validationStage >= 2 ? "bg-emerald-600 text-white shadow-sm shadow-emerald-500/25" : "bg-slate-100 text-slate-400"
                   }`}>
-                    {validationStage >= 2 ? "✓" : "⌛"}
+                    {validationStage >= 2 ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Clock className="w-3.5 h-3.5" />}
                   </span>
-                  <span className={validationStage >= 2 ? "text-slate-800 font-bold" : "text-slate-400"}>
+                  <span className={validationStage >= 2 ? "text-slate-900 font-bold" : "text-slate-400"}>
                     Check registry certificate serial hash match
                   </span>
                 </div>
 
                 <div className="flex gap-3 items-center border-t border-slate-100 pt-3">
-                  <span className={`w-5 h-5 rounded-full font-bold flex items-center justify-center text-[9px] ${
+                  <span className={`w-6 h-6 rounded-full font-bold flex items-center justify-center text-xs ${
                     validationStage >= 3 ? "bg-emerald-600 text-white shadow-sm shadow-emerald-500/25" : "bg-slate-100 text-slate-400"
                   }`}>
-                    {validationStage >= 3 ? "✓" : "⌛"}
+                    {validationStage >= 3 ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Clock className="w-3.5 h-3.5" />}
                   </span>
-                  <span className={validationStage >= 3 ? "text-slate-800 font-bold" : "text-slate-400"}>
+                  <span className={validationStage >= 3 ? "text-slate-900 font-bold" : "text-slate-400"}>
                     Validate double-allocation / retirement clear
                   </span>
                 </div>
               </div>
 
               {validating ? (
-                <div className="flex items-center justify-center gap-2 text-slate-400 text-xs py-4">
+                <div className="flex items-center justify-center gap-2 text-slate-500 text-xs py-4">
                   <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
                   <span>Auditing registry data packets...</span>
                 </div>
               ) : validationSuccess ? (
                 <div className="space-y-4 animate-slideDown">
-                  <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl border border-emerald-100 text-xs text-center font-bold">
-                    ✅ GCI Match Confirmed! Certificate serial is valid and unlocked for marketplace.
+                  <div className="bg-emerald-50 text-emerald-800 p-4 rounded-2xl border border-emerald-200 text-xs text-center font-bold flex items-center justify-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    <span>GCI Match Confirmed. Certificate serial is valid and unlocked for marketplace.</span>
                   </div>
                   <button
                     onClick={() => setStep(4)}
-                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow flex items-center justify-center gap-1 text-xs"
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow-md flex items-center justify-center gap-1.5 text-xs cursor-pointer"
                   >
-                    Locate Coordinates
+                    <span>Locate Coordinates</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -303,7 +305,7 @@ export default function SellerOnboarding() {
             <div className="space-y-4 animate-fadeIn">
               <div className="text-center space-y-2">
                 <MapPin className="w-10 h-10 text-emerald-600 mx-auto" />
-                <h2 className="text-xl font-bold text-slate-800">Pin Project Location</h2>
+                <h2 className="text-xl font-bold text-slate-900">Pin Project Location</h2>
                 <p className="text-xs text-slate-500">Provide GPS coordinates representing your project boundaries. Used by buyers for satellite MRV audits.</p>
               </div>
 
@@ -315,7 +317,7 @@ export default function SellerOnboarding() {
                     type="number"
                     value={coordinates.lat}
                     onChange={(e) => setCoordinates(prev => ({ ...prev, lat: parseFloat(e.target.value) || 20 }))}
-                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 font-bold"
+                    className="w-full border border-slate-200 rounded-xl px-2.5 py-2 bg-slate-50 font-bold"
                   />
                 </div>
                 <div className="space-y-1">
@@ -324,7 +326,7 @@ export default function SellerOnboarding() {
                     type="number"
                     value={coordinates.lng}
                     onChange={(e) => setCoordinates(prev => ({ ...prev, lng: parseFloat(e.target.value) || 85 }))}
-                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 font-bold"
+                    className="w-full border border-slate-200 rounded-xl px-2.5 py-2 bg-slate-50 font-bold"
                   />
                 </div>
                 <div className="space-y-1">
@@ -333,25 +335,25 @@ export default function SellerOnboarding() {
                     type="text"
                     value={coordinates.state}
                     onChange={(e) => setCoordinates(prev => ({ ...prev, state: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 font-bold"
+                    className="w-full border border-slate-200 rounded-xl px-2.5 py-2 bg-slate-50 font-bold"
                   />
                 </div>
               </div>
 
               {/* Embedded Mini Globe */}
-              <div className="w-full h-56 bg-[#030704] rounded-2xl overflow-hidden border border-emerald-950/20 relative">
+              <div className="w-full h-56 bg-[#03140F] rounded-2xl overflow-hidden border border-emerald-950/20 relative">
                 <InteractiveGlobe mini={true} interactive={false} />
-                <div className="absolute bottom-2 left-2 bg-black/60 px-2 py-0.5 rounded text-[8px] text-slate-300">
+                <div className="absolute bottom-2 left-2 bg-black/60 px-2.5 py-1 rounded text-[9px] text-slate-300 font-mono">
                   Odisha Centered coordinates
                 </div>
               </div>
 
               <button
                 onClick={handleCompleteOnboarding}
-                className="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl text-xs transition-colors shadow flex items-center justify-center gap-1.5"
+                className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl text-xs transition-colors shadow-lg flex items-center justify-center gap-2 cursor-pointer"
               >
-                <PartyPopper className="w-4 h-4" />
-                Complete Verification & Unlock Portal
+                <ShieldCheck className="w-4 h-4" />
+                <span>Complete Verification & Unlock Portal</span>
               </button>
             </div>
           )}

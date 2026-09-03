@@ -23,7 +23,8 @@ import {
   Award,
   Lock,
   Layers,
-  MapPin
+  MapPin,
+  FileCheck
 } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue } from "framer-motion";
 
@@ -184,14 +185,14 @@ export default function Home() {
     <div ref={targetRef} className="min-h-screen flex flex-col bg-transparent font-sans overflow-x-hidden relative">
       
       {/* Light-Themed Transaction Marquee Ticker with smooth edge fades */}
-      <div className="bg-slate-50 border-b border-slate-200/60 text-slate-600 py-3 overflow-hidden text-[9px] font-mono tracking-wider select-none relative z-50">
+      <div className="bg-slate-50 border-b border-slate-200/60 text-slate-700 py-3.5 overflow-hidden text-xs font-mono tracking-wider select-none relative z-50">
         <div className="absolute left-0 top-0 bottom-0 w-44 bg-gradient-to-r from-slate-50 via-slate-50/80 to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-44 bg-gradient-to-l from-slate-50 via-slate-50/80 to-transparent z-10 pointer-events-none" />
         <div className="animate-marquee whitespace-nowrap flex gap-12 items-center">
           {[...mockMarqueeLog, ...mockMarqueeLog].map((log, idx) => (
             <div key={idx} className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>{log}</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-semibold">{log}</span>
             </div>
           ))}
         </div>
@@ -210,18 +211,18 @@ export default function Home() {
         {/* Parallax layers mapping scroll and mouse tracking */}
         <motion.div 
           style={{ y: yFloatingPill1, x: cursorTransX }}
-          className="absolute top-20 right-16 hidden lg:flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200/60 shadow-lg rounded-2xl text-[10px] font-extrabold text-slate-700 select-none z-25 cursor-default"
+          className="absolute top-20 right-16 hidden lg:flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200/80 shadow-xl rounded-2xl text-xs sm:text-sm font-bold text-slate-800 select-none z-25 cursor-default"
         >
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          Escrow: ₹1.2 Cr Safe Locked
+          <span>Escrow: ₹1.2 Cr Safe Locked</span>
         </motion.div>
 
         <motion.div 
           style={{ y: yFloatingPill2, x: cursorTransX }}
-          className="absolute bottom-28 left-20 hidden lg:flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200/60 shadow-lg rounded-2xl text-[10px] font-extrabold text-slate-700 select-none z-25 cursor-default"
+          className="absolute bottom-28 left-20 hidden lg:flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200/80 shadow-xl rounded-2xl text-xs sm:text-sm font-bold text-slate-800 select-none z-25 cursor-default"
         >
           <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          eKYC Identity Confirmed
+          <span>eKYC Identity Confirmed</span>
         </motion.div>
 
         <motion.div 
@@ -241,18 +242,18 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               >
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-emerald-50 text-emerald-800 text-[10px] font-extrabold rounded-full border border-emerald-200/60 mb-5 shadow-sm">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 text-emerald-800 text-xs sm:text-sm font-bold rounded-full border border-emerald-200/80 mb-5 shadow-sm">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
                   National Grid Carbon Registry Handshake Live
                 </span>
                 
-                <h1 className="text-4xl sm:text-5xl lg:text-[62px] font-black tracking-tight leading-[0.98] text-[#064E3B] select-none">
+                <h1 className="text-4xl sm:text-5xl lg:text-[62px] font-black tracking-tight leading-[1.02] text-[#064E3B] select-none">
                   Carbon credits you can <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-cyan-500">access.</span>
                   <br />
                   Transactions you can <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-800">trust.</span>
                 </h1>
                 
-                <p className="mt-5 text-xs sm:text-sm text-slate-500 max-w-lg mx-auto lg:mx-0 leading-relaxed font-bold">
+                <p className="mt-5 text-sm sm:text-base lg:text-lg text-slate-600 max-w-lg mx-auto lg:mx-0 leading-relaxed font-semibold">
                   EcoVault connects verified voluntary carbon project developers across India directly with corporate sustainability buyers. Direct escrow settlement and satellite Lidar verification audits.
                 </p>
               </motion.div>
@@ -264,25 +265,25 @@ export default function Home() {
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
               >
                 <TiltCard 
-                  className="bg-white/90 backdrop-blur-md p-6 border border-slate-200/80 text-slate-600 space-y-4 shadow-xl"
+                  className="bg-white/95 backdrop-blur-md p-6 sm:p-7 border border-slate-200/90 text-slate-700 space-y-5 shadow-xl rounded-3xl"
                   shadowColor="rgba(16, 185, 129, 0.08)"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black text-emerald-700 flex items-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5" />
+                    <span className="text-xs sm:text-sm font-extrabold text-emerald-800 flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-emerald-600" />
                       ESG Offset Split Calculator
                     </span>
-                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Instant valuation</span>
+                    <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Instant valuation</span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                     {/* Sector */}
-                    <div className="space-y-1">
-                      <label className="text-slate-500 block font-semibold">Your Sector</label>
+                    <div className="space-y-1.5">
+                      <label className="text-slate-700 block font-bold text-xs sm:text-sm">Your Sector</label>
                       <select
                         value={sector}
                         onChange={(e: any) => setSector(e.target.value)}
-                        className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-800 font-bold"
+                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-800 font-bold text-xs sm:text-sm"
                       >
                         <option value="tech">Technology / SaaS</option>
                         <option value="manufacturing">Heavy Industrial</option>
@@ -292,10 +293,10 @@ export default function Home() {
                     </div>
 
                     {/* Volume Slider */}
-                    <div className="space-y-1">
-                      <div className="flex justify-between font-semibold">
-                        <span className="text-slate-500">Emissions Target</span>
-                        <span className="text-emerald-700 font-bold">{emissions.toLocaleString()} t</span>
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between font-bold text-xs sm:text-sm">
+                        <span className="text-slate-700">Emissions Target</span>
+                        <span className="text-emerald-700 font-extrabold">{emissions.toLocaleString()} t</span>
                       </div>
                       <input
                         type="range"
@@ -304,7 +305,7 @@ export default function Home() {
                         step="500"
                         value={emissions}
                         onChange={(e) => setEmissions(parseInt(e.target.value, 10))}
-                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600 mt-2.5"
+                        className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 mt-3"
                       />
                     </div>
                   </div>
@@ -313,35 +314,35 @@ export default function Home() {
 
                   {/* Calculation Outputs */}
                   <div className="grid grid-cols-3 gap-3 text-center">
-                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
-                      <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Estimated Cost</span>
-                      <strong className="text-xs text-slate-800 font-black">₹{(metrics.estimatedCost / 100000).toFixed(2)} L</strong>
+                    <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                      <span className="text-[10px] sm:text-xs text-slate-500 block uppercase font-bold tracking-wider mb-1">Estimated Cost</span>
+                      <strong className="text-sm sm:text-base text-slate-900 font-black">₹{(metrics.estimatedCost / 100000).toFixed(2)} L</strong>
                     </div>
-                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
-                      <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Trees Sequest.</span>
-                      <strong className="text-xs text-emerald-600 font-black flex items-center justify-center gap-0.5">
-                        <TreePine className="w-3.5 h-3.5 text-emerald-600" />
+                    <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                      <span className="text-[10px] sm:text-xs text-slate-500 block uppercase font-bold tracking-wider mb-1">Trees Sequest.</span>
+                      <strong className="text-sm sm:text-base text-emerald-700 font-black flex items-center justify-center gap-1">
+                        <TreePine className="w-4 h-4 text-emerald-600" />
                         {metrics.treesEquivalent.toLocaleString()}
                       </strong>
                     </div>
-                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
-                      <span className="text-[8px] text-slate-400 block uppercase font-bold tracking-wider mb-0.5">Flight Offset</span>
-                      <strong className="text-xs text-sky-600 font-black flex items-center justify-center gap-0.5">
-                        <PlaneTakeoff className="w-3.5 h-3.5 text-sky-600" />
+                    <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                      <span className="text-[10px] sm:text-xs text-slate-500 block uppercase font-bold tracking-wider mb-1">Flight Offset</span>
+                      <strong className="text-sm sm:text-base text-sky-700 font-black flex items-center justify-center gap-1">
+                        <PlaneTakeoff className="w-4 h-4 text-sky-600" />
                         {metrics.flightsEquivalent.toLocaleString()}
                       </strong>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-[9px] text-slate-400 font-bold">Recommended: {metrics.forestryRatio}% Forestry / {metrics.biogasRatio}% Biogas</span>
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+                    <span className="text-xs text-slate-500 font-bold">Recommended: {metrics.forestryRatio}% Forestry / {metrics.biogasRatio}% Biogas</span>
                     <MagneticButton
                       variant="primary"
                       onClick={handleApplyCalculatorSplit}
-                      className="px-4 py-2 text-[10px]"
+                      className="w-full sm:w-auto px-5 py-2.5 text-xs sm:text-sm font-bold shadow-md"
                     >
-                      Apply Split
-                      <ArrowRight className="w-3 h-3" />
+                      <span>Apply Split</span>
+                      <ArrowRight className="w-4 h-4" />
                     </MagneticButton>
                   </div>
                 </TiltCard>
@@ -365,120 +366,138 @@ export default function Home() {
       {/* Interactive Carbon Sensory Showcase (Kumo Matcha-style liquid flavor & impact explorer) */}
       <SensoryImpactShowcase />
 
-      {/* Advanced Light-Themed Verification Scanner */}
-      <section className="py-24 bg-white/40 backdrop-blur-md border-b border-slate-200/50 dotted-grid relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-[9px] uppercase font-bold tracking-wider bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full border border-emerald-200/50">
-              Audit Instrument console
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#064E3B] tracking-tight">
+      {/* High-Tech Anti-Greenwashing Laser Verification Scanner Console */}
+      <section className="py-24 bg-[#03140F] text-white border-y border-emerald-950/80 relative overflow-hidden">
+        {/* Ambient atmospheric cyan & emerald background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[380px] bg-gradient-to-b from-emerald-500/15 via-cyan-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-950/90 text-emerald-400 text-xs font-bold rounded-full border border-emerald-800/80 shadow-md">
+              <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+              <span>National Registry Audit Instrument Console</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
               Anti-Greenwashing Laser Verification Scanner
             </h2>
-            <p className="text-slate-500 text-xs leading-relaxed max-w-lg mx-auto font-bold">
-              Validate credit integrity by running queries directly on the Grid Controller of India registry files. Select a certificate serial to start.
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl mx-auto font-medium">
+              Validate voluntary carbon credit integrity by querying the Grid Controller of India registry files and satellite Lidar telemetry in real time.
             </p>
           </div>
 
           {/* Verification Console */}
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             
             {/* Left Console Controller (5 cols) */}
-            <div className="md:col-span-5 flex flex-col justify-between">
-              <TiltCard 
-                className="bg-white/90 backdrop-blur-md border border-slate-200/80 p-6 shadow-md flex flex-col justify-between h-full space-y-6"
-                shadowColor="rgba(16, 185, 129, 0.05)"
-              >
+            <div className="lg:col-span-5 flex flex-col justify-between">
+              <div className="bg-[#06281E]/90 backdrop-blur-xl border border-emerald-800/60 p-6 rounded-3xl shadow-2xl flex flex-col justify-between h-full space-y-6">
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Terminal className="w-5 h-5 text-emerald-600" />
-                    <h3 className="text-sm font-bold text-slate-800">Scanner Controller</h3>
+                  <div className="flex items-center gap-2.5 border-b border-emerald-900/60 pb-3">
+                    <Terminal className="w-5 h-5 text-emerald-400" />
+                    <h3 className="text-base font-bold text-white tracking-wide">Registry Controller</h3>
                   </div>
                   
-                  <div className="space-y-2 text-xs">
-                    <label className="text-slate-500 block font-semibold">Select Certificate Registry ID</label>
+                  <div className="space-y-2.5 text-xs">
+                    <label className="text-slate-300 block font-bold">Select Certificate Registry ID to Audit</label>
                     <div className="grid grid-cols-1 gap-2">
-                      <button
-                        onClick={() => setTerminalInput("GCI-REG-2026-OD812")}
-                        className={`text-left p-2.5 rounded-xl border text-[10px] font-mono transition-all ${
-                          terminalInput === "GCI-REG-2026-OD812" 
-                            ? "border-emerald-500 bg-emerald-50/50 text-emerald-800 font-bold" 
-                            : "border-slate-100 hover:bg-slate-50 text-slate-600"
-                        }`}
-                      >
-                        📄 GCI-REG-2026-OD812 (Mahanadi Mangroves)
-                      </button>
-                      <button
-                        onClick={() => setTerminalInput("GCI-REG-2026-PB291")}
-                        className={`text-left p-2.5 rounded-xl border text-[10px] font-mono transition-all ${
-                          terminalInput === "GCI-REG-2026-PB291" 
-                            ? "border-emerald-500 bg-emerald-50/50 text-emerald-800 font-bold" 
-                            : "border-slate-100 hover:bg-slate-50 text-slate-600"
-                        }`}
-                      >
-                        📄 GCI-REG-2026-PB291 (Malwa Biogas)
-                      </button>
+                      {[
+                        { id: "GCI-REG-2026-OD812", name: "Mahanadi Mangroves", loc: "Odisha" },
+                        { id: "GCI-REG-2026-PB291", name: "Malwa Agri-Biogas", loc: "Punjab" },
+                        { id: "GCI-REG-2026-RJ404", name: "Thar Desert Solar", loc: "Rajasthan" },
+                        { id: "GCI-REG-2026-GJ118", name: "Kutch Coastal Wind", loc: "Gujarat" },
+                        { id: "GCI-REG-2026-KA780", name: "Bengaluru Bio-Energy", loc: "Karnataka" },
+                      ].map((item) => {
+                        const isSelected = terminalInput === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => setTerminalInput(item.id)}
+                            className={`text-left p-3 rounded-2xl border text-xs font-mono transition-all flex items-center justify-between cursor-pointer ${
+                              isSelected 
+                                ? "border-emerald-400 bg-emerald-950/90 text-emerald-300 font-bold shadow-lg shadow-emerald-950/60 ring-1 ring-emerald-400/30" 
+                                : "border-emerald-950/80 bg-black/40 hover:bg-emerald-950/40 text-slate-300"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 truncate">
+                              <FileCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                              <span className="truncate">{item.id} ({item.name})</span>
+                            </div>
+                            {isSelected && (
+                              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
 
                 <MagneticButton
-                  variant="secondary"
+                  variant="primary"
                   onClick={runRegistryAudit}
                   disabled={terminalStatus === "running"}
-                  className="w-full py-3 text-xs"
+                  className="w-full py-3.5 text-xs shadow-lg font-bold"
                 >
-                  <Activity className="w-4 h-4 text-white" />
-                  Initialize Laser Scanner
+                  <Activity className={`w-4 h-4 text-white ${terminalStatus === "running" ? "animate-spin" : ""}`} />
+                  <span>{terminalStatus === "running" ? "Executing Laser Audit Sweep..." : "Initialize Laser Scanner"}</span>
                 </MagneticButton>
-              </TiltCard>
+              </div>
             </div>
 
-            {/* Right Scanner Terminal (Frosted glass light layout) */}
-            <div className="md:col-span-7 bg-white/70 backdrop-blur-md rounded-3xl p-6 shadow-lg border border-slate-200/80 relative overflow-hidden flex flex-col justify-between min-h-[300px]">
+            {/* Right Scanner Terminal */}
+            <div className="lg:col-span-7 bg-[#020C09]/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-emerald-900/80 relative overflow-hidden flex flex-col justify-between min-h-[380px]">
               
               {/* Laser Sweep Overlay Line */}
-              {terminalStatus === "running" && <div className="laser-line" />}
+              {terminalStatus === "running" && <div className="laser-line-highres" />}
 
-              {/* Console log output (Clean light monospace text) */}
-              <div className="space-y-3 font-mono text-[10px] text-slate-600 select-none overflow-y-auto max-h-[220px]">
+              {/* Header Telemetry Bar */}
+              <div className="flex items-center justify-between pb-3 border-b border-emerald-950/90 text-xs font-mono text-slate-400">
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-emerald-300 font-bold">GCI-LIVE-GATEWAY</span>
+                </span>
+                <span className="text-[11px] text-slate-400">PORT: 8443 / SSL ENCRYPTED</span>
+              </div>
+
+              {/* Console log output */}
+              <div className="space-y-3 font-mono text-xs sm:text-sm text-slate-300 select-none overflow-y-auto max-h-[240px] my-4 leading-relaxed">
                 {terminalLogs.length > 0 ? (
                   terminalLogs.map((log, idx) => (
                     <div 
                       key={idx} 
                       className={`animate-fadeIn ${
                         idx === terminalLogs.length - 1 && terminalStatus === "success" 
-                          ? "text-emerald-700 font-bold" 
-                          : "text-slate-500"
+                          ? "text-emerald-300 font-bold bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-800/60" 
+                          : "text-slate-300"
                       }`}
                     >
                       {log}
                     </div>
                   ))
                 ) : (
-                  <div className="text-slate-400 text-center py-20">
-                    // Handshake idle. Select certificate and execute scanner.
+                  <div className="text-slate-500 text-center py-20 font-mono text-xs">
+                    // Handshake idle. Select a certificate registry ID on the left and click Initialize.
                   </div>
                 )}
               </div>
 
               {/* Audit checks checklist display */}
-              <div className="border-t border-slate-200 pt-4 mt-4 grid grid-cols-2 gap-4 text-[9px] font-mono text-slate-500">
-                <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 3 ? "bg-emerald-500" : "bg-slate-300"}`} />
-                  <span>eKYC Verified</span>
+              <div className="border-t border-emerald-950/90 pt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+                <div className="flex items-center gap-2 bg-emerald-950/30 p-2 rounded-xl border border-emerald-900/40">
+                  <span className={`w-2.5 h-2.5 rounded-full ${activeStep >= 3 ? "bg-emerald-400 animate-pulse" : "bg-slate-700"}`} />
+                  <span className={activeStep >= 3 ? "text-emerald-300 font-bold" : "text-slate-500"}>eKYC Verified</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 4 ? "bg-emerald-500" : "bg-slate-300"}`} />
-                  <span>Registry match</span>
+                <div className="flex items-center gap-2 bg-emerald-950/30 p-2 rounded-xl border border-emerald-900/40">
+                  <span className={`w-2.5 h-2.5 rounded-full ${activeStep >= 4 ? "bg-emerald-400 animate-pulse" : "bg-slate-700"}`} />
+                  <span className={activeStep >= 4 ? "text-emerald-300 font-bold" : "text-slate-500"}>GCI Match</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 5 ? "bg-emerald-500" : "bg-slate-300"}`} />
-                  <span>Duplicate check clear</span>
+                <div className="flex items-center gap-2 bg-emerald-950/30 p-2 rounded-xl border border-emerald-900/40">
+                  <span className={`w-2.5 h-2.5 rounded-full ${activeStep >= 5 ? "bg-emerald-400 animate-pulse" : "bg-slate-700"}`} />
+                  <span className={activeStep >= 5 ? "text-emerald-300 font-bold" : "text-slate-500"}>No Duplicate</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${activeStep >= 6 ? "bg-emerald-500" : "bg-slate-300"}`} />
-                  <span>Satellite Lidar pass</span>
+                <div className="flex items-center gap-2 bg-emerald-950/30 p-2 rounded-xl border border-emerald-900/40">
+                  <span className={`w-2.5 h-2.5 rounded-full ${activeStep >= 6 ? "bg-emerald-400 animate-pulse" : "bg-slate-700"}`} />
+                  <span className={activeStep >= 6 ? "text-emerald-300 font-bold" : "text-slate-500"}>Lidar Pass</span>
                 </div>
               </div>
 
@@ -491,33 +510,38 @@ export default function Home() {
       {/* Buyer vs Seller dynamic panel showcase */}
       <section className="py-24 bg-slate-50/40 backdrop-blur-md border-b border-slate-200/50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block font-bold">Adaptable Platform</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#064E3B] tracking-tight">Direct Trading Portal Preview</h2>
-            <p className="text-slate-500 text-xs max-w-md mx-auto font-bold">
-              EcoVault provides verified interfaces for both voluntary buyers and local project developers.
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <span className="inline-flex items-center gap-1.5 text-xs uppercase font-bold tracking-wider text-emerald-800 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200/80 shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              Adaptable Trading Ecosystem
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#064E3B] tracking-tight">
+              Direct Trading Portal Preview
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base max-w-lg mx-auto font-medium leading-relaxed">
+              EcoVault provides verified interfaces tailored specifically for corporate ESG buyers and local project developers.
             </p>
 
-            <div className="inline-flex bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200 mt-4">
+            <div className="inline-flex bg-slate-100 p-1.5 rounded-2xl text-sm font-bold border border-slate-200 mt-4 shadow-sm">
               <button
                 onClick={() => setActiveView("buyer")}
-                className={`px-6 py-2 rounded-lg transition-all ${
+                className={`px-8 py-3 rounded-xl transition-all cursor-pointer ${
                   activeView === "buyer" 
-                    ? "bg-[#0B3D2E] text-white shadow-sm" 
-                    : "text-slate-500 hover:text-slate-800"
+                    ? "bg-[#0B3D2E] text-white shadow-md font-bold" 
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
-                I'm a Buyer
+                I'm a Corporate Buyer
               </button>
               <button
                 onClick={() => setActiveView("seller")}
-                className={`px-6 py-2 rounded-lg transition-all ${
+                className={`px-8 py-3 rounded-xl transition-all cursor-pointer ${
                   activeView === "seller" 
-                    ? "bg-[#0B3D2E] text-white shadow-sm" 
-                    : "text-slate-500 hover:text-slate-800"
+                    ? "bg-[#0B3D2E] text-white shadow-md font-bold" 
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
-                I'm a Seller
+                I'm a Project Developer
               </button>
             </div>
           </div>
@@ -525,7 +549,7 @@ export default function Home() {
           {/* Showcase Panel with 3D Tilt Wrapper */}
           <div className="max-w-5xl mx-auto">
             <TiltCard 
-              className="bg-white border border-slate-200/80 p-8 shadow-md min-h-[380px]"
+              className="bg-white/95 backdrop-blur-md border border-slate-200/90 p-8 sm:p-10 shadow-xl rounded-3xl min-h-[400px]"
               shadowColor="rgba(16, 185, 129, 0.05)"
             >
               <AnimatePresence mode="wait">
@@ -536,56 +560,56 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 15 }}
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 items-center"
                   >
-                    <div className="space-y-5 text-xs text-slate-500">
-                      <span className="text-[9px] uppercase font-bold text-emerald-600 block">Corporate Buyers</span>
-                      <h3 className="text-xl font-extrabold text-slate-800 tracking-tight leading-snug">
+                    <div className="space-y-6 text-sm text-slate-600">
+                      <span className="text-xs uppercase font-extrabold text-emerald-700 tracking-wider block">Corporate ESG Buyers</span>
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
                         Purchase verified voluntary credits with zero greenwashing risk.
                       </h3>
-                      <p className="leading-relaxed font-bold">
+                      <p className="leading-relaxed font-medium text-slate-600 text-sm sm:text-base">
                         Corporate buyers need credits to hit carbon net-zero targets. However, greenwashing represents severe brand risks. EcoVault requires GCI registry verification and third-party ACVA audits, giving you complete trust.
                       </p>
-                      <ul className="space-y-2 text-slate-600 font-bold">
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                          Explore credits on our Interactive 3D Globe map
+                      <ul className="space-y-3 text-slate-700 font-semibold text-sm sm:text-base">
+                        <li className="flex items-center gap-2.5">
+                          <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                          <span>Explore credits on our Interactive 3D Globe map</span>
                         </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                          AI-generated carbon footprint offset insights
+                        <li className="flex items-center gap-2.5">
+                          <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                          <span>AI-generated carbon footprint offset insights</span>
                         </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                          Escrow protection: capital released only upon transfer verification
+                        <li className="flex items-center gap-2.5">
+                          <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                          <span>Escrow protection: capital released only upon transfer verification</span>
                         </li>
                       </ul>
                       <MagneticButton
                         variant="primary"
                         onClick={() => handleChoosePersona("buyer")}
-                        className="px-6 py-2.5 text-xs"
+                        className="px-7 py-3 text-sm font-bold shadow-md"
                       >
-                        Enter Buyer Portal
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        <span>Enter Buyer Portal</span>
+                        <ArrowRight className="w-4 h-4" />
                       </MagneticButton>
                     </div>
 
                     {/* UI Preview mockup */}
-                    <div className="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4">
-                      <div className="flex justify-between items-center text-xs">
-                        <strong className="text-slate-800">Tata ESG Group Portfolio</strong>
-                        <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">14,200 t Offset</span>
+                    <div className="bg-slate-50 border border-slate-200/90 p-6 sm:p-8 rounded-3xl shadow-sm space-y-5">
+                      <div className="flex justify-between items-center text-sm">
+                        <strong className="text-slate-900 font-bold">Tata ESG Group Portfolio</strong>
+                        <span className="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold">14,200 t Offset</span>
                       </div>
                       <hr className="border-slate-200" />
-                      <div className="space-y-3 text-xs text-slate-500 font-bold">
-                        <div className="flex justify-between">
+                      <div className="space-y-4 text-sm text-slate-600 font-medium">
+                        <div className="flex justify-between items-center">
                           <span>Offset Target:</span>
-                          <strong className="text-slate-800">50,000 tons</strong>
+                          <strong className="text-slate-900 font-bold text-base">50,000 tons</strong>
                         </div>
-                        <div className="w-full bg-slate-200 rounded-full h-1.5">
-                          <div className="bg-emerald-600 h-1.5 rounded-full" style={{ width: "28%" }} />
+                        <div className="w-full bg-slate-200 rounded-full h-2">
+                          <div className="bg-emerald-600 h-2 rounded-full" style={{ width: "28%" }} />
                         </div>
-                        <div className="bg-white p-2.5 rounded-lg border border-slate-100 font-mono text-[9px] text-slate-400">
+                        <div className="bg-white p-3 rounded-xl border border-slate-200 font-mono text-xs text-slate-600 font-semibold">
                           // Latest Certificate: EV-CERT-OD812-4029
                         </div>
                       </div>
@@ -598,59 +622,57 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -15 }}
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 items-center"
                   >
-                    <div className="space-y-5 text-xs text-slate-500">
-                      <span className="text-[9px] uppercase font-bold text-emerald-600 block">Project Developers</span>
-                      <h3 className="text-xl font-extrabold text-slate-800 tracking-tight leading-snug">
+                    <div className="space-y-6 text-sm text-slate-600">
+                      <span className="text-xs uppercase font-extrabold text-sky-700 tracking-wider block">Project Developers</span>
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
                         Your Projects. Verified Once. Sold Fair.
                       </h3>
-                      <p className="leading-relaxed font-bold">
+                      <p className="leading-relaxed font-medium text-slate-600 text-sm sm:text-base">
                         Sellers of voluntary offsets (forestry, biogas) face opacity and lack broker access, losing huge margins. EcoVault provides direct access to corporate buyers, locks assets safely in digital vaults, and settles payouts inside 48 hours.
                       </p>
-                      <ul className="space-y-2 text-slate-600 font-bold">
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
-                          AI Reference Price Assistant to optimize listings
+                      <ul className="space-y-3 text-slate-700 font-semibold text-sm sm:text-base">
+                        <li className="flex items-center gap-2.5">
+                          <CheckCircle className="w-5 h-5 text-[#38BDF8] flex-shrink-0" />
+                          <span>AI Reference Price Assistant to optimize listings</span>
                         </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
-                          Escrow eLock: direct payouts settled within 48h
+                        <li className="flex items-center gap-2.5">
+                          <CheckCircle className="w-5 h-5 text-[#38BDF8] flex-shrink-0" />
+                          <span>Escrow eLock: direct payouts settled within 48h</span>
                         </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0" />
-                          One-time eKYC and GCI registry matching
+                        <li className="flex items-center gap-2.5">
+                          <CheckCircle className="w-5 h-5 text-[#38BDF8] flex-shrink-0" />
+                          <span>One-time eKYC and GCI registry matching</span>
                         </li>
                       </ul>
                       <MagneticButton
                         variant="primary"
                         onClick={() => handleChoosePersona("seller")}
-                        className="px-6 py-2.5 text-xs"
+                        className="px-7 py-3 text-sm font-bold shadow-md"
                       >
-                        Enter Seller Portal
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        <span>Enter Seller Portal</span>
+                        <ArrowRight className="w-4 h-4" />
                       </MagneticButton>
                     </div>
 
                     {/* UI Preview mockup */}
-                    <div className="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4">
-                      <div className="flex justify-between items-center text-xs">
-                        <strong className="text-slate-800">Rakesh Forestry Dashboard</strong>
-                        <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Locked Vault</span>
+                    <div className="bg-slate-50 border border-slate-200/90 p-6 sm:p-8 rounded-3xl shadow-sm space-y-5">
+                      <div className="flex justify-between items-center text-sm">
+                        <strong className="text-slate-900 font-bold">Mahanadi Mangrove Custody</strong>
+                        <span className="text-xs bg-sky-100 text-sky-800 px-3 py-1 rounded-full font-bold">Vault Locked</span>
                       </div>
                       <hr className="border-slate-200" />
-                      <div className="space-y-3 text-xs text-slate-500 font-bold">
-                        <div className="flex justify-between">
-                          <span>Total Payouts:</span>
-                          <strong className="text-slate-800">₹7,87,500</strong>
+                      <div className="space-y-4 text-sm text-slate-600 font-medium">
+                        <div className="flex justify-between items-center">
+                          <span>Verified Inventory:</span>
+                          <strong className="text-slate-900 font-bold text-base">14,500 tons</strong>
                         </div>
-                        <div className="flex justify-between">
-                          <span>Escrow Locked Bids:</span>
-                          <strong className="text-emerald-600">2 Pending Offers</strong>
+                        <div className="w-full bg-slate-200 rounded-full h-2">
+                          <div className="bg-sky-500 h-2 rounded-full" style={{ width: "68%" }} />
                         </div>
-                        <div className="bg-white text-emerald-700 border border-emerald-100 p-2 rounded-lg text-[9px] flex items-center justify-between font-bold">
-                          <span>Odisha Community Forestry</span>
-                          <span>Locked in Custody ✅</span>
+                        <div className="bg-white p-3 rounded-xl border border-slate-200 font-mono text-xs text-slate-600 font-semibold">
+                          // Settlement Status: ₹44.95 L Cleared
                         </div>
                       </div>
                     </div>

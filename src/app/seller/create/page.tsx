@@ -14,7 +14,7 @@ export default function CreateListing() {
   const [name, setName] = useState("");
   const [type, setType] = useState<"Forestry" | "Biogas" | "Wind" | "Solar" | "Waste-to-Energy">("Forestry");
   const [location, setLocation] = useState("Odisha");
-  const [developer, setDeveloper] = useState("Rakesh Forestry Projects");
+  const [developer, setDeveloper] = useState("Sharath Agro Energy");
   const [lat, setLat] = useState(20.3);
   const [lng, setLng] = useState(85.8);
   const [price, setPrice] = useState<number>(310);

@@ -36,7 +36,7 @@ interface FlavorArchetype {
   pricePerTon: number;
   availableVolume: number;
   trustScore: number;
-  sensoryNotes: string[];
+  sensoryNotes: { label: string; icon: React.ElementType }[];
   metrics: {
     treesPerTon: number;
     flightEquiv: number;
@@ -62,10 +62,10 @@ const archetypes: FlavorArchetype[] = [
     availableVolume: 14500,
     trustScore: 98,
     sensoryNotes: [
-      "🌿 High Subterranean Peat Carbon",
-      "🛰️ 98.4% Satellite Lidar Density",
-      "🐟 Coastal Fishing Community Yield",
-      "🛡️ GCI Voluntary Registry Locked"
+      { label: "High Subterranean Peat Carbon", icon: TreePine },
+      { label: "98.4% Satellite Lidar Density", icon: Globe },
+      { label: "Coastal Fishing Community Yield", icon: Activity },
+      { label: "GCI Voluntary Registry Locked", icon: ShieldCheck }
     ],
     metrics: {
       treesPerTon: 14,
@@ -90,10 +90,10 @@ const archetypes: FlavorArchetype[] = [
     availableVolume: 8200,
     trustScore: 96,
     sensoryNotes: [
-      "🔥 100% Crop Burning Abatement",
-      "🚜 Direct Farmer Revenue Split",
-      "⚡ Compressed Biomethane Injection",
-      "🔬 ACVA Audited Chemical Purity"
+      { label: "100% Crop Burning Abatement", icon: Zap },
+      { label: "Direct Farmer Revenue Split", icon: TrendingUp },
+      { label: "Compressed Biomethane Injection", icon: Sparkles },
+      { label: "ACVA Audited Chemical Purity", icon: ShieldCheck }
     ],
     metrics: {
       treesPerTon: 10,
@@ -118,10 +118,10 @@ const archetypes: FlavorArchetype[] = [
     availableVolume: 22000,
     trustScore: 99,
     sensoryNotes: [
-      "☀️ 300+ Days Peak Solar Flux",
-      "💧 Zero Water Cleaning Tech",
-      "📊 24/7 Smart Telemetry Handshake",
-      "🔒 Escrow Direct Capital Binding"
+      { label: "300+ Days Peak Solar Flux", icon: Sun },
+      { label: "Zero Water Cleaning Tech", icon: Activity },
+      { label: "24/7 Smart Telemetry Handshake", icon: Globe },
+      { label: "Escrow Direct Capital Binding", icon: ShieldCheck }
     ],
     metrics: {
       treesPerTon: 9,
@@ -146,10 +146,10 @@ const archetypes: FlavorArchetype[] = [
     availableVolume: 18000,
     trustScore: 97,
     sensoryNotes: [
-      "🌊 Maritime Offshore Thermal Winds",
-      "🇪🇺 EU CBAM Export Compliant",
-      "⚡ Non-Intermittent Baseload",
-      "🤝 48-Hour Escrow Settlement"
+      { label: "Maritime Offshore Thermal Winds", icon: Wind },
+      { label: "EU CBAM Export Compliant", icon: Globe },
+      { label: "Non-Intermittent Baseload", icon: Zap },
+      { label: "48-Hour Escrow Settlement", icon: ShieldCheck }
     ],
     metrics: {
       treesPerTon: 11,
@@ -317,24 +317,28 @@ export default function SensoryImpactShowcase() {
                     </p>
                   </div>
 
-                  {/* Floating Sensory Notes Pills (Kumo Matcha Ingredient tags) */}
+                  {/* Floating Sensory Notes Pills */}
                   <div className="space-y-2">
-                    <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                    <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
                       Verified Bio-Telemetry &amp; Co-Benefits
                     </span>
                     <div className="flex flex-wrap gap-2">
-                      {selectedArchetype.sensoryNotes.map((note, idx) => (
-                        <motion.span
-                          key={idx}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: idx * 0.08, duration: 0.3 }}
-                          whileHover={{ scale: 1.05 }}
-                          className="px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 border border-slate-200/70 hover:border-emerald-300 text-slate-700 text-xs font-bold rounded-xl transition-all shadow-sm cursor-default"
-                        >
-                          {note}
-                        </motion.span>
-                      ))}
+                      {selectedArchetype.sensoryNotes.map((note, idx) => {
+                        const NoteIcon = note.icon;
+                        return (
+                          <motion.span
+                            key={idx}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: idx * 0.08, duration: 0.3 }}
+                            whileHover={{ scale: 1.05 }}
+                            className="px-3.5 py-1.5 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-800 text-xs font-bold rounded-xl transition-all shadow-sm cursor-default flex items-center gap-1.5"
+                          >
+                            <NoteIcon className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>{note.label}</span>
+                          </motion.span>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -342,15 +346,15 @@ export default function SensoryImpactShowcase() {
                 {/* Bottom Technical Spec Bar */}
                 <div className="border-t border-slate-100 pt-5 grid grid-cols-3 gap-4 text-xs font-semibold">
                   <div>
-                    <span className="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Registry File</span>
-                    <code className="text-slate-800 font-mono text-[10px] font-bold block">{selectedArchetype.metrics.registryId}</code>
+                    <span className="text-[9px] text-slate-500 uppercase font-bold block mb-0.5">Registry File</span>
+                    <code className="text-slate-800 font-mono text-xs font-bold block">{selectedArchetype.metrics.registryId}</code>
                   </div>
                   <div>
-                    <span className="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Bio-Stability</span>
+                    <span className="text-[9px] text-slate-500 uppercase font-bold block mb-0.5">Bio-Stability</span>
                     <strong className="text-emerald-700 font-bold block">{selectedArchetype.metrics.bioStability}</strong>
                   </div>
                   <div>
-                    <span className="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Available Supply</span>
+                    <span className="text-[9px] text-slate-500 uppercase font-bold block mb-0.5">Available Supply</span>
                     <strong className="text-slate-800 font-bold block">{selectedArchetype.availableVolume.toLocaleString()} Tons</strong>
                   </div>
                 </div>
@@ -367,23 +371,23 @@ export default function SensoryImpactShowcase() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[8px] uppercase font-bold tracking-wider text-slate-400 block mb-1">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block mb-1">
                         Interactive Offset Volume
                       </span>
-                      <h4 className="text-lg font-black text-slate-800">
+                      <h4 className="text-lg font-black text-slate-900">
                         Customize Your Impact
                       </h4>
                     </div>
                     <div className="text-right">
-                      <span className="text-xl font-black text-[#0B3D2E]">₹{selectedArchetype.pricePerTon}</span>
-                      <span className="text-[9px] text-slate-400 font-semibold block">/ ton CO₂e</span>
+                      <span className="text-2xl font-black text-[#06281E]">₹{selectedArchetype.pricePerTon}</span>
+                      <span className="text-[10px] text-slate-500 font-semibold block">/ ton CO2e</span>
                     </div>
                   </div>
 
                   {/* Volume Slider with Live Counter */}
                   <div className="space-y-2">
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-500 font-bold">Volume Selected</span>
+                      <span className="text-slate-600 font-bold">Volume Selected</span>
                       <span className="text-emerald-700 font-black text-base">{volume.toLocaleString()} Tons</span>
                     </div>
                     <input
@@ -393,9 +397,9 @@ export default function SensoryImpactShowcase() {
                       step="500"
                       value={volume}
                       onChange={(e) => setVolume(parseInt(e.target.value, 10))}
-                      className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+                      className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                     />
-                    <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                    <div className="flex justify-between text-[10px] text-slate-500 font-mono">
                       <span>500 t</span>
                       <span>10,000 t</span>
                       <span>20,000 t</span>
@@ -404,24 +408,26 @@ export default function SensoryImpactShowcase() {
 
                   {/* Sensory Impact Conversions */}
                   <div className="grid grid-cols-2 gap-3 text-center">
-                    <div className="p-3 bg-emerald-50/60 rounded-2xl border border-emerald-100 space-y-1">
-                      <span className="text-[8px] text-emerald-800 uppercase font-bold block">
-                        🌳 Native Tree Equivalent
-                      </span>
-                      <strong className="text-base text-[#0B3D2E] font-black block">
+                    <div className="p-3 bg-emerald-50/70 rounded-2xl border border-emerald-100 space-y-1">
+                      <div className="flex items-center justify-center gap-1 text-[9px] text-emerald-800 uppercase font-bold">
+                        <TreePine className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Native Trees</span>
+                      </div>
+                      <strong className="text-lg text-[#06281E] font-black block">
                         {treesTotal.toLocaleString()}
                       </strong>
-                      <span className="text-[8px] text-emerald-600 font-semibold">Absorption Cycle</span>
+                      <span className="text-[9px] text-emerald-600 font-semibold">Absorption Cycle</span>
                     </div>
 
-                    <div className="p-3 bg-sky-50/60 rounded-2xl border border-sky-100 space-y-1">
-                      <span className="text-[8px] text-sky-800 uppercase font-bold block">
-                        ✈️ Flights Neutralized
-                      </span>
-                      <strong className="text-base text-sky-900 font-black block">
+                    <div className="p-3 bg-sky-50/70 rounded-2xl border border-sky-100 space-y-1">
+                      <div className="flex items-center justify-center gap-1 text-[9px] text-sky-800 uppercase font-bold">
+                        <Globe className="w-3.5 h-3.5 text-sky-600" />
+                        <span>Flights Neutralized</span>
+                      </div>
+                      <strong className="text-lg text-sky-950 font-black block">
                         {flightsTotal.toLocaleString()}
                       </strong>
-                      <span className="text-[8px] text-sky-600 font-semibold">DEL ⇄ BOM Flights</span>
+                      <span className="text-[9px] text-sky-600 font-semibold">DEL to BOM Flights</span>
                     </div>
                   </div>
 

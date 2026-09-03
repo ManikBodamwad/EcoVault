@@ -53,67 +53,68 @@ export default function SellerDashboard() {
         
         {/* Success toast alerts */}
         {successMsg && (
-          <div className="bg-emerald-600 text-white p-4 rounded-xl shadow-lg text-center font-bold text-xs animate-slideDown">
-            🎉 {successMsg}
+          <div className="bg-[#06281E] text-emerald-300 border border-emerald-500/30 p-4 rounded-2xl shadow-xl text-center font-bold text-xs animate-slideDown flex items-center justify-center gap-2">
+            <Check className="w-4 h-4 text-emerald-400 stroke-[3]" />
+            <span>{successMsg}</span>
           </div>
         )}
 
         {/* Header summary */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-950 text-emerald-400 text-[10px] font-bold rounded-full mb-2 border border-emerald-900/60">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-full mb-2 border border-emerald-200">
               Seller Control Portal
             </div>
-            <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Developer Dashboard</h1>
-            <p className="text-xs text-slate-500 mt-1">Manage vault-custodied certificates, verify active bids, and monitor cash payouts.</p>
+            <h1 className="text-3xl font-extrabold text-[#06281E] tracking-tight">Developer Dashboard</h1>
+            <p className="text-sm text-slate-600 mt-1">Manage vault-custodied certificates, verify active bids, and monitor cash payouts.</p>
           </div>
           <Link
             href="/seller/create"
-            className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors shadow flex items-center gap-1.5"
+            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors shadow-md flex items-center gap-2 cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
-            Create New Listing
+            <span>Create New Listing</span>
           </Link>
         </div>
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Card 1 */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Payout Earnings</span>
+          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-500 block">Payout Earnings</span>
             <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-slate-800">₹{totalEarnings.toLocaleString()}</span>
+              <span className="text-3xl font-extrabold text-slate-900">₹{totalEarnings.toLocaleString()}</span>
             </div>
-            <span className="text-[10px] text-emerald-600 font-medium block">Settled to your bank</span>
+            <span className="text-xs text-emerald-700 font-bold block">Settled to your bank</span>
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Funds Locked in Escrow</span>
+          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-500 block">Locked in Escrow</span>
             <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-[#0B3D2E]">₹{pendingEscrow.toLocaleString()}</span>
+              <span className="text-3xl font-extrabold text-[#06281E]">₹{pendingEscrow.toLocaleString()}</span>
             </div>
-            <span className="text-[10px] text-[#06B6D4] font-medium block">Pending buyer release</span>
+            <span className="text-xs text-sky-700 font-bold block">Pending buyer release</span>
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Active Listings Volume</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-slate-800">{totalListedTons.toLocaleString()}</span>
-              <span className="text-xs text-slate-400 font-semibold">Tons</span>
+          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-500 block">Active Listings Volume</span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-extrabold text-slate-900">{totalListedTons.toLocaleString()}</span>
+              <span className="text-xs text-slate-500 font-semibold">Tons</span>
             </div>
-            <span className="text-[10px] text-slate-500 font-medium block">Pre-locked in GCI vaults</span>
+            <span className="text-xs text-slate-600 font-medium block">Pre-locked in GCI vaults</span>
           </div>
 
           {/* Card 4 */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-2">
-            <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 block">Pending Bids</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-[#F59E0B]">{activeOffersCount}</span>
-              <span className="text-xs text-slate-400 font-semibold">Offers</span>
+          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-500 block">Pending Bids</span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-extrabold text-amber-600">{activeOffersCount}</span>
+              <span className="text-xs text-slate-500 font-semibold">Offers</span>
             </div>
-            <span className="text-[10px] text-slate-500 font-medium block">Action required</span>
+            <span className="text-xs text-amber-700 font-bold block">Action required</span>
           </div>
         </div>
 

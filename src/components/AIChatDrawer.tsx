@@ -21,17 +21,19 @@ export default function AIChatDrawer() {
     scrollToBottom();
   }, [chatMessages, isTyping]);
 
-  // Show typing animation briefly when user submits
-  const handleSend = (text: string) => {
+  // Show typing animation while real AI call executes
+  const handleSend = async (text: string) => {
     if (!text.trim()) return;
-    sendChatMessage(text);
     setInputText("");
     setIsTyping(true);
     
-    // Typing stops when new message arrives (simulated after 1s)
-    setTimeout(() => {
+    try {
+      await sendChatMessage(text);
+    } catch (e) {
+      console.warn("Chat error:", e);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -41,11 +43,12 @@ export default function AIChatDrawer() {
   };
 
   const prompts = [
-    { label: "🌲 Forestry projects", query: "Show me forestry projects" },
-    { label: "🐄 Biogas projects", query: "Show me biogas projects" },
-    { label: "📉 Under ₹300/ton", query: "Show me projects under ₹300/ton" },
-    { label: "✅ What is ACVA?", query: "What is ACVA verification?" },
-    { label: "🛡️ How is escrow safe?", query: "How does the escrow work?" }
+    { label: "Forestry Projects", query: "Show me verified forestry projects in India" },
+    { label: "Biogas Projects", query: "Show me agricultural biogas projects" },
+    { label: "Under ₹300/ton", query: "Which credits are priced under ₹300/ton?" },
+    { label: "How Escrow Works", query: "How does the EcoVault institutional escrow protect transactions?" },
+    { label: "What is ACVA?", query: "What is ACVA verification and satellite audit?" },
+    { label: "BRSR Reporting", query: "How do EcoVault retirement certificates support BRSR compliance?" }
   ];
 
   // Don't show chatbot for seller (they have pricing assistant instead)
@@ -143,20 +146,18 @@ export default function AIChatDrawer() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Prompt suggestions (shows only when chat is thin) */}
-            {chatMessages.length <= 2 && (
-              <div className="px-4 py-2 bg-white border-t border-slate-100 flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
-                {prompts.map((p) => (
-                  <button
-                    key={p.label}
-                    onClick={() => handleSend(p.query)}
-                    className="text-[10px] bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 font-medium px-2.5 py-1 rounded-full border border-slate-200/60 transition-colors"
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-            )}
+            {/* Quick Prompt suggestions pills (always accessible) */}
+            <div className="px-3.5 py-2 bg-slate-100/90 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-shrink-0">
+              {prompts.map((p) => (
+                <button
+                  key={p.label}
+                  onClick={() => handleSend(p.query)}
+                  className="text-[11px] whitespace-nowrap bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 font-bold px-3 py-1.5 rounded-xl border border-slate-200/80 hover:border-emerald-300 transition-all shadow-2xs flex-shrink-0 cursor-pointer"
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
 
             {/* Input area */}
             <div className="p-3 bg-white border-t border-slate-200 flex items-center gap-2">

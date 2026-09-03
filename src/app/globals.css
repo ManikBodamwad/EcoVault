@@ -39,9 +39,14 @@
 :root {
   --background: #FFFFFF;
   --foreground: #0F172A;
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-heading), var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  font-size: 16.5px;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -49,6 +54,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  line-height: 1.6;
   transition: background-color 0.4s var(--ease-expo), color 0.4s var(--ease-expo);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
