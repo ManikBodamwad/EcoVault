@@ -2,8 +2,164 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
-import { MessageSquare, X, Send, Trash2, HelpCircle, Sparkles, Loader2 } from "lucide-react";
+import { MessageSquare, X, Send, Trash2, HelpCircle, Sparkles, Loader2, Bot, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+// Helper component to parse inline markdown (bold, italic, code)
+function formatInlineText(text: string): React.ReactNode[] {
+  const parts: React.ReactNode[] = [];
+  const regex = /(\*\*.*?\*\*|\*.*?\*|`.*?`)/g;
+  const tokens = text.split(regex);
+
+  tokens.forEach((token, index) => {
+    if (!token) return;
+    if (token.startsWith("**") && token.endsWith("**")) {
+      parts.push(
+        <strong key={index} className="font-bold text-slate-950">
+          {token.slice(2, -2)}
+        </strong>
+      );
+    } else if (token.startsWith("*") && token.endsWith("*") && token.length > 2) {
+      parts.push(
+        <em key={index} className="italic text-slate-700">
+          {token.slice(1, -1)}
+        </em>
+      );
+    } else if (token.startsWith("`") && token.endsWith("`")) {
+      parts.push(
+        <code key={index} className="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 rounded text-[11px] font-mono border border-emerald-200">
+          {token.slice(1, -1)}
+        </code>
+      );
+    } else {
+      parts.push(token);
+    }
+  });
+
+  return parts;
+}
+
+// Full rich markdown renderer for AI responses
+function FormattedMessage({ content, isUser }: { content: string; isUser: boolean }) {
+  if (isUser) {
+    return <div className="leading-relaxed">{content}</div>;
+  }
+
+  const lines = content.split("\n");
+  const elements: React.ReactNode[] = [];
+  let tableRows: string[][] = [];
+  let inTable = false;
+
+  const flushTable = (keyIndex: number) => {
+    if (tableRows.length > 0) {
+      const headers = tableRows[0];
+      const dataRows = tableRows.slice(1).filter(r => !r.every(c => c.match(/^:?-+:?$/))); // filter out separator line
+      
+      elements.push(
+        <div key={`table-${keyIndex}`} className="my-2.5 overflow-x-auto rounded-lg border border-slate-200 shadow-2xs">
+          <table className="min-w-full divide-y divide-slate-200 text-[11px]">
+            <thead className="bg-emerald-50/80">
+              <tr>
+                {headers.map((h, i) => (
+                  <th key={i} className="px-2.5 py-1.5 text-left font-bold text-emerald-950">
+                    {formatInlineText(h.trim())}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 bg-white">
+              {dataRows.map((row, rIdx) => (
+                <tr key={rIdx} className={rIdx % 2 === 0 ? "bg-white" : "bg-slate-50/50"}>
+                  {row.map((cell, cIdx) => (
+                    <td key={cIdx} className="px-2.5 py-1.5 text-slate-700 whitespace-nowrap">
+                      {formatInlineText(cell.trim())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+      tableRows = [];
+      inTable = false;
+    }
+  };
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+
+    // Check for Table line
+    if (trimmed.startsWith("|") && trimmed.endsWith("|")) {
+      inTable = true;
+      const cells = trimmed.split("|").slice(1, -1);
+      tableRows.push(cells);
+      return;
+    } else if (inTable) {
+      flushTable(index);
+    }
+
+    if (!trimmed) {
+      elements.push(<div key={`spacer-${index}`} className="h-1.5" />);
+      return;
+    }
+
+    // Headers (### or ##)
+    if (trimmed.startsWith("### ") || trimmed.startsWith("## ")) {
+      const headerText = trimmed.replace(/^#{2,3}\s+/, "");
+      elements.push(
+        <h4 key={index} className="font-bold text-emerald-950 text-xs mt-2 mb-1 flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+          {formatInlineText(headerText)}
+        </h4>
+      );
+      return;
+    }
+
+    // Bullet points (- or * or •)
+    if (trimmed.match(/^[-*•]\s+/)) {
+      const bulletText = trimmed.replace(/^[-*•]\s+/, "");
+      elements.push(
+        <div key={index} className="flex items-start gap-2 my-1 pl-1 text-slate-800">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 flex-shrink-0" />
+          <div className="flex-1 leading-relaxed">
+            {formatInlineText(bulletText)}
+          </div>
+        </div>
+      );
+      return;
+    }
+
+    // Numbered lists (1. 2. etc)
+    const numMatch = trimmed.match(/^(\d+)\.\s+(.*)/);
+    if (numMatch) {
+      const num = numMatch[1];
+      const itemText = numMatch[2];
+      elements.push(
+        <div key={index} className="flex items-start gap-2 my-1 pl-1 text-slate-800">
+          <span className="font-bold text-emerald-700 text-[11px] min-w-[14px] flex-shrink-0">{num}.</span>
+          <div className="flex-1 leading-relaxed">
+            {formatInlineText(itemText)}
+          </div>
+        </div>
+      );
+      return;
+    }
+
+    // Regular paragraph
+    elements.push(
+      <p key={index} className="my-1 leading-relaxed text-slate-800">
+        {formatInlineText(trimmed)}
+      </p>
+    );
+  });
+
+  if (inTable) {
+    flushTable(lines.length);
+  }
+
+  return <div className="space-y-0.5 text-xs">{elements}</div>;
+}
 
 export default function AIChatDrawer() {
   const { chatMessages, sendChatMessage, clearChat, persona } = useApp();
@@ -61,12 +217,12 @@ export default function AIChatDrawer() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-emerald-500 hover:shadow-emerald-500/20 transition-all border border-emerald-500/30"
+        className="w-14 h-14 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-xl hover:bg-emerald-500 hover:shadow-emerald-500/30 transition-all border border-emerald-400/40 cursor-pointer"
       >
         {isOpen ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6" />}
         {/* Subtle notification badge */}
         {!isOpen && (
-          <span className="absolute top-0 right-0 w-3 h-3 bg-sky-400 rounded-full border-2 border-white animate-pulse"></span>
+          <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-white animate-pulse"></span>
         )}
       </motion.button>
 
@@ -74,34 +230,37 @@ export default function AIChatDrawer() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="absolute bottom-20 right-0 w-80 md:w-96 h-[500px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col"
+            exit={{ opacity: 0, y: 30, scale: 0.95 }}
+            transition={{ type: "spring", damping: 25, stiffness: 320 }}
+            className="absolute bottom-20 right-0 w-[90vw] sm:w-[420px] md:w-[460px] h-[560px] max-h-[85vh] bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col z-50"
           >
             {/* Header */}
-            <div className="bg-[#0B3D2E] text-white p-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center border border-emerald-500/30">
-                  <Sparkles className="w-4 h-4 text-emerald-300" />
+            <div className="bg-[#0B3D2E] text-white p-4 flex items-center justify-between border-b border-emerald-900/40">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-600/80 flex items-center justify-center border border-emerald-400/30 shadow-xs">
+                  <Bot className="w-5 h-5 text-emerald-200" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold leading-none">EcoVault AI Assistant</h3>
-                  <span className="text-[9px] text-emerald-400 font-semibold mt-0.5 inline-block">Online • GCI Connected</span>
+                  <h3 className="text-sm font-bold leading-tight">EcoVault AI Assistant</h3>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span className="text-[10px] text-emerald-300 font-semibold tracking-wide uppercase">Groq AI • GCI Registry Live</span>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <button
                   onClick={clearChat}
                   title="Clear Conversation"
-                  className="p-1.5 rounded hover:bg-emerald-950/50 text-slate-300 hover:text-white transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-white/10 text-emerald-200 hover:text-white transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1.5 rounded hover:bg-emerald-950/50 text-slate-300 hover:text-white transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-white/10 text-emerald-200 hover:text-white transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -109,22 +268,22 @@ export default function AIChatDrawer() {
             </div>
 
             {/* Chat Messages Area */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50/50">
+            <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50/70">
               {chatMessages.map((msg) => (
                 <div
                   key={msg.id}
                   className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
+                    className={`max-w-[88%] rounded-2xl px-4 py-3 text-xs leading-relaxed shadow-xs ${
                       msg.sender === "user"
-                        ? "bg-emerald-600 text-white rounded-tr-none"
-                        : "bg-white text-slate-800 border border-slate-200 shadow-sm rounded-tl-none whitespace-pre-line"
+                        ? "bg-emerald-600 text-white rounded-tr-none font-medium"
+                        : "bg-white text-slate-800 border border-slate-200/90 rounded-tl-none shadow-sm"
                     }`}
                   >
-                    {msg.text}
+                    <FormattedMessage content={msg.text} isUser={msg.sender === "user"} />
                     <div
-                      className={`text-[8px] mt-1 text-right ${
+                      className={`text-[9px] mt-1.5 text-right font-mono ${
                         msg.sender === "user" ? "text-emerald-200" : "text-slate-400"
                       }`}
                     >
@@ -137,9 +296,9 @@ export default function AIChatDrawer() {
               {/* Typing indicator */}
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-tl-none px-3.5 py-2.5 flex items-center gap-1.5 text-xs text-slate-500">
-                    <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-600" />
-                    <span>EcoVault AI is typing...</span>
+                  <div className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-2 text-xs text-slate-600">
+                    <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
+                    <span className="font-medium">Querying carbon registry & analyzing...</span>
                   </div>
                 </div>
               )}
@@ -147,12 +306,12 @@ export default function AIChatDrawer() {
             </div>
 
             {/* Quick Prompt suggestions pills (always accessible) */}
-            <div className="px-3.5 py-2 bg-slate-100/90 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-shrink-0">
+            <div className="px-3 py-2 bg-slate-100/95 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-shrink-0">
               {prompts.map((p) => (
                 <button
                   key={p.label}
                   onClick={() => handleSend(p.query)}
-                  className="text-[11px] whitespace-nowrap bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 font-bold px-3 py-1.5 rounded-xl border border-slate-200/80 hover:border-emerald-300 transition-all shadow-2xs flex-shrink-0 cursor-pointer"
+                  className="text-[11px] whitespace-nowrap bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 font-semibold px-3 py-1.5 rounded-lg border border-slate-200/80 hover:border-emerald-300 transition-all shadow-2xs flex-shrink-0 cursor-pointer"
                 >
                   {p.label}
                 </button>
@@ -166,15 +325,15 @@ export default function AIChatDrawer() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Ask EcoVault assistant..."
-                className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50 focus:bg-white transition-all"
+                placeholder="Ask about carbon credits, ACVA audits, pricing..."
+                className="flex-1 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-slate-50 focus:bg-white transition-all text-slate-800"
               />
               <button
                 onClick={() => handleSend(inputText)}
                 disabled={!inputText.trim()}
-                className="w-8 h-8 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center transition-colors disabled:opacity-50 disabled:hover:bg-emerald-600"
+                className="w-9 h-9 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center transition-colors disabled:opacity-50 disabled:hover:bg-emerald-600 cursor-pointer shadow-xs"
               >
-                <Send className="w-3.5 h-3.5" />
+                <Send className="w-4 h-4" />
               </button>
             </div>
           </motion.div>
@@ -183,3 +342,4 @@ export default function AIChatDrawer() {
     </div>
   );
 }
+

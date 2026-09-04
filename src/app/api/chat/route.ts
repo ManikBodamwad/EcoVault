@@ -45,9 +45,10 @@ Key Architectural Pillars:
 - Institutional 4-Stage Escrow: Stage 1 (Deposit Lock) -> Stage 2 (Registry GCI Serial Quarantined) -> Stage 3 (Lidar Satellite Verification) -> Stage 4 (Developer Payout & Permanent Certificate Retirement).
 - Compliance: Full SEBI BRSR Core and Indian Carbon Credit Trading Scheme (CCTS) readiness.
 
-Guidelines:
-- Always answer the user's specific question directly with relevant numbers, project names, and actionable advice.
-- Keep responses concise (2 to 4 sentences or punchy bullet points), professional, and easy to read.`
+Formatting Guidelines:
+- Format your response with clear, clean bullet points and bold headers.
+- Do NOT use raw ascii/markdown tables. Use structured bulleted lists with bold titles.
+- Keep responses concise (3-5 structured bullets max) and complete. Never cut off mid-sentence.`
                 },
                 ...history.slice(-4).map((h: any) => ({
                   role: h.sender === "user" ? "user" : "assistant",
@@ -56,7 +57,7 @@ Guidelines:
                 { role: "user", content: message }
               ],
               temperature: 0.2,
-              max_tokens: 300
+              max_tokens: 500
             })
           });
 
