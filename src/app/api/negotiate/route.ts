@@ -17,27 +17,36 @@ export async function POST(req: NextRequest) {
     const volumeMultiplier = volume >= 5000 ? 0.92 : volume >= 2000 ? 0.95 : 0.97;
     const floorPrice = Math.round(askingPrice * volumeMultiplier);
 
-    // 1. Live Groq LLaMA 3.3 70B AI Call
+    // 1. Live Groq AI Call with fallback model list
     const groqKey = process.env.GROQ_API_KEY;
 
     if (groqKey) {
-      try {
-        const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${groqKey}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
-            messages: [
-              {
-                role: "system",
-                content: "You are an AI negotiation agent representing verified carbon project developers across India on the EcoVault platform. Always respond with realistic carbon market economics, local MRV costs, and community benefit sharing. Return strictly valid JSON."
-              },
-              {
-                role: "user",
-                content: `You represent developer "${developer}" in ${location}, India managing the "${projectName}" (${projectType} carbon project).
+      const GROQ_MODELS = [
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-20b",
+        "qwen/qwen3.8-27b",
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant"
+      ];
+
+      for (const modelName of GROQ_MODELS) {
+        try {
+          const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${groqKey}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              model: modelName,
+              messages: [
+                {
+                  role: "system",
+                  content: "You are an AI negotiation agent representing verified carbon project developers across India on the EcoVault platform. Always respond with realistic carbon market economics, local MRV costs, and community benefit sharing. Return strictly valid JSON with keys: status, finalPrice, message, developerName, registryHold."
+                },
+                {
+                  role: "user",
+                  content: `You represent developer "${developer}" in ${location}, India managing the "${projectName}" (${projectType} carbon project).
 A corporate buyer is bidding ₹${offeredPrice}/ton for ${volume.toLocaleString()} tons. Official asking price is ₹${askingPrice}/ton. Minimum acceptable floor price for this volume is ₹${floorPrice}/ton.
 
 Respond as ${developer}.
@@ -49,23 +58,26 @@ Return raw JSON object:
   "developerName": "${developer}",
   "registryHold": true
 }`
-              }
-            ],
-            response_format: { type: "json_object" },
-            temperature: 0.2
-          })
-        });
+                }
+              ],
+              temperature: 0.2
+            })
+          });
 
-        if (groqRes.ok) {
-          const data = await groqRes.json();
-          const content = data?.choices?.[0]?.message?.content;
-          if (content) {
-            const parsed = JSON.parse(content);
-            return NextResponse.json(parsed);
+          if (groqRes.ok) {
+            const data = await groqRes.json();
+            const content = data?.choices?.[0]?.message?.content;
+            if (content) {
+              const cleaned = content.replace(/```json/g, "").replace(/```/g, "").trim();
+              const parsed = JSON.parse(cleaned);
+              if (parsed.status && parsed.message) {
+                return NextResponse.json(parsed);
+              }
+            }
           }
+        } catch (groqErr) {
+          console.warn(`Groq API negotiation error with ${modelName}:`, groqErr);
         }
-      } catch (groqErr) {
-        console.warn("Groq API negotiation error, falling back:", groqErr);
       }
     }
 
